@@ -1,469 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AquaStar & THV | Indomie Lab</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<script src="https://unpkg.com/scrollreveal"></script>
-<style>
-/* CSS Variables for Themes */
-:root {
-	--bg: #0a0a0a;
-	--primary: #ff2d75;
-	--secondary: #00d4ff;
-	--glass: rgba(255, 255, 255, 0.04);
-	--glass-hover: rgba(255, 255, 255, 0.08);
-	--border: rgba(255, 255, 255, 0.08);
-	--text-main: #ffffff;
-	--text-muted: #a0a0a0;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaStar & THV | Operation Terminal</title>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <style>
+        :root {
+            --bg: #050505;
+            --primary: #00d4ff;
+            --accent: #ff2d75;
+            --surface: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+        }
 
-/* Midnight Theme (Default) */
-[data-theme="midnight"] {
-	--bg: #050510;
-	--primary: #8a2be2;
-	--secondary: #00fa9a;
-}
+        [data-theme="midnight"] { --bg: #02020a; --primary: #7000ff; --accent: #00ffaa; }
+        [data-theme="crimson"] { --bg: #0a0000; --primary: #e60000; --accent: #ffb300; }
 
-/* Crimson Theme */
-[data-theme="crimson"] {
-	--bg: #100000;
-	--primary: #ff003c;
-	--secondary: #ff8c00;
-}
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-* { 
-	transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s, color 0.4s, transform 0.4s; 
-	box-sizing: border-box; 
-}
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+        }
 
-body {
-	font-family: 'Inter', system-ui, -apple-system, sans-serif;
-	background-color: var(--bg);
-	color: var(--text-main);
-	margin: 0;
-	overflow-x: hidden;
-	background-image: 
-	radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.02) 0%, transparent 40%),
-	radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
-	background-attachment: fixed;
-}
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
 
-/* Loading Screen */
-#loader {
-position: fixed;
-top: 0; left: 0; width: 100%; height: 100%;
-background: #050505;
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 9999;
-transition: opacity 0.8s ease;
-}
-.loader-text {
-	font-size: 1.5rem;
-	letter-spacing: 5px;
-	color: #fff;
-	animation: pulse 1.5s infinite alternate;
-}
+        header { text-align: center; margin-bottom: 80px; }
+        h1 { 
+            font-size: clamp(2rem, 10vw, 4.5rem); 
+            margin: 0; 
+            font-weight: 900; 
+            letter-spacing: -2px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.container { max-width: 1000px; margin: 0 auto; padding: 20px 20px 80px 20px; }
+        .theme-switcher { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+        .theme-btn { 
+            width: 12px; height: 12px; border-radius: 50%; cursor: pointer; 
+            border: 1px solid #fff; transition: transform 0.2s;
+        }
+        .theme-btn:hover { transform: scale(1.5); }
 
-/* Theme Controls */
-.theme-controls {
-	display: flex;
-	justify-content: center;
-	gap: 15px;
-	margin-top: 20px;
-}
-.theme-btn {
-	background: var(--glass);
-	border: 1px solid var(--border);
-	color: var(--text-muted);
-	padding: 8px 16px;
-	border-radius: 20px;
-	cursor: pointer;
-	font-size: 0.8rem;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-}
-.theme-btn:hover {
-	border-color: var(--primary);
-	color: var(--primary);
-}
+        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
-header { text-align: center; padding: 100px 20px 60px 20px; }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
 
-h1 {
-	font-size: clamp(3rem, 8vw, 4.5rem);
-	margin: 0;
-	background: linear-gradient(to right, var(--secondary), var(--primary));
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	text-transform: uppercase;
-	letter-spacing: -2px;
-	font-weight: 900;
-}
+        h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); margin-bottom: 30px; }
 
-.subtitle {
-	color: var(--text-muted);
-	letter-spacing: 4px;
-	font-weight: 300;
-	text-transform: uppercase;
-	margin-top: 10px;
-}
+        /* Enhanced Input Styling */
+        .input-group { margin-bottom: 20px; position: relative; }
+        input, select, textarea {
+            width: 100%;
+            padding: 16px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        select { cursor: pointer; appearance: none; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
 
-.section {
-	background: var(--glass);
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
-	border: 1px solid var(--border);
-	border-radius: 20px;
-	padding: 50px;
-	margin: 30px 0;
-}
+        .btn-dispatch {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
 
-.section:hover {
-	background: var(--glass-hover);
-	border-color: rgba(255, 255, 255, 0.15);
-	transform: translateY(-2px);
-}
+        /* Order Monitor UI */
+        .order-monitor { margin-top: 40px; }
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 14px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+        }
+        .order-info b { display: block; color: var(--primary); margin-bottom: 4px; }
+        .order-info span { font-size: 0.8rem; opacity: 0.6; }
+        
+        .btn-cancel {
+            background: #222;
+            color: #ff4444;
+            border: 1px solid #444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .btn-cancel:hover { background: #ff4444; color: #fff; }
 
-h2 { color: var(--primary); font-size: 2rem; margin-top: 0; }
-
-/* Custom Better Dropdown & Form */
-.order-form {
-	display: grid;
-	gap: 20px;
-	max-width: 500px;
-	margin: 0 auto;
-}
-
-input, textarea, select {
-	background: rgba(0, 0, 0, 0.3);
-	border: 1px solid var(--border);
-	padding: 18px;
-	border-radius: 12px;
-	color: var(--text-main);
-	font-size: 1rem;
-	width: 100%;
-	font-family: 'Inter', sans-serif;
-}
-
-/* Styling the standard dropdown to look modern */
-select {
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-	background-repeat: no-repeat;
-	background-position-x: 96%;
-	background-position-y: 50%;
-	cursor: pointer;
-}
-
-select option {
-	background: #111;
-	color: #fff;
-}
-select optgroup {
-	background: #000;
-	color: var(--primary);
-	font-style: normal;
-	font-weight: bold;
-}
-
-input:focus, textarea:focus, select:focus {
-	outline: none;
-	border-color: var(--secondary);
-	background: rgba(0, 0, 0, 0.5);
-}
-
-.btn-order {
-	background: var(--primary);
-	color: #fff;
-	border: none;
-	padding: 18px;
-	border-radius: 12px;
-	font-weight: 800;
-	cursor: pointer;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	margin-top: 10px;
-}
-
-.btn-order:hover {
-	background: var(--secondary);
-	transform: scale(1.02);
-}
-
-/* Menu Grid */
-.menu-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-	gap: 25px;
-}
-
-.menu-card {
-	background: rgba(0,0,0,0.2);
-	padding: 30px;
-	border-radius: 16px;
-	border: 1px solid var(--border);
-}
-
-.menu-card ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	line-height: 2.2;
-	color: var(--text-muted);
-}
-
-.menu-card h3 {
-	margin-top: 0;
-	font-size: 1.3rem;
-	color: var(--secondary);
-	border-bottom: 1px solid var(--border);
-	padding-bottom: 10px;
-}
-
-.secret-box {
-	display: none;
-	background: rgba(0, 0, 0, 0.4);
-	padding: 30px;
-	border-radius: 16px;
-	margin-top: 20px;
-	border: 1px solid var(--primary);
-}
-
-@keyframes pulse {
-	0% { opacity: 0.5; }
-	100% { opacity: 1; }
-}
-
-.status-msg {
-	text-align: center;
-	font-weight: bold;
-	margin-top: 10px;
-	letter-spacing: 1px;
-}
-
-footer { text-align: center; padding-top: 40px; color: var(--text-muted); font-size: 0.8rem; }
-</style>
+        footer { text-align: center; margin-top: 100px; opacity: 0.2; font-size: 0.7rem; letter-spacing: 2px; }
+    </style>
 </head>
 <body>
 
-<div id="loader">
-<div class="loader-text">BOILING WATER...</div>
-</div>
+<div id="loader">CONNECTING TO DATABASE...</div>
 
 <div class="container">
-<header class="animate__animated animate__fadeIn">
-<h1>AquaStar & THV</h1>
-<div class="subtitle">The Indomie Lab</div>
+    <header>
+        <h1>AquaStar & THV</h1>
+        <div class="theme-switcher">
+            <div class="theme-btn" style="background: #00d4ff" onclick="setTheme('default')"></div>
+            <div class="theme-btn" style="background: #7000ff" onclick="setTheme('midnight')"></div>
+            <div class="theme-btn" style="background: #e60000" onclick="setTheme('crimson')"></div>
+        </div>
+    </header>
 
-<div class="theme-controls">
-<button class="theme-btn" onclick="setTheme('default')">Neon</button>
-<button class="theme-btn" onclick="setTheme('midnight')">Midnight</button>
-<button class="theme-btn" onclick="setTheme('crimson')">Crimson</button>
-</div>
-</header>
+    <div class="grid">
+        <div class="card reveal">
+            <h2>Deployment Terminal</h2>
+            <div class="input-group">
+                <input type="text" id="nodeName" placeholder="Client Name">
+            </div>
+            <div class="input-group">
+                <select id="nodeSelection">
+                    <option value="" disabled selected>Signature Dish Selection</option>
+                    <optgroup label="Pink Series">
+                        <option>🌸 Swicy</option>
+                        <option>🌸 Duck Duck Indomie</option>
+                        <option>🌸 The Dreamy Creamy</option>
+                    </optgroup>
+                    <optgroup label="Nuclear Series">
+                        <option>☢️ The Atomic Bomb</option>
+                        <option>☢️ The Challenger</option>
+                    </optgroup>
+                    <optgroup label="Void Series">
+                        <option>⚫ Duck Duck Black Indomie</option>
+                        <option>⚫ More Spicy than Swicy</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="input-group">
+                <textarea id="nodeNote" rows="3" placeholder="Special Requests"></textarea>
+            </div>
+            <button class="btn-dispatch" onclick="submitOrder()">Submit to Lab</button>
+            <p id="msg" style="text-align:center; font-size: 0.8rem; margin-top: 15px; opacity: 0.7;"></p>
+        </div>
 
-<div class="section reveal">
-<h2 style="text-align: center;">Place Your Order</h2>
-<div class="order-form">
-<input type="text" id="orderName" placeholder="Name" required>
-<select id="orderItem">
-<option value="" disabled selected>Select a bowl...</option>
-<optgroup label="Pink Buldak">
-<option value="Swicy">Swicy</option>
-<option value="Duck Duck Indomie">Duck Duck Indomie</option>
-<option value="The Dreamy Creamy">The Dreamy Creamy</option>
-</optgroup>
-<optgroup label="2x Spicy">
-<option value="The Atomic Bomb">The Atomic Bomb</option>
-<option value="The Challenger">The Challenger</option>
-</optgroup>
-<optgroup label="Black Buldak">
-<option value="Duck Duck Black Indomie">Duck Duck Black Indomie</option>
-<option value="More Spicy than Swicy">More Spicy than Swicy</option>
-</optgroup>
-<optgroup label="Specials">
-<option value="The KAI">The KAI</option>
-<option value="The ZANE">The ZANE</option>
-</optgroup>
-</select>
-<textarea id="orderNote" rows="2" placeholder="Any modifications?"></textarea>
-<button class="btn-order" onclick="sendOrder()">Send to Kitchen</button>
-<div id="statusMsg" class="status-msg"></div>
-</div>
-</div>
+        <div class="card reveal">
+            <h2>Lab Manual</h2>
+            <p style="font-size: 0.9rem; opacity: 0.7; line-height: 1.8;">
+                The Lab specializes in precise Indomie engineering. We prioritize texture and chemical balance in every bowl. Our operations are strictly confined to Bait Baba Saeed.
+            </p>
+            <h2 style="margin-top: 40px;">Status</h2>
+            <p style="font-size: 0.8rem; color: var(--accent);">Operational: 24/7</p>
+        </div>
+    </div>
 
-<div class="section reveal">
-<h2>Our Story</h2>
-<p style="color: var(--text-muted); line-height: 1.8;">
-We started this because regular instant noodles just weren't hitting the spot. AquaStar & THV is our dedicated lab for the ultimate Buldak experience. We don't just boil water and throw in a flavor packet; we experiment, mix, and dial in the perfect heat and texture for every single bowl right here at Bait Baba Saeed.
-</p>
-</div>
+    <div class="card reveal" style="margin-top: 40px;">
+        <div id="authSection" style="text-align: center;">
+            <h2>Staff Authentication</h2>
+            <div style="max-width: 300px; margin: 0 auto;">
+                <input type="password" id="authKey" placeholder="Access Key" style="text-align: center;">
+                <button class="btn-dispatch" style="margin-top: 15px; padding: 12px; font-size: 0.8rem;" onclick="unlockTerminal()">Access All Orders</button>
+            </div>
+        </div>
 
-<div class="section reveal">
-<h2>Menu</h2>
-<div class="menu-grid">
-<div class="menu-card">
-<h3>Pink Series</h3>
-<ul>
-<li>🌸 Swicy</li>
-<li>🌸 Duck Duck Indomie</li>
-<li>🌸 The Dreamy Creamy</li>
-</ul>
-</div>
-<div class="menu-card">
-<h3>Nuclear Series</h3>
-<ul>
-<li>☢️ The Atomic Bomb</li>
-<li>💀 The Challenger</li>
-</ul>
-</div>
-<div class="menu-card">
-<h3>Void Series</h3>
-<ul>
-<li>⚫ Duck Duck Black</li>
-<li>⚫ More Spicy Than Swicy</li>
-</ul>
-</div>
-</div>
-</div>
+        <div id="staffPortal" style="display: none;">
+            <h2>Global Order Management</h2>
+            <div id="globalOrders">
+                <p style="opacity: 0.5;">Awaiting data from server...</p>
+            </div>
+        </div>
+    </div>
 
-<div class="section reveal" style="text-align:center;">
-<h2>Location</h2>
-<p style="font-size: 1.8rem; margin: 10px 0; font-weight: bold; color: var(--text-main);">Bait Baba Saeed</p>
-<p style="color: var(--text-muted);">Dine-in and pickup only.</p>
-</div>
-
-<div class="section reveal" style="text-align:center;">
-<h2 style="font-size: 1rem; letter-spacing: 2px;">STAFF PORTAL</h2>
-<div style="max-width: 300px; margin: 0 auto;">
-<input type="password" id="staffPass" placeholder="Enter password" style="text-align:center; margin-bottom: 15px;">
-<button class="btn-order" style="width:100%; padding: 12px; font-size: 0.8rem; background: #222;" onclick="unlockStaff()">View Recipes</button>
-</div>
-
-<div id="staffContent" class="secret-box">
-<h3 style="color: var(--secondary); text-align: left;">Recipe Index</h3>
-<div style="text-align: left; font-size: 0.9rem; line-height: 2; color: var(--text-muted);">
-<strong>Swicy:</strong> Powder + sauce + sweet soy + water. Drizzle extra soy post-mix.<br>
-<strong>Duck Duck:</strong> Powder + 50% sauce + light soy + water. Pour rest of sauce on top.<br>
-<strong>Atomic:</strong> Duck Duck style + 2x Spicy noodles. NO soy.<br>
-<strong>Challenger:</strong> 2x Spicy direct. No dilution. No pre-mix. Absolute heat.<br>
-<strong>Black:</strong> Duck Duck style + Black Indomie. NO water.<br>
-<strong>More Spicy:</strong> Swicy style. NO water. Less soy.<br>
-<strong>KAI:</strong> Black Sauce + Creamy Pink Powder.<br>
-<strong>ZANE:</strong> Direct Pink Indomie + Fresh Lemon.
-</div>
-</div>
-</div>
-
-<footer>AQUASTAR & THV © 2026</footer>
+    <footer>EST. 2026 // RAZOR PROTOCOL</footer>
 </div>
 
 <script>
-// Remove loading screen when everything is ready
-window.addEventListener('load', () => {
-	setTimeout(() => {
-		const loader = document.getElementById('loader');
-		loader.style.opacity = '0';
-		setTimeout(() => {
-			loader.style.display = 'none';
-		}, 800);
-	}, 1000); // 1 second artificial delay to show off the loader
-});
+    // System Initialization
+    window.onload = () => {
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+        setTheme('default');
+    };
 
-// Theme Switcher Logic
-function setTheme(themeName) {
-	document.documentElement.setAttribute('data-theme', themeName);
-}
+    function setTheme(t) { document.documentElement.setAttribute('data-theme', t); }
+    ScrollReveal().reveal('.reveal', { distance: '20px', origin: 'bottom', duration: 1000 });
 
-// Scroll Reveal Initializer
-ScrollReveal().reveal('.reveal', { 
-	delay: 150, 
-	distance: '40px', 
-	origin: 'bottom', 
-	interval: 100,
-	easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' 
-});
+    // Client Submission
+    async function submitOrder() {
+        const name = document.getElementById('nodeName').value;
+        const item = document.getElementById('nodeSelection').value;
+        const note = document.getElementById('nodeNote').value;
+        const msg = document.getElementById('msg');
 
-// Discord Webhook Logic
-async function sendOrder() {
-	const webhookURL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
-	const name = document.getElementById('orderName').value;
-	const item = document.getElementById('orderItem').value;
-	const note = document.getElementById('orderNote').value;
-	const status = document.getElementById('statusMsg');
-	
-	if(!name || !item) {
-		status.innerText = "Please fill out your name and select a bowl.";
-		status.style.color = "var(--primary)";
-		return;
-	}
-	
-	status.innerText = "Routing order...";
-	status.style.color = "var(--text-muted)";
-	
-	// Aesthetically pleasing Discord Embed
-	const payload = {
-		embeds: [{
-			title: "NEW ORDER INCOMING",
-			description: `**${name}** just submitted a ticket to the kitchen.`,
-			color: 16723317, // Hex for a pinkish color
-			fields: [
-				{ 
-					name: "Selected Dish", 
-					value: `\`\`\`\n${item}\n\`\`\``, 
-					inline: false 
-				},
-				{ 
-					name: "Customer Notes / Requests", 
-					value: note ? `> ${note}` : "> No special modifications requested.", 
-					inline: false 
-				}
-			],
-			footer: { text: "AquaStar & THV Order System" },
-			timestamp: new Date()
-		}]
-	};
-	
-	try {
-		const response = await fetch(webhookURL, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload)
-		});
-		
-		if(response.ok) {
-			status.innerText = "Order successfully sent to the kitchen.";
-			status.style.color = "var(--secondary)";
-			// Reset form
-			document.getElementById('orderName').value = '';
-			document.getElementById('orderItem').value = '';
-			document.getElementById('orderNote').value = '';
-		} else { throw new Error(); }
-	} catch (err) {
-		status.innerText = "Connection failed. Could not send order.";
-		status.style.color = "var(--primary)";
-	}
-}
+        if(!name || !item) return alert("All primary fields required.");
 
+        msg.innerText = "Transmitting...";
 
-function unlockStaff() {
-	const pass = document.getElementById('staffPass').value;
-	if(pass === '12344321-r') {
-		document.getElementById('staffContent').style.display = 'block';
-		document.getElementById('staffPass').value = '';
-		ScrollReveal().reveal('#staffContent', { duration: 500 });
-	} else {
-		alert("Incorrect password.");
-	}
-}
+        try {
+            const res = await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, item, note })
+            });
+            if(res.ok) {
+                msg.innerText = "Transmission successful.";
+                document.getElementById('nodeName').value = '';
+                document.getElementById('nodeNote').value = '';
+                if(document.getElementById('staffPortal').style.display === 'block') refreshStaffPortal();
+            }
+        } catch (e) { msg.innerText = "Transmission failed."; }
+    }
+
+    // Staff Portal Logic
+    function unlockTerminal() {
+        if(document.getElementById('authKey').value === '12344321-r') {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('staffPortal').style.display = 'block';
+            refreshStaffPortal();
+            setInterval(refreshStaffPortal, 10000); // Auto-refresh every 10s
+        } else {
+            alert("Unauthorized.");
+        }
+    }
+
+    async function refreshStaffPortal() {
+        try {
+            const res = await fetch('/api/orders');
+            const data = await res.json();
+            const container = document.getElementById('globalOrders');
+
+            if(data.length === 0) {
+                container.innerHTML = "<p>No active deployments.</p>";
+                return;
+            }
+
+            container.innerHTML = data.map(o => `
+                <div class="order-row">
+                    <div class="order-info">
+                        <b>${o.item}</b>
+                        <span>Operator: ${o.name}</span>
+                    </div>
+                    <button class="btn-cancel" onclick="cancelDeployment(${o.id}, '${o.discord_id}')">Wipe Data</button>
+                </div>
+            `).join('');
+        } catch (e) { console.error("Sync error."); }
+    }
+
+    async function cancelDeployment(id, discordId) {
+        if(!confirm("Cancel and delete from Discord?")) return;
+        
+        await fetch(`/api/orders?id=${id}&discord_id=${discordId}`, { method: 'DELETE' });
+        refreshStaffPortal();
+    }
 </script>
 
 </body>
