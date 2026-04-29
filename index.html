@@ -10,29 +10,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* =========================================================
-           1. COLORS & THEME SETTINGS
-           Change these to alter the look of your entire website
-        ========================================================= */
+        /* --- COLORS & THEME --- */
         :root {
-            --primary-color: #ff2d75; /* The main pink color */
-            --primary-glow: rgba(255, 45, 117, 0.4); /* Pink shadow */
-            --bg-color: #050507; /* Dark background color */
-            --glass-bg: rgba(255, 255, 255, 0.04); /* See-through box color */
-            --glass-border: rgba(255, 255, 255, 0.1); /* See-through borders */
+            --primary-color: #ff2d75;
+            --primary-glow: rgba(255, 45, 117, 0.4);
+            --bg-color: #050507;
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        /* ================= GENERAL STYLES ================= */
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-color); color: #fff; overflow-x: hidden; }
 
-        /* Background Animated Glowing Orbs */
         .orb { position: fixed; filter: blur(80px); z-index: -1; border-radius: 50%; opacity: 0.3; animation: move 20s infinite alternate; }
         .orb-1 { width: 500px; height: 500px; background: var(--primary-color); top: -150px; left: -150px; }
         .orb-2 { width: 400px; height: 400px; background: #00d4ff; bottom: -100px; right: -100px; animation-delay: -5s; }
         @keyframes move { from { transform: translate(0,0); } to { transform: translate(120px, 120px); } }
 
-        /* Layout Setup */
         .container { max-width: 1300px; margin: 0 auto; padding: 60px 20px; transition: opacity 0.5s; }
         header { text-align: left; margin-bottom: 60px; display: flex; justify-content: space-between; align-items: flex-end; }
         header h1 { font-weight: 800; font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: -3px; line-height: 0.9; }
@@ -41,7 +35,6 @@
         .layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; }
         @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
 
-        /* ================= MENU GRID STYLES ================= */
         .glass { background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-radius: 40px; padding: 40px; }
         .cat-label { font-size: 0.75rem; font-weight: 800; color: var(--primary-color); letter-spacing: 5px; text-transform: uppercase; margin: 35px 0 20px; display: block; opacity: 0.8; }
         
@@ -56,7 +49,6 @@
         .item i { font-size: 1.2rem; min-width: 30px; text-align: center; }
         .item strong { font-size: 0.95rem; font-weight: 600; line-height: 1.2; }
 
-        /* ================= FORM & BUTTON STYLES ================= */
         input, textarea { 
             width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); 
             padding: 20px; border-radius: 18px; color: #fff; font-family: inherit; font-size: 1rem; margin-top: 10px; transition: 0.3s;
@@ -70,18 +62,13 @@
         }
         .btn:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(255,255,255,0.2); }
         .btn-p { background: var(--primary-color); color: #fff; box-shadow: 0 15px 35px var(--primary-glow); }
-        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-        /* ================= SUCCESS OVERLAY STYLES ================= */
         #successScreen {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
             z-index: 1000; align-items: center; justify-content: center; flex-direction: column; text-align: center;
-            animation: fadeIn 0.4s ease;
         }
-        .success-icon { font-size: 5rem; color: #00ff88; margin-bottom: 20px; text-shadow: 0 0 40px rgba(0, 255, 136, 0.5); animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        .success-icon { font-size: 5rem; color: #00ff88; margin-bottom: 20px; }
 
-        /* ================= STAFF PORTAL STYLES ================= */
         #staff { position: fixed; inset: 0; background: #000; z-index: 999; display: none; padding: clamp(20px, 5vw, 60px); overflow-y: auto; }
         .stat-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0; }
         .stat-card { background: var(--glass-bg); padding: 25px; border-radius: 25px; border: 1px solid var(--glass-border); text-align: center; }
@@ -90,9 +77,7 @@
         .order-card { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 25px; border-radius: 25px; 
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
-            animation: slideIn 0.5s ease;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
         
         .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
         .status-pending { background: #ffaa00; color: #000; }
@@ -120,199 +105,179 @@
 
         <div class="layout">
             <div class="glass">
-                
                 <span class="cat-label">The Pink Series 🌸</span>
                 <div class="grid">
                     <div class="item" onclick="sel('Swicy (Sweet & Spicy)', this)"><i class="fa-solid fa-pepper-hot"></i><strong>Swicy<br><small style="opacity:0.6; font-weight:300;">Sweet & Spicy</small></strong></div>
-                    <div class="item" onclick="sel('Duck Duck Indomie (Original)', this)"><i class="fa-solid fa-bowl-food"></i><strong>Duck Duck<br><small style="opacity:0.6; font-weight:300;">The Original Signature</small></strong></div>
+                    <div class="item" onclick="sel('Duck Duck Indomie (Original)', this)"><i class="fa-solid fa-bowl-food"></i><strong>Duck Duck<br><small style="opacity:0.6; font-weight:300;">Original Signature</small></strong></div>
                     <div class="item" onclick="sel('The Dreamy Creamy (White Sauce)', this)"><i class="fa-solid fa-cloud"></i><strong>Dreamy Creamy<br><small style="opacity:0.6; font-weight:300;">Velvety White Sauce</small></strong></div>
                 </div>
 
                 <span class="cat-label">The Nuclear Series ☢️</span>
                 <div class="grid">
-                    <div class="item" onclick="sel('The Atomic Bomb (Extreme Spice)', this)"><i class="fa-solid fa-bomb"></i><strong>Atomic Bomb<br><small style="opacity:0.6; font-weight:300;">Extreme Spice Level</small></strong></div>
-                    <div class="item" onclick="sel('The Challenger (Spice Level 10)', this)"><i class="fa-solid fa-skull-crossbones"></i><strong>The Challenger<br><small style="opacity:0.6; font-weight:300;">Spice Level 10 Challenge</small></strong></div>
+                    <div class="item" onclick="sel('The Atomic Bomb (Extreme Spice)', this)"><i class="fa-solid fa-bomb"></i><strong>Atomic Bomb<br><small style="opacity:0.6; font-weight:300;">Extreme Spice</small></strong></div>
+                    <div class="item" onclick="sel('The Challenger (Spice Level 10)', this)"><i class="fa-solid fa-skull-crossbones"></i><strong>The Challenger<br><small style="opacity:0.6; font-weight:300;">Level 10 Challenge</small></strong></div>
                 </div>
 
                 <span class="cat-label">The Void Specials ⚫</span>
                 <div class="grid">
-                    <div class="item" onclick="sel('Duck Duck Black (Charcoal Infused)', this)"><i class="fa-solid fa-moon"></i><strong>Duck Black<br><small style="opacity:0.6; font-weight:300;">Charcoal Infused Fusion</small></strong></div>
-                    <div class="item" onclick="sel('More Spicy Than Swicy (Legacy)', this)"><i class="fa-solid fa-fire"></i><strong>More Spicy Than Swicy<br><small style="opacity:0.6; font-weight:300;">Legacy Spice Blend</small></strong></div>
-                    <div class="item" onclick="sel('The KAI (Special Edition)', this)"><i class="fa-solid fa-star"></i><strong>The KAI<br><small style="opacity:0.6; font-weight:300;">Seasonal Special Edition</small></strong></div>
-                    <div class="item" onclick="sel('The ZANE (Limited Edition)', this)"><i class="fa-solid fa-bolt"></i><strong>The ZANE<br><small style="opacity:0.6; font-weight:300;">Limited Collector Series</small></strong></div>
+                    <div class="item" onclick="sel('Duck Duck Black (Charcoal Infused)', this)"><i class="fa-solid fa-moon"></i><strong>Duck Black<br><small style="opacity:0.6; font-weight:300;">Charcoal Fusion</small></strong></div>
+                    <div class="item" onclick="sel('More Spicy Than Swicy (Legacy)', this)"><i class="fa-solid fa-fire"></i><strong>Extreme Swicy<br><small style="opacity:0.6; font-weight:300;">Legacy Blend</small></strong></div>
+                    <div class="item" onclick="sel('The KAI (Special Edition)', this)"><i class="fa-solid fa-star"></i><strong>The KAI<br><small style="opacity:0.6; font-weight:300;">Seasonal Special</small></strong></div>
+                    <div class="item" onclick="sel('The ZANE (Limited Edition)', this)"><i class="fa-solid fa-bolt"></i><strong>The ZANE<br><small style="opacity:0.6; font-weight:300;">Limited Series</small></strong></div>
                 </div>
             </div>
 
             <div class="glass" style="height: fit-content; position: sticky; top: 40px;">
-                <h3 style="margin-bottom: 25px; letter-spacing: -1px;">Secure Checkout</h3>
-                
+                <h3 style="margin-bottom: 25px;">Secure Checkout</h3>
                 <label>Dish Selection</label>
-                <input type="text" id="selDish" readonly placeholder="Pick a dish from the menu...">
-                
+                <input type="text" id="selDish" readonly placeholder="Pick from menu...">
                 <label>Customer Name</label>
-                <input type="text" id="name" placeholder="Enter your full name">
-                
-                <label>Kitchen Notes</label>
-                <textarea id="note" rows="3" placeholder="Extra spicy? Allergies? Special requests?"></textarea>
-                
-                <button class="btn btn-p" id="sendBtn" onclick="order()">
-                    <i class="fa-solid fa-paper-plane"></i> PLACE ORDER
-                </button>
+                <input type="text" id="name" placeholder="Enter full name">
+                <label>Notes</label>
+                <textarea id="note" rows="3" placeholder="Extra spicy? Allergies?"></textarea>
+                <button class="btn btn-p" id="sendBtn" onclick="order()"><i class="fa-solid fa-paper-plane"></i> PLACE ORDER</button>
             </div>
         </div>
     </div>
 
     <div id="successScreen">
         <i class="fa-solid fa-circle-check success-icon"></i>
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Order Sent to Kitchen!</h1>
-        <p style="opacity: 0.7; margin-bottom: 30px;">The chefs are reviewing your masterpiece.</p>
-        <button class="btn btn-p" style="width: auto; padding: 15px 40px;" onclick="resetApp()">Order Another Dish</button>
+        <h1>Order Transmitted!</h1>
+        <p style="opacity:0.7; margin-bottom:20px;">The kitchen is preparing your meal.</p>
+        <button class="btn btn-p" onclick="location.reload()">Back to Menu</button>
     </div>
 
     <div id="staff">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
             <h1>Kitchen Management</h1>
-            <button class="a-btn" style="background:#fff; color:#000;" onclick="document.getElementById('staff').style.display='none'">EXIT PORTAL</button>
+            <button class="a-btn" style="background:#fff;" onclick="document.getElementById('staff').style.display='none'">EXIT</button>
         </div>
-        
         <div class="stat-bar">
             <div class="stat-card"><p>Pending</p><h3 id="c1">0</h3></div>
             <div class="stat-card"><p>Finished</p><h3 id="c2" style="color:#00ff88">0</h3></div>
-            <div class="stat-card"><p>Total</p><h3 id="c3" style="color:#fff">0</h3></div>
+            <div class="stat-card"><p>Total</p><h3 id="c3">0</h3></div>
         </div>
-
         <div id="staffList"></div>
     </div>
 
     <script>
-        // --- 1. DATABASE & WEBHOOK SETTINGS ---
-        // Change these ONLY if you create a new database or discord channel
+        // --- CONFIG ---
         const S_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
         
-        // Initialize Database Connection
         const _s = supabase.createClient(S_URL, S_KEY);
         let currentDish = "";
 
-        // --- 2. MENU SELECTION LOGIC ---
-        // Highlights the clicked dish and puts the name in the text box
-        function sel(dishName, element) {
-            currentDish = dishName; 
-            document.getElementById('selDish').value = dishName;
+        function sel(d, e) {
+            currentDish = d; document.getElementById('selDish').value = d;
             document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
-            element.classList.add('active');
+            e.classList.add('active');
         }
 
-        // --- 3. SEND ORDER LOGIC ---
-        // Sends data to Discord and Supabase, then shows Success Screen
         async function order() {
-            const customerName = document.getElementById('name').value;
-            const customerNote = document.getElementById('note').value;
+            const n = document.getElementById('name').value, nt = document.getElementById('note').value;
+            if(!currentDish || !n) return alert("Select a dish and enter your name.");
             
-            // Validation: Stop if missing info
-            if(!currentDish || !customerName) {
-                return alert("Please select a dish and enter your name!");
-            }
-            
-            // UI Update: Show loading state on button
             const btn = document.getElementById('sendBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> TRANSMITTING...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SENDING...`;
             btn.disabled = true;
 
             try {
-                // Step A: Send Discord Alert
+                // Discord
                 const res = await fetch(`${W_URL}?wait=true`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         embeds: [{ 
-                            title: "🌸 New Luxury Order", 
+                            title: "🌸 New Order Received", 
                             color: 0xff2d75, 
                             fields: [
-                                {name: "Customer", value: customerName, inline: true}, 
+                                {name: "Customer", value: n, inline: true}, 
                                 {name: "Dish", value: currentDish, inline: true},
-                                {name: "Notes", value: customerNote || "None"}
+                                {name: "Notes", value: nt || "None"}
                             ],
                             timestamp: new Date()
                         }] 
                     })
                 });
-                const discordData = await res.json();
+                const dData = await res.json();
                 
-                // Step B: Save to Database
-                await _s.from('orders').insert([{ 
-                    name: customerName, 
-                    item: currentDish, 
-                    note: customerNote, 
-                    discord_id: discordData.id, 
-                    status: 'pending' 
-                }]);
+                // Supabase
+                await _s.from('orders').insert([{ name: n, item: currentDish, note: nt, discord_id: dData.id, status: 'pending' }]);
                 
-                // Step C: Trigger Success Screen
                 document.getElementById('mainLayout').style.display = 'none';
                 document.getElementById('successScreen').style.display = 'flex';
-                
             } catch (e) {
-                alert("Order Error: " + e.message);
+                alert("Error: " + e.message);
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> RETRY ORDER`;
+                btn.innerHTML = "RETRY ORDER";
             }
         }
 
-        // Reset the app to order again
-        function resetApp() {
-            location.reload(); 
-        }
-
-        // --- 4. STAFF PORTAL LOGIC ---
-        // Change the PIN code here
         function openStaff() {
-            if(prompt("Enter Kitchen Security PIN:") === '12344321-r') {
+            if(prompt("PIN:") === '12344321-r') {
                 document.getElementById('staff').style.display='block';
-                loadStaff(); 
-                setInterval(loadStaff, 5000); // Auto-refreshes every 5 seconds
+                loadStaff(); setInterval(loadStaff, 5000);
             }
         }
 
-        // Pulls orders from database and creates the cards
         async function loadStaff() {
             const { data } = await _s.from('orders').select('*').order('id', { ascending: false });
             if(!data) return;
-            
-            // Update Stats
             document.getElementById('c1').innerText = data.filter(o => o.status==='pending').length;
             document.getElementById('c2').innerText = data.filter(o => o.status==='finished').length;
             document.getElementById('c3').innerText = data.length;
 
-            // Generate HTML for each order
             document.getElementById('staffList').innerHTML = data.map(o => `
                 <div class="order-card">
                     <div>
                         <span class="status-pill status-${o.status}">${o.status}</span>
-                        <h2 style="font-size: 1.2rem; margin-bottom: 5px;">${o.name}</h2>
-                        <p style="color:var(--primary-color); font-weight:700; font-size:0.9rem;">${o.item}</p>
-                        <p style="opacity:0.5; font-size:0.8rem; margin-top:5px;">${o.note || 'No special requests.'}</p>
+                        <h2>${o.name}</h2>
+                        <p style="color:var(--primary-color); font-weight:700;">${o.item}</p>
+                        <p style="opacity:0.5; font-size:0.8rem;">${o.note || ''}</p>
                     </div>
                     <div class="action-btns">
-                        ${o.status === 'pending' ? `<button class="a-btn btn-finish" onclick="updateStatus(${o.id}, 'finished')">FINISH</button>` : ''}
+                        ${o.status === 'pending' ? `<button class="a-btn btn-finish" onclick="updateStatus(${o.id}, '${o.discord_id}', '${o.name}', '${o.item}', '${o.note}')">FINISH</button>` : ''}
                         <button class="a-btn btn-del" onclick="deleteOrder(${o.id}, '${o.discord_id}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Changes status from 'pending' to 'finished'
-        async function updateStatus(db_id, newStatus) { 
-            await _s.from('orders').update({ status: newStatus }).eq('id', db_id); 
-            loadStaff(); 
+        // ========================================================
+        // UPDATED: This now edits the Discord message to say Finished
+        // ========================================================
+        async function updateStatus(db_id, disc_id, name, item, note) {
+            // 1. Update Discord Message (PATCH)
+            try {
+                await fetch(`${W_URL}/messages/${disc_id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "✅ ORDER FINISHED",
+                            color: 0x00ff88, // Green
+                            fields: [
+                                {name: "Customer", value: name, inline: true}, 
+                                {name: "Dish", value: item, inline: true},
+                                {name: "Notes", value: note || "None"}
+                            ],
+                            footer: { text: "Completed at " + new Date().toLocaleTimeString() }
+                        }]
+                    })
+                });
+            } catch (e) { console.error("Discord edit failed", e); }
+
+            // 2. Update Supabase
+            await _s.from('orders').update({ status: 'finished' }).eq('id', db_id);
+            loadStaff();
         }
 
-        // Deletes from Discord and Database
-        async function deleteOrder(db_id, discord_id) {
-            if(!confirm("Are you sure you want to delete this record?")) return;
-            await fetch(`${W_URL}/messages/${discord_id}`, { method:'DELETE' }).catch(()=>{});
-            await _s.from('orders').delete().eq('id', db_id);
+        async function deleteOrder(id, did) {
+            if(!confirm("Delete?")) return;
+            await fetch(`${W_URL}/messages/${did}`, { method:'DELETE' }).catch(()=>{});
+            await _s.from('orders').delete().eq('id', id);
             loadStaff();
         }
     </script>
