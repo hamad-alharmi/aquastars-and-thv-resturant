@@ -38,12 +38,11 @@
             align-items: center;
             z-index: 1000;
             letter-spacing: 4px;
-            font-weight: 300;
         }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
 
-        header { text-align: center; padding: 80px 0; }
+        header { text-align: center; padding: 60px 0; }
         h1 { 
             font-size: clamp(2.5rem, 8vw, 4.5rem); 
             margin: 0; 
@@ -68,12 +67,11 @@
             backdrop-filter: blur(10px);
         }
 
-        h2 { font-size: 1.5rem; color: var(--secondary); margin-top: 0; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { font-size: 1.3rem; color: var(--secondary); margin-top: 0; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Restored Menu Grid */
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
         .menu-card {
@@ -82,23 +80,20 @@
             border-radius: 16px;
             border: 1px solid var(--border);
         }
-        .menu-card h3 { color: var(--primary); margin-top: 0; font-size: 1.1rem; }
-        .menu-card p { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0; }
+        .menu-card h3 { color: var(--primary); margin: 0 0 10px 0; font-size: 1rem; }
+        .menu-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-dim); }
 
-        /* Order Form */
         .order-form { max-width: 600px; margin: 0 auto; }
         .input-row { margin-bottom: 20px; }
         input, select, textarea {
             width: 100%;
             padding: 16px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
             border: 1px solid var(--border);
             border-radius: 12px;
             color: #fff;
             font-size: 1rem;
-            font-family: inherit;
         }
-        input:focus, select:focus { outline: none; border-color: var(--secondary); }
 
         .btn-main {
             width: 100%;
@@ -109,13 +104,9 @@
             border-radius: 12px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
             cursor: pointer;
         }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 45, 117, 0.2); }
 
-        /* Staff Portal Monitor */
-        .order-list { margin-top: 20px; }
         .order-item {
             display: flex;
             justify-content: space-between;
@@ -126,27 +117,17 @@
             margin-bottom: 10px;
             border-left: 3px solid var(--primary);
         }
-        .btn-delete {
-            background: #222;
-            color: #ff4d4d;
-            border: 1px solid #333;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
 
-        footer { text-align: center; padding: 60px; opacity: 0.4; font-size: 0.8rem; letter-spacing: 2px; }
+        footer { text-align: center; padding: 40px; opacity: 0.3; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<div id="loader">PREPARING KITCHEN...</div>
+<div id="loader">WAKING UP KITCHEN...</div>
 
 <div class="container">
     <header>
         <h1>AquaStar & THV</h1>
-        <p style="color: var(--text-dim); margin-top: 10px; letter-spacing: 3px;">PREMIUM INDOMIE EXPERIENCE</p>
         <div class="theme-bar">
             <div class="theme-btn" style="background: #00d4ff" onclick="setTheme('default')"></div>
             <div class="theme-btn" style="background: #7000ff" onclick="setTheme('midnight')"></div>
@@ -159,15 +140,15 @@
         <div class="menu-grid">
             <div class="menu-card">
                 <h3>Pink Series</h3>
-                <p>🌸 Swicy<br>🌸 Duck Duck Indomie<br>🌸 The Dreamy Creamy</p>
+                <ul><li>🌸 Swicy</li><li>🌸 Duck Duck Indomie</li><li>🌸 The Dreamy Creamy</li></ul>
             </div>
             <div class="menu-card">
                 <h3>Nuclear Series</h3>
-                <p>☢️ The Atomic Bomb<br>☢️ The Challenger (2x Spicy)</p>
+                <ul><li>☢️ The Atomic Bomb</li><li>💀 The Challenger (2x Spicy)</li></ul>
             </div>
             <div class="menu-card">
-                <h3>Specialty Series</h3>
-                <p>⚫ Duck Duck Black<br>✨ The KAI / The ZANE</p>
+                <h3>Void & Specials</h3>
+                <ul><li>⚫ Duck Duck Black</li><li>⚫ More Spicy than Swicy</li><li>✨ The KAI / The ZANE</li></ul>
             </div>
         </div>
     </div>
@@ -175,32 +156,23 @@
     <div class="section reveal">
         <h2>Place Your Order</h2>
         <div class="order-form">
-            <div class="input-row">
-                <input type="text" id="custName" placeholder="Your Name">
-            </div>
+            <div class="input-row"><input type="text" id="custName" placeholder="Your Name"></div>
             <div class="input-row">
                 <select id="dishSelect">
-                    <option value="" disabled selected>Select a Dish</option>
+                    <option value="" disabled selected>Choose Your Bowl</option>
                     <optgroup label="Pink Series">
-                        <option>🌸 Swicy</option>
-                        <option>🌸 Duck Duck Indomie</option>
-                        <option>🌸 The Dreamy Creamy</option>
+                        <option>Swicy</option><option>Duck Duck Indomie</option><option>The Dreamy Creamy</option>
                     </optgroup>
-                    <optgroup label="Nuclear">
-                        <option>☢️ The Atomic Bomb</option>
-                        <option>☢️ The Challenger</option>
+                    <optgroup label="Nuclear Series">
+                        <option>The Atomic Bomb</option><option>The Challenger</option>
                     </optgroup>
-                    <optgroup label="Specials">
-                        <option>⚫ Duck Duck Black</option>
-                        <option>✨ The KAI</option>
-                        <option>✨ The ZANE</option>
+                    <optgroup label="Void & Specials">
+                        <option>Duck Duck Black Indomie</option><option>More Spicy than Swicy</option><option>The KAI</option><option>The ZANE</option>
                     </optgroup>
                 </select>
             </div>
-            <div class="input-row">
-                <textarea id="custNote" rows="2" placeholder="Any special requests?"></textarea>
-            </div>
-            <button class="btn-main" onclick="sendOrder()">Send to Kitchen</button>
+            <div class="input-row"><textarea id="custNote" rows="2" placeholder="Any modifications?"></textarea></div>
+            <button class="btn-main" onclick="sendOrder()">Send Order</button>
             <p id="status" style="text-align: center; font-size: 0.8rem; margin-top: 15px; color: var(--text-dim);"></p>
         </div>
     </div>
@@ -209,56 +181,46 @@
         <div id="loginArea" style="text-align: center;">
             <h2>Staff Portal</h2>
             <div style="max-width: 300px; margin: 0 auto;">
-                <input type="password" id="staffPass" placeholder="Master Password" style="text-align: center;">
-                <button class="btn-main" style="margin-top: 15px; padding: 12px; font-size: 0.8rem; background: #1a1a1a;" onclick="login()">Enter Dashboard</button>
+                <input type="password" id="staffPass" placeholder="Password" style="text-align: center;">
+                <button class="btn-main" style="margin-top: 15px; padding: 12px; background: #1a1a1a;" onclick="login()">Enter Dashboard</button>
             </div>
         </div>
-
         <div id="staffDashboard" style="display: none;">
-            <h2>Live Orders</h2>
-            <div id="orderMonitor" class="order-list">
-                <p>Loading database...</p>
+            <h2>Live Kitchen Monitor</h2>
+            <div id="orderMonitor">
+                <p id="syncStatus">Attempting to sync with database...</p>
             </div>
         </div>
     </div>
 
-    <footer>BAIT BABA SAEED // EST. 2026</footer>
+    <footer>BAIT BABA SAEED</footer>
 </div>
 
 <script>
-    // System Setup
-    window.onload = () => {
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
-    };
-
+    window.onload = () => setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
     function setTheme(t) { document.documentElement.setAttribute('data-theme', t); }
-    ScrollReveal().reveal('.reveal', { distance: '30px', origin: 'bottom', duration: 800 });
+    ScrollReveal().reveal('.reveal', { distance: '20px', origin: 'bottom', duration: 800 });
 
-    // API Interactions
     async function sendOrder() {
         const name = document.getElementById('custName').value;
         const item = document.getElementById('dishSelect').value;
         const note = document.getElementById('custNote').value;
         const status = document.getElementById('status');
-
-        if(!name || !item) return alert("Please enter your name and select a dish.");
-
-        status.innerText = "Connecting to kitchen...";
-
+        if(!name || !item) return alert("Missing info.");
+        status.innerText = "Dispatching...";
         try {
             const res = await fetch('/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, item, note })
             });
-
             if(res.ok) {
-                status.innerText = "Order received by the kitchen.";
+                status.innerText = "Sent!";
                 document.getElementById('custName').value = '';
-                document.getElementById('custNote').value = '';
+                document.getElementById('dishSelect').selectedIndex = 0;
                 if(document.getElementById('staffDashboard').style.display === 'block') refreshOrders();
-            }
-        } catch (e) { status.innerText = "Connection failed."; }
+            } else { status.innerText = "Server error (Check DB)."; }
+        } catch (e) { status.innerText = "Connection lost."; }
     }
 
     function login() {
@@ -266,41 +228,36 @@
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('staffDashboard').style.display = 'block';
             refreshOrders();
-            setInterval(refreshOrders, 10000); // Sync every 10 seconds
-        } else {
-            alert("Incorrect password.");
-        }
+        } else { alert("Wrong password."); }
     }
 
     async function refreshOrders() {
+        const monitor = document.getElementById('orderMonitor');
         try {
             const res = await fetch('/api/orders');
+            if(!res.ok) throw new Error("API not responding");
             const data = await res.json();
-            const monitor = document.getElementById('orderMonitor');
-
             if(data.length === 0) {
-                monitor.innerHTML = "<p style='opacity:0.5;'>No active orders.</p>";
+                monitor.innerHTML = "<p style='opacity:0.5;'>No orders in queue.</p>";
                 return;
             }
-
             monitor.innerHTML = data.map(o => `
                 <div class="order-item">
-                    <div>
-                        <strong style="color:var(--secondary);">${o.item}</strong><br>
-                        <span style="font-size:0.8rem; opacity:0.7;">Customer: ${o.name}</span>
-                    </div>
-                    <button class="btn-delete" onclick="cancelOrder(${o.id}, '${o.discord_id}')">Cancel Order</button>
+                    <div><strong>${o.item}</strong><br><small>${o.name}</small></div>
+                    <button class="btn-main" style="width:auto; padding:5px 10px; background:#444;" onclick="cancelOrder(${o.id}, '${o.discord_id}')">X</button>
                 </div>
             `).join('');
-        } catch (e) { console.error("Database sync error."); }
+        } catch (e) {
+            monitor.innerHTML = `<p style="color:red;">Error: Database not found or API down. Did you create the table in Vercel?</p>`;
+        }
     }
 
-    async function cancelOrder(id, discordId) {
-        if(!confirm("Are you sure you want to cancel this order and remove the Discord alert?")) return;
-        await fetch(`/api/orders?id=${id}&discord_id=${discordId}`, { method: 'DELETE' });
-        refreshOrders();
+    async function cancelOrder(id, dId) {
+        if(confirm("Cancel?")) {
+            await fetch(`/api/orders?id=${id}&discord_id=${dId}`, { method: 'DELETE' });
+            refreshOrders();
+        }
     }
 </script>
-
 </body>
 </html>
