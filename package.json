@@ -1,7 +1,11 @@
 {
   "name": "aquastar-thv-restaurant",
   "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "@vercel/postgres": "^0.10.0"
+  },
+  "scripts": {
+    "build": "echo 'No build needed'"
   }
 }
