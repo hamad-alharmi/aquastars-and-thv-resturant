@@ -1,263 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaStar & THV | Indomie Restaurant</title>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <style>
-        :root {
-            --bg: #050505;
-            --primary: #ff2d75;
-            --secondary: #00d4ff;
-            --surface: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-        }
-
-        [data-theme="midnight"] { --bg: #02020a; --primary: #7000ff; --secondary: #00ffaa; }
-        [data-theme="crimson"] { --bg: #0a0000; --primary: #e60000; --secondary: #ffb300; }
-
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        #loader {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            letter-spacing: 4px;
-        }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-
-        header { text-align: center; padding: 60px 0; }
-        h1 { 
-            font-size: clamp(2.5rem, 8vw, 4.5rem); 
-            margin: 0; 
-            font-weight: 900; 
-            letter-spacing: -2px;
-            background: linear-gradient(to right, var(--secondary), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .theme-bar { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .theme-btn { 
-            width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1.5px solid #fff; 
-        }
-
-        .section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 40px;
-            backdrop-filter: blur(10px);
-        }
-
-        h2 { font-size: 1.3rem; color: var(--secondary); margin-top: 0; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .menu-card {
-            background: rgba(0,0,0,0.3);
-            padding: 25px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-        .menu-card h3 { color: var(--primary); margin: 0 0 10px 0; font-size: 1rem; }
-        .menu-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-dim); }
-
-        .order-form { max-width: 600px; margin: 0 auto; }
-        .input-row { margin-bottom: 20px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 16px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        .btn-main {
-            width: 100%;
-            padding: 18px;
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--primary);
-        }
-
-        footer { text-align: center; padding: 40px; opacity: 0.3; font-size: 0.8rem; }
-    </style>
-</head>
-<body>
-
-<div id="loader">WAKING UP KITCHEN...</div>
-
-<div class="container">
-    <header>
-        <h1>AquaStar & THV</h1>
-        <div class="theme-bar">
-            <div class="theme-btn" style="background: #00d4ff" onclick="setTheme('default')"></div>
-            <div class="theme-btn" style="background: #7000ff" onclick="setTheme('midnight')"></div>
-            <div class="theme-btn" style="background: #e60000" onclick="setTheme('crimson')"></div>
-        </div>
-    </header>
-
-    <div class="section reveal">
-        <h2>The Menu</h2>
-        <div class="menu-grid">
-            <div class="menu-card">
-                <h3>Pink Series</h3>
-                <ul><li>🌸 Swicy</li><li>🌸 Duck Duck Indomie</li><li>🌸 The Dreamy Creamy</li></ul>
-            </div>
-            <div class="menu-card">
-                <h3>Nuclear Series</h3>
-                <ul><li>☢️ The Atomic Bomb</li><li>💀 The Challenger (2x Spicy)</li></ul>
-            </div>
-            <div class="menu-card">
-                <h3>Void & Specials</h3>
-                <ul><li>⚫ Duck Duck Black</li><li>⚫ More Spicy than Swicy</li><li>✨ The KAI / The ZANE</li></ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="section reveal">
-        <h2>Place Your Order</h2>
-        <div class="order-form">
-            <div class="input-row"><input type="text" id="custName" placeholder="Your Name"></div>
-            <div class="input-row">
-                <select id="dishSelect">
-                    <option value="" disabled selected>Choose Your Bowl</option>
-                    <optgroup label="Pink Series">
-                        <option>Swicy</option><option>Duck Duck Indomie</option><option>The Dreamy Creamy</option>
-                    </optgroup>
-                    <optgroup label="Nuclear Series">
-                        <option>The Atomic Bomb</option><option>The Challenger</option>
-                    </optgroup>
-                    <optgroup label="Void & Specials">
-                        <option>Duck Duck Black Indomie</option><option>More Spicy than Swicy</option><option>The KAI</option><option>The ZANE</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div class="input-row"><textarea id="custNote" rows="2" placeholder="Any modifications?"></textarea></div>
-            <button class="btn-main" onclick="sendOrder()">Send Order</button>
-            <p id="status" style="text-align: center; font-size: 0.8rem; margin-top: 15px; color: var(--text-dim);"></p>
-        </div>
-    </div>
-
-    <div class="section reveal">
-        <div id="loginArea" style="text-align: center;">
-            <h2>Staff Portal</h2>
-            <div style="max-width: 300px; margin: 0 auto;">
-                <input type="password" id="staffPass" placeholder="Password" style="text-align: center;">
-                <button class="btn-main" style="margin-top: 15px; padding: 12px; background: #1a1a1a;" onclick="login()">Enter Dashboard</button>
-            </div>
-        </div>
-        <div id="staffDashboard" style="display: none;">
-            <h2>Live Kitchen Monitor</h2>
-            <div id="orderMonitor">
-                <p id="syncStatus">Attempting to sync with database...</p>
-            </div>
-        </div>
-    </div>
-
-    <footer>BAIT BABA SAEED</footer>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+    // 1. Connection Setup
+    const SUPABASE_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
+
     window.onload = () => setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
     function setTheme(t) { document.documentElement.setAttribute('data-theme', t); }
     ScrollReveal().reveal('.reveal', { distance: '20px', origin: 'bottom', duration: 800 });
 
+    // 2. Send Order
     async function sendOrder() {
         const name = document.getElementById('custName').value;
         const item = document.getElementById('dishSelect').value;
         const note = document.getElementById('custNote').value;
         const status = document.getElementById('status');
-        if(!name || !item) return alert("Missing info.");
-        status.innerText = "Dispatching...";
+
+        if(!name || !item) return alert("Please enter your name and dish.");
+        status.innerText = "Processing order...";
+
         try {
-            const res = await fetch('/api/orders', {
+            // Step A: Send to Discord
+            const discordRes = await fetch(`${WEBHOOK_URL}?wait=true`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, item, note })
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "New Order Received",
+                        color: 0xff2d75,
+                        fields: [
+                            { name: "Customer", value: name, inline: true },
+                            { name: "Dish", value: item, inline: true },
+                            { name: "Note", value: note || "None" }
+                        ],
+                        timestamp: new Date()
+                    }]
+                })
             });
-            if(res.ok) {
-                status.innerText = "Sent!";
-                document.getElementById('custName').value = '';
-                document.getElementById('dishSelect').selectedIndex = 0;
-                if(document.getElementById('staffDashboard').style.display === 'block') refreshOrders();
-            } else { status.innerText = "Server error (Check DB)."; }
-        } catch (e) { status.innerText = "Connection lost."; }
+            const discordData = await discordRes.json();
+
+            // Step B: Save to Supabase (Table name must be 'orders')
+            const { error } = await _supabase
+                .from('orders')
+                .insert([{ name, item, note, discord_id: discordData.id }]);
+
+            if (error) throw error;
+
+            status.innerText = "Order sent to kitchen!";
+            document.getElementById('custName').value = '';
+            document.getElementById('custNote').value = '';
+            if(document.getElementById('staffDashboard').style.display === 'block') refreshOrders();
+        } catch (e) {
+            status.innerText = "Error: " + e.message;
+            console.error(e);
+        }
     }
 
+    // 3. Staff Portal Logic
     function login() {
         if(document.getElementById('staffPass').value === '12344321-r') {
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('staffDashboard').style.display = 'block';
             refreshOrders();
-        } else { alert("Wrong password."); }
+            setInterval(refreshOrders, 5000); // Auto-refresh every 5s
+        } else {
+            alert("Incorrect password.");
+        }
     }
 
     async function refreshOrders() {
         const monitor = document.getElementById('orderMonitor');
-        try {
-            const res = await fetch('/api/orders');
-            if(!res.ok) throw new Error("API not responding");
-            const data = await res.json();
-            if(data.length === 0) {
-                monitor.innerHTML = "<p style='opacity:0.5;'>No orders in queue.</p>";
-                return;
-            }
-            monitor.innerHTML = data.map(o => `
-                <div class="order-item">
-                    <div><strong>${o.item}</strong><br><small>${o.name}</small></div>
-                    <button class="btn-main" style="width:auto; padding:5px 10px; background:#444;" onclick="cancelOrder(${o.id}, '${o.discord_id}')">X</button>
-                </div>
-            `).join('');
-        } catch (e) {
-            monitor.innerHTML = `<p style="color:red;">Error: Database not found or API down. Did you create the table in Vercel?</p>`;
+        const { data, error } = await _supabase
+            .from('orders')
+            .select('*')
+            .order('id', { ascending: false });
+
+        if(error) {
+            monitor.innerHTML = `<p style="color:red;">Sync Error: ${error.message}</p>`;
+            return;
         }
+
+        if(!data || data.length === 0) {
+            monitor.innerHTML = "<p style='opacity:0.5;'>Kitchen is empty.</p>";
+            return;
+        }
+
+        monitor.innerHTML = data.map(o => `
+            <div class="order-item">
+                <div>
+                    <strong>${o.item}</strong><br>
+                    <small>${o.name} ${o.note ? `(${o.note})` : ''}</small>
+                </div>
+                <button class="btn-main" style="width:auto; padding:5px 15px; background:#333;" onclick="cancelOrder(${o.id}, '${o.discord_id}')">DONE</button>
+            </div>
+        `).join('');
     }
 
     async function cancelOrder(id, dId) {
-        if(confirm("Cancel?")) {
-            await fetch(`/api/orders?id=${id}&discord_id=${dId}`, { method: 'DELETE' });
-            refreshOrders();
-        }
+        if(!confirm("Clear this order?")) return;
+        
+        // Remove from Discord
+        await fetch(`${WEBHOOK_URL}/messages/${dId}`, { method: 'DELETE' }).catch(() => {});
+        
+        // Remove from Supabase
+        await _supabase.from('orders').delete().eq('id', id);
+        refreshOrders();
     }
 </script>
-</body>
-</html>
