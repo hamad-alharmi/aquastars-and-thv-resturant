@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaStar & THV | Operation Terminal</title>
+    <title>AquaStar & THV | Indomie Restaurant</title>
     <script src="https://unpkg.com/scrollreveal"></script>
     <style>
         :root {
             --bg: #050505;
-            --primary: #00d4ff;
-            --accent: #ff2d75;
-            --surface: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
+            --primary: #ff2d75;
+            --secondary: #00d4ff;
+            --surface: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
         }
 
-        [data-theme="midnight"] { --bg: #02020a; --primary: #7000ff; --accent: #00ffaa; }
-        [data-theme="crimson"] { --bg: #0a0000; --primary: #e60000; --accent: #ffb300; }
+        [data-theme="midnight"] { --bg: #02020a; --primary: #7000ff; --secondary: #00ffaa; }
+        [data-theme="crimson"] { --bg: #0a0000; --primary: #e60000; --secondary: #ffb300; }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-main);
             margin: 0;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Loading Screen */
         #loader {
             position: fixed;
             inset: 0;
@@ -35,195 +37,213 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            font-size: 0.8rem;
             letter-spacing: 4px;
+            font-weight: 300;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
 
-        header { text-align: center; margin-bottom: 80px; }
+        header { text-align: center; padding: 80px 0; }
         h1 { 
-            font-size: clamp(2rem, 10vw, 4.5rem); 
+            font-size: clamp(2.5rem, 8vw, 4.5rem); 
             margin: 0; 
             font-weight: 900; 
             letter-spacing: -2px;
-            background: linear-gradient(to right, var(--primary), var(--accent));
+            background: linear-gradient(to right, var(--secondary), var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .theme-switcher { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+        .theme-bar { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
         .theme-btn { 
-            width: 12px; height: 12px; border-radius: 50%; cursor: pointer; 
-            border: 1px solid #fff; transition: transform 0.2s;
+            width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1.5px solid #fff; 
         }
-        .theme-btn:hover { transform: scale(1.5); }
 
-        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-
-        .card {
+        .section {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 40px;
+            margin-bottom: 40px;
             backdrop-filter: blur(10px);
         }
 
-        h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); margin-bottom: 30px; }
+        h2 { font-size: 1.5rem; color: var(--secondary); margin-top: 0; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Enhanced Input Styling */
-        .input-group { margin-bottom: 20px; position: relative; }
+        /* Restored Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .menu-card {
+            background: rgba(0,0,0,0.3);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        .menu-card h3 { color: var(--primary); margin-top: 0; font-size: 1.1rem; }
+        .menu-card p { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0; }
+
+        /* Order Form */
+        .order-form { max-width: 600px; margin: 0 auto; }
+        .input-row { margin-bottom: 20px; }
         input, select, textarea {
             width: 100%;
             padding: 16px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.4);
             border: 1px solid var(--border);
             border-radius: 12px;
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-family: inherit;
         }
-        select { cursor: pointer; appearance: none; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
+        input:focus, select:focus { outline: none; border-color: var(--secondary); }
 
-        .btn-dispatch {
+        .btn-main {
             width: 100%;
             padding: 18px;
             background: var(--primary);
-            color: #000;
+            color: #fff;
             border: none;
             border-radius: 12px;
-            font-weight: 900;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
         }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 45, 117, 0.2); }
 
-        /* Order Monitor UI */
-        .order-monitor { margin-top: 40px; }
-        .order-row {
+        /* Staff Portal Monitor */
+        .order-list { margin-top: 20px; }
+        .order-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 14px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
             margin-bottom: 10px;
-            border-left: 3px solid var(--accent);
+            border-left: 3px solid var(--primary);
         }
-        .order-info b { display: block; color: var(--primary); margin-bottom: 4px; }
-        .order-info span { font-size: 0.8rem; opacity: 0.6; }
-        
-        .btn-cancel {
+        .btn-delete {
             background: #222;
-            color: #ff4444;
-            border: 1px solid #444;
-            padding: 8px 16px;
+            color: #ff4d4d;
+            border: 1px solid #333;
+            padding: 8px 12px;
             border-radius: 8px;
-            font-size: 0.75rem;
             cursor: pointer;
+            font-size: 0.8rem;
         }
-        .btn-cancel:hover { background: #ff4444; color: #fff; }
 
-        footer { text-align: center; margin-top: 100px; opacity: 0.2; font-size: 0.7rem; letter-spacing: 2px; }
+        footer { text-align: center; padding: 60px; opacity: 0.4; font-size: 0.8rem; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-<div id="loader">CONNECTING TO DATABASE...</div>
+<div id="loader">PREPARING KITCHEN...</div>
 
 <div class="container">
     <header>
         <h1>AquaStar & THV</h1>
-        <div class="theme-switcher">
+        <p style="color: var(--text-dim); margin-top: 10px; letter-spacing: 3px;">PREMIUM INDOMIE EXPERIENCE</p>
+        <div class="theme-bar">
             <div class="theme-btn" style="background: #00d4ff" onclick="setTheme('default')"></div>
             <div class="theme-btn" style="background: #7000ff" onclick="setTheme('midnight')"></div>
             <div class="theme-btn" style="background: #e60000" onclick="setTheme('crimson')"></div>
         </div>
     </header>
 
-    <div class="grid">
-        <div class="card reveal">
-            <h2>Deployment Terminal</h2>
-            <div class="input-group">
-                <input type="text" id="nodeName" placeholder="Client Name">
+    <div class="section reveal">
+        <h2>The Menu</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <h3>Pink Series</h3>
+                <p>🌸 Swicy<br>🌸 Duck Duck Indomie<br>🌸 The Dreamy Creamy</p>
             </div>
-            <div class="input-group">
-                <select id="nodeSelection">
-                    <option value="" disabled selected>Signature Dish Selection</option>
+            <div class="menu-card">
+                <h3>Nuclear Series</h3>
+                <p>☢️ The Atomic Bomb<br>☢️ The Challenger (2x Spicy)</p>
+            </div>
+            <div class="menu-card">
+                <h3>Specialty Series</h3>
+                <p>⚫ Duck Duck Black<br>✨ The KAI / The ZANE</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section reveal">
+        <h2>Place Your Order</h2>
+        <div class="order-form">
+            <div class="input-row">
+                <input type="text" id="custName" placeholder="Your Name">
+            </div>
+            <div class="input-row">
+                <select id="dishSelect">
+                    <option value="" disabled selected>Select a Dish</option>
                     <optgroup label="Pink Series">
                         <option>🌸 Swicy</option>
                         <option>🌸 Duck Duck Indomie</option>
                         <option>🌸 The Dreamy Creamy</option>
                     </optgroup>
-                    <optgroup label="Nuclear Series">
+                    <optgroup label="Nuclear">
                         <option>☢️ The Atomic Bomb</option>
                         <option>☢️ The Challenger</option>
                     </optgroup>
-                    <optgroup label="Void Series">
-                        <option>⚫ Duck Duck Black Indomie</option>
-                        <option>⚫ More Spicy than Swicy</option>
+                    <optgroup label="Specials">
+                        <option>⚫ Duck Duck Black</option>
+                        <option>✨ The KAI</option>
+                        <option>✨ The ZANE</option>
                     </optgroup>
                 </select>
             </div>
-            <div class="input-group">
-                <textarea id="nodeNote" rows="3" placeholder="Special Requests"></textarea>
+            <div class="input-row">
+                <textarea id="custNote" rows="2" placeholder="Any special requests?"></textarea>
             </div>
-            <button class="btn-dispatch" onclick="submitOrder()">Submit to Lab</button>
-            <p id="msg" style="text-align:center; font-size: 0.8rem; margin-top: 15px; opacity: 0.7;"></p>
-        </div>
-
-        <div class="card reveal">
-            <h2>Lab Manual</h2>
-            <p style="font-size: 0.9rem; opacity: 0.7; line-height: 1.8;">
-                The Lab specializes in precise Indomie engineering. We prioritize texture and chemical balance in every bowl. Our operations are strictly confined to Bait Baba Saeed.
-            </p>
-            <h2 style="margin-top: 40px;">Status</h2>
-            <p style="font-size: 0.8rem; color: var(--accent);">Operational: 24/7</p>
+            <button class="btn-main" onclick="sendOrder()">Send to Kitchen</button>
+            <p id="status" style="text-align: center; font-size: 0.8rem; margin-top: 15px; color: var(--text-dim);"></p>
         </div>
     </div>
 
-    <div class="card reveal" style="margin-top: 40px;">
-        <div id="authSection" style="text-align: center;">
-            <h2>Staff Authentication</h2>
+    <div class="section reveal">
+        <div id="loginArea" style="text-align: center;">
+            <h2>Staff Portal</h2>
             <div style="max-width: 300px; margin: 0 auto;">
-                <input type="password" id="authKey" placeholder="Access Key" style="text-align: center;">
-                <button class="btn-dispatch" style="margin-top: 15px; padding: 12px; font-size: 0.8rem;" onclick="unlockTerminal()">Access All Orders</button>
+                <input type="password" id="staffPass" placeholder="Master Password" style="text-align: center;">
+                <button class="btn-main" style="margin-top: 15px; padding: 12px; font-size: 0.8rem; background: #1a1a1a;" onclick="login()">Enter Dashboard</button>
             </div>
         </div>
 
-        <div id="staffPortal" style="display: none;">
-            <h2>Global Order Management</h2>
-            <div id="globalOrders">
-                <p style="opacity: 0.5;">Awaiting data from server...</p>
+        <div id="staffDashboard" style="display: none;">
+            <h2>Live Orders</h2>
+            <div id="orderMonitor" class="order-list">
+                <p>Loading database...</p>
             </div>
         </div>
     </div>
 
-    <footer>EST. 2026 // RAZOR PROTOCOL</footer>
+    <footer>BAIT BABA SAEED // EST. 2026</footer>
 </div>
 
 <script>
-    // System Initialization
+    // System Setup
     window.onload = () => {
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
-        setTheme('default');
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
     };
 
     function setTheme(t) { document.documentElement.setAttribute('data-theme', t); }
-    ScrollReveal().reveal('.reveal', { distance: '20px', origin: 'bottom', duration: 1000 });
+    ScrollReveal().reveal('.reveal', { distance: '30px', origin: 'bottom', duration: 800 });
 
-    // Client Submission
-    async function submitOrder() {
-        const name = document.getElementById('nodeName').value;
-        const item = document.getElementById('nodeSelection').value;
-        const note = document.getElementById('nodeNote').value;
-        const msg = document.getElementById('msg');
+    // API Interactions
+    async function sendOrder() {
+        const name = document.getElementById('custName').value;
+        const item = document.getElementById('dishSelect').value;
+        const note = document.getElementById('custNote').value;
+        const status = document.getElementById('status');
 
-        if(!name || !item) return alert("All primary fields required.");
+        if(!name || !item) return alert("Please enter your name and select a dish.");
 
-        msg.innerText = "Transmitting...";
+        status.innerText = "Connecting to kitchen...";
 
         try {
             const res = await fetch('/api/orders', {
@@ -231,55 +251,54 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, item, note })
             });
+
             if(res.ok) {
-                msg.innerText = "Transmission successful.";
-                document.getElementById('nodeName').value = '';
-                document.getElementById('nodeNote').value = '';
-                if(document.getElementById('staffPortal').style.display === 'block') refreshStaffPortal();
+                status.innerText = "Order received by the kitchen.";
+                document.getElementById('custName').value = '';
+                document.getElementById('custNote').value = '';
+                if(document.getElementById('staffDashboard').style.display === 'block') refreshOrders();
             }
-        } catch (e) { msg.innerText = "Transmission failed."; }
+        } catch (e) { status.innerText = "Connection failed."; }
     }
 
-    // Staff Portal Logic
-    function unlockTerminal() {
-        if(document.getElementById('authKey').value === '12344321-r') {
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('staffPortal').style.display = 'block';
-            refreshStaffPortal();
-            setInterval(refreshStaffPortal, 10000); // Auto-refresh every 10s
+    function login() {
+        if(document.getElementById('staffPass').value === '12344321-r') {
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('staffDashboard').style.display = 'block';
+            refreshOrders();
+            setInterval(refreshOrders, 10000); // Sync every 10 seconds
         } else {
-            alert("Unauthorized.");
+            alert("Incorrect password.");
         }
     }
 
-    async function refreshStaffPortal() {
+    async function refreshOrders() {
         try {
             const res = await fetch('/api/orders');
             const data = await res.json();
-            const container = document.getElementById('globalOrders');
+            const monitor = document.getElementById('orderMonitor');
 
             if(data.length === 0) {
-                container.innerHTML = "<p>No active deployments.</p>";
+                monitor.innerHTML = "<p style='opacity:0.5;'>No active orders.</p>";
                 return;
             }
 
-            container.innerHTML = data.map(o => `
-                <div class="order-row">
-                    <div class="order-info">
-                        <b>${o.item}</b>
-                        <span>Operator: ${o.name}</span>
+            monitor.innerHTML = data.map(o => `
+                <div class="order-item">
+                    <div>
+                        <strong style="color:var(--secondary);">${o.item}</strong><br>
+                        <span style="font-size:0.8rem; opacity:0.7;">Customer: ${o.name}</span>
                     </div>
-                    <button class="btn-cancel" onclick="cancelDeployment(${o.id}, '${o.discord_id}')">Wipe Data</button>
+                    <button class="btn-delete" onclick="cancelOrder(${o.id}, '${o.discord_id}')">Cancel Order</button>
                 </div>
             `).join('');
-        } catch (e) { console.error("Sync error."); }
+        } catch (e) { console.error("Database sync error."); }
     }
 
-    async function cancelDeployment(id, discordId) {
-        if(!confirm("Cancel and delete from Discord?")) return;
-        
+    async function cancelOrder(id, discordId) {
+        if(!confirm("Are you sure you want to cancel this order and remove the Discord alert?")) return;
         await fetch(`/api/orders?id=${id}&discord_id=${discordId}`, { method: 'DELETE' });
-        refreshStaffPortal();
+        refreshOrders();
     }
 </script>
 
