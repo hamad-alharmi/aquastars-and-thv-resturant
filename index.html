@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AQUASTAR & THV | Luxury Indomie</title>
     
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,10 +31,10 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; transition: background 0.5s ease; scroll-behavior: smooth; }
 
         /* Background Effects */
-        .orb { position: fixed; filter: blur(80px); z-index: -1; border-radius: 50%; opacity: 0.3; animation: move 20s infinite alternate; transition: background 0.5s ease; }
+        .orb { position: fixed; filter: blur(90px); z-index: -1; border-radius: 50%; opacity: 0.25; animation: move 25s infinite alternate ease-in-out; }
         .orb-1 { width: 500px; height: 500px; background: var(--primary); top: -150px; left: -150px; }
-        .orb-2 { width: 400px; height: 400px; background: var(--orb-secondary); bottom: -100px; right: -100px; animation-delay: -5s; }
-        @keyframes move { from { transform: translate(0,0); } to { transform: translate(120px, 120px); } }
+        .orb-2 { width: 450px; height: 450px; background: var(--orb-secondary); bottom: -100px; right: -100px; animation-delay: -3s; }
+        @keyframes move { from { transform: translate(0,0) scale(1); } to { transform: translate(150px, 150px) scale(1.1); } }
 
         .container { max-width: 1300px; margin: 0 auto; padding: 60px 20px; transition: 0.5s; }
         header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
@@ -45,61 +44,68 @@
         .header-controls { display: flex; gap: 10px; }
 
         .layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; margin-bottom: 40px; }
-        @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+        .bottom-modules { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        @media (max-width: 1000px) { .layout, .bottom-modules { grid-template-columns: 1fr; } }
 
         /* Glass Cards */
-        .glass { background: var(--glass); backdrop-filter: blur(30px); border: 1px solid var(--border); border-radius: 40px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .glass { background: var(--glass); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--border); border-radius: 30px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); transition: transform 0.3s ease, border 0.3s ease; }
+        .glass:hover { border-color: rgba(255,255,255,0.2); }
         .cat-label { font-size: 0.75rem; font-weight: 800; color: var(--primary); letter-spacing: 5px; text-transform: uppercase; margin: 35px 0 20px; display: block; }
         
         /* Menu Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
         .item { 
             background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 25px; border-radius: 20px; 
-            cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 15px;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 15px;
         }
-        .item:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 15px 35px var(--primary-g); color: #000; }
+        .item:hover { background: var(--primary); transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px var(--primary-g); color: #000; }
         .item:hover small { color: #000; opacity: 0.8; }
-        .item.active { border-color: var(--primary); background: var(--primary-g); }
+        .item.active { border-color: var(--primary); background: var(--primary-g); transform: scale(0.98); }
 
         /* Form Controls */
         label { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 15px; display: block; opacity: 0.7; }
         input, textarea, select { 
             width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); 
-            padding: 18px; border-radius: 18px; color: #fff; font-family: inherit; margin-top: 8px; transition: border 0.3s;
+            padding: 18px; border-radius: 18px; color: #fff; font-family: inherit; margin-top: 8px; transition: all 0.3s ease;
         }
-        input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-g); background: rgba(0,0,0,0.6); }
 
         /* Feedback Sliders */
         .feedback-group { margin: 15px 0 5px; }
         .slider-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; opacity: 0.8; }
         .slider-label span { color: var(--primary); font-weight: 800; width: 100px; text-align: right;}
-        input[type="range"] { -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); height: 6px; border-radius: 50px; padding: 0; margin-top: 5px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 0 10px var(--primary); }
+        input[type="range"] { -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); height: 8px; border-radius: 50px; padding: 0; margin-top: 8px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 0 15px var(--primary); transition: transform 0.2s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
         .btn { 
             width: 100%; background: #fff; color: #000; border: none; padding: 22px; 
-            border-radius: 22px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 25px;
-            display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 0.95rem;
+            border-radius: 22px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 25px;
+            display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;
         }
-        .btn:hover:not(:disabled) { transform: scale(1.02); }
+        .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
+        .btn:active:not(:disabled) { transform: scale(0.98); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-p { background: var(--primary); color: #fff; box-shadow: 0 15px 35px var(--primary-g); }
+        .btn-p:hover:not(:disabled) { box-shadow: 0 20px 45px var(--primary-g); }
 
-        /* Custom Toast Notifications */
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: #fff; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; opacity: 0; pointer-events: none; }
+        /* Notifications */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: #fff; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; opacity: 0; pointer-events: none; }
         .toast.show { transform: translate(-50%, 0); opacity: 1; }
-        .toast.error { background: #ff4444; color: #fff; }
+        .toast.error { background: #ff2d55; color: #fff; }
         .toast.success { background: #00ff88; color: #000; }
 
-        /* Success Overlay */
-        #successScreen {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
+        /* Modals (Success & Staff) */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             z-index: 1000; align-items: center; justify-content: center; flex-direction: column; text-align: center;
-            opacity: 0; transition: opacity 0.5s ease;
+            opacity: 0; transition: opacity 0.4s ease;
         }
+        .modal-content { transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-overlay.active .modal-content { transform: scale(1); }
 
         /* --- STAFF PORTAL --- */
-        #staff { position: fixed; inset: 0; background: #050508; z-index: 999; display: none; padding: 40px; overflow-y: auto; opacity: 0; transition: opacity 0.3s ease;}
+        #staff { position: fixed; inset: 0; background: #050508; z-index: 999; display: none; padding: 40px; overflow-y: auto; opacity: 0; transition: opacity 0.4s ease;}
         .portal-layout { display: grid; grid-template-columns: 1fr 500px; gap: 40px; margin-top: 30px; }
         @media (max-width: 1100px) { .portal-layout { grid-template-columns: 1fr; } }
         
@@ -109,26 +115,30 @@
         .order-card, .feedback-card, .rec-card { 
             background: var(--glass); border: 1px solid var(--border); padding: 20px; border-radius: 20px; 
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
-            transition: all 0.5s ease;
+            transition: all 0.3s ease;
         }
+        .order-card:hover { border-color: rgba(255,255,255,0.2); transform: translateX(5px); }
         .feedback-card, .rec-card { flex-direction: column; align-items: flex-start; gap: 10px; }
         
         .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
-        .status-pending { background: #ffaa00; color: #000; }
-        .status-finished { background: #00ff88; color: #000; }
+        .status-pending { background: #ffaa00; color: #000; box-shadow: 0 0 10px rgba(255,170,0,0.3); }
+        .status-finished { background: #00ff88; color: #000; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
 
-        .score-badge { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 5px 10px; border-radius: 10px; font-size: 0.75rem; margin-right: 5px; display: inline-block; }
-        .empty-state { text-align: center; padding: 40px 20px; opacity: 0.4; font-weight: 700; border: 1px dashed var(--border); border-radius: 20px; }
+        .score-badge { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; margin-right: 5px; display: inline-block; font-weight: 600; }
+        .empty-state { text-align: center; padding: 60px 20px; opacity: 0.4; font-weight: 700; border: 1px dashed var(--border); border-radius: 20px; }
         
-        /* Tab Controls */
         .tab-headers { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .tab-btn { background: none; border: none; color: #fff; opacity: 0.4; font-weight: 700; cursor: pointer; padding: 5px 10px; font-size: 0.9rem; transition: 0.2s; }
         .tab-btn.active { opacity: 1; color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .tab-content { display: none; max-height: 500px; overflow-y: auto; padding-right: 10px; }
+        .tab-content { display: none; max-height: 600px; overflow-y: auto; padding-right: 10px; }
         .tab-content.active { display: block; }
+        /* Custom Scrollbar for tabs */
+        .tab-content::-webkit-scrollbar { width: 6px; }
+        .tab-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
         .action-btns { display: flex; gap: 10px; }
-        .a-btn { padding: 12px 18px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; }
+        .a-btn { padding: 12px 18px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; transition: 0.2s; }
+        .a-btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -136,7 +146,6 @@
     <div id="toast" class="toast">Notification</div>
 
     <div class="container" id="mainLayout">
-        <!-- HEADER -->
         <header>
             <div>
                 <p style="letter-spacing: 6px; opacity: 0.4; font-size: 0.7rem; font-weight: 700;">RAS AL KHAIMAH • UAE</p>
@@ -147,13 +156,12 @@
                     <i class="fa-solid fa-palette"></i>
                 </button>
                 <button class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0; opacity: 0.2;" onclick="openStaff()" title="Staff Portal">
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="fa-solid fa-fingerprint"></i>
                 </button>
             </div>
         </header>
 
         <div class="layout">
-            <!-- MENU OPTIONS -->
             <div class="glass">
                 <span class="cat-label">The Pink Series 🌸</span>
                 <div class="grid">
@@ -177,19 +185,31 @@
                 </div>
             </div>
 
-            <!-- CHECKOUT BLOCK & FEEDBACK METRICS -->
             <div class="glass" style="height: fit-content; position: sticky; top: 40px;">
                 <h3 style="margin-bottom: 10px;">Secure Checkout</h3>
+                <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Dispatch your ticket directly to the kitchen.</p>
                 <label>Selection</label>
                 <input type="text" id="selDish" readonly placeholder="Pick from menu...">
                 <label>Your Name</label>
-                <input type="text" id="name" placeholder="Enter full name">
+                <input type="text" id="name" placeholder="Enter full name" oninput="saveName(this.value)">
                 <label>Kitchen Notes</label>
-                <textarea id="note" rows="2" placeholder="Extra spicy? Allergies?"></textarea>
+                <textarea id="note" rows="3" placeholder="Extra spicy? Allergies?"></textarea>
+                
+                <button class="btn btn-p" id="sendBtn" onclick="order()"><i class="fa-solid fa-fire-burner"></i> FIRE ORDER</button>
+            </div>
+        </div>
 
-                <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px;">
-                    <h4 style="font-size: 0.9rem; letter-spacing: 1px; color: var(--primary);">Rate Our Staff (Optional)</h4>
-                    
+        <div class="bottom-modules">
+            <div class="glass">
+                <h3 style="color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-clipboard-user"></i> Staff Evaluation</h3>
+                <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Rate specific staff members on their performance today.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div><label>Target Staff Member</label><input type="text" id="rateStaffName" placeholder="e.g. Kai, Zane, Aqua..."></div>
+                    <div><label>Your Name</label><input type="text" id="rateCustomerName" placeholder="Anonymous" oninput="saveName(this.value)"></div>
+                </div>
+
+                <div style="margin-top: 25px;">
                     <div class="feedback-group">
                         <div class="slider-label">Food Execution <span id="v1">5 (Perfect)</span></div>
                         <input type="range" id="fFood" min="1" max="5" value="5" oninput="updateLabel('v1', this.value)">
@@ -208,83 +228,81 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-p" id="sendBtn" onclick="order()"><i class="fa-solid fa-paper-plane"></i> PLACE ORDER</button>
+                <button class="btn" style="background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--border);" id="rateBtn" onclick="submitFeedback()"><i class="fa-solid fa-star"></i> Submit Evaluation</button>
             </div>
-        </div>
 
-        <!-- RECOMMENDATIONS INTAKE BOX -->
-        <div class="glass" style="margin-top: 40px;">
-            <h3 style="color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-lightbulb"></i> Recommendations Sandbox</h3>
-            <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Have an amazing idea for a new Indomie recipe or a website feature? We want to build it.</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                <div><label>Your Alias</label><input type="text" id="recName" placeholder="Chef / Dev Name"></div>
-                <div>
-                    <label>Target Area</label>
-                    <select id="recType">
-                        <option value="menu">New Menu Item Concept 🍲</option>
-                        <option value="website">Website Upgrade / Animation Idea 💻</option>
-                    </select>
+            <div class="glass">
+                <h3 style="color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-lightbulb"></i> Recommendations Sandbox</h3>
+                <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Have an amazing idea for a new Indomie recipe or a website feature? We want to build it.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div><label>Your Alias</label><input type="text" id="recName" placeholder="Chef / Dev Name" oninput="saveName(this.value)"></div>
+                    <div>
+                        <label>Target Area</label>
+                        <select id="recType">
+                            <option value="menu">New Menu Item Concept 🍲</option>
+                            <option value="website">Website Upgrade / Animation Idea 💻</option>
+                        </select>
+                    </div>
                 </div>
+                <div style="margin-top: 15px;"><label>Proposal Details</label><textarea id="recText" rows="6" placeholder="Describe your recommendation in detail..."></textarea></div>
+                <button class="btn" style="background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--border);" id="recBtn" onclick="submitRecommendation()"><i class="fa-solid fa-paper-plane"></i> Submit Proposal</button>
             </div>
-            <div style="margin-top: 15px;"><label>Proposal Details</label><textarea id="recText" rows="3" placeholder="Describe your recommendation..."></textarea></div>
-            <button class="btn" style="background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--border); width: auto; padding: 15px 30px; margin-top: 15px;" id="recBtn" onclick="submitRecommendation()">Submit Proposal</button>
         </div>
     </div>
 
-    <!-- SUCCESS INTERACTION COMPONENT -->
-    <div id="successScreen">
-        <i class="fa-solid fa-circle-check" style="font-size: 5rem; color: #00ff88; margin-bottom: 20px;"></i>
-        <h1>Order Transmitted!</h1>
-        <p style="opacity:0.7; margin-bottom:20px;">Your metrics have cleared verification pipelines.</p>
-        <button class="btn btn-p" style="width:auto; padding: 15px 40px;" onclick="resetUI()">Return to Menu</button>
+    <div id="successScreen" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fa-solid fa-fire" style="font-size: 6rem; color: #ff2d75; margin-bottom: 20px; filter: drop-shadow(0 0 20px var(--primary-g));"></i>
+            <h1 style="font-size: 3rem; margin-bottom: 10px;">Ticket Sent!</h1>
+            <p style="opacity:0.7; margin-bottom:30px; font-size: 1.1rem;">The chefs are preparing your dispatch.</p>
+            <button class="btn btn-p" style="width:auto; padding: 18px 50px; margin: 0 auto;" onclick="resetUI()">Return to Menu</button>
+        </div>
     </div>
 
-    <!-- CENTRAL CONTROL STAFF PORTAL -->
     <div id="staff">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
             <div>
-                <h1>Kitchen HQ Control</h1>
-                <p style="opacity:0.5; font-size:0.85rem;">Live orders, analytics tracking, and R&D systems</p>
+                <h1 style="letter-spacing: -1px;">Kitchen HQ Control</h1>
+                <p style="opacity:0.5; font-size:0.85rem; text-transform: uppercase; letter-spacing: 2px;">Live orders, analytics tracking, and R&D systems</p>
             </div>
-            <button class="a-btn" style="background:#fff; color:#000;" onclick="closeStaff()">EXIT SYSTEM</button>
+            <button class="a-btn" style="background:#fff; color:#000;" onclick="closeStaff()"><i class="fa-solid fa-xmark"></i> EXIT SYSTEM</button>
         </div>
 
         <div class="portal-layout">
-            <!-- LEFT MODULE: LIVE TICKETS -->
             <div>
-                <h3 style="margin-bottom: 15px; letter-spacing: 2px;">LIVE ORDERS</h3>
+                <h3 style="margin-bottom: 15px; letter-spacing: 2px; display: flex; align-items: center; gap: 10px;">
+                    <div style="width:10px; height:10px; background:#ff2d75; border-radius:50%; box-shadow:0 0 10px #ff2d75; animation: pulse 2s infinite;"></div>
+                    LIVE TICKETS
+                </h3>
                 <div class="stat-bar">
-                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Pending</p><h3 id="c1">0</h3></div>
-                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Finished</p><h3 id="c2" style="color:#00ff88">0</h3></div>
-                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Total Tickets</p><h3 id="c3">0</h3></div>
+                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Pending</p><h3 id="c1" style="font-size:1.8rem;">0</h3></div>
+                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Finished</p><h3 id="c2" style="color:#00ff88; font-size:1.8rem;">0</h3></div>
+                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Total Tickets</p><h3 id="c3" style="font-size:1.8rem;">0</h3></div>
                 </div>
                 <div id="staffList">
                     <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Fetching Live Data...</div>
                 </div>
             </div>
 
-            <!-- RIGHT MODULE: AUDIT TELEMETRY (TABS) -->
             <div style="border-left: 1px solid var(--border); padding-left: 30px;">
                 <div class="tab-headers">
-                    <button class="tab-btn active" id="btnTabFeed" onclick="switchTab('feedback')">STAFF RATINGS</button>
-                    <button class="tab-btn" id="btnTabRec" onclick="switchTab('recs')">CUSTOMER SUGGESTIONS</button>
+                    <button class="tab-btn active" id="btnTabFeed" onclick="switchTab('feedback')"><i class="fa-solid fa-star"></i> RATINGS</button>
+                    <button class="tab-btn" id="btnTabRec" onclick="switchTab('recs')"><i class="fa-solid fa-lightbulb"></i> IDEAS</button>
                 </div>
                 
-                <!-- SUB-TAB 1: PERFORMANCE FEEDBACK -->
                 <div id="tabFeedback" class="tab-content active">
-                    <div class="stat-card" style="text-align: left; margin-bottom: 20px; background: rgba(255,45,117,0.05);">
-                        <p style="font-weight: 700; margin-bottom: 10px;">Rolling Metric Averages:</p>
-                        <div style="font-size: 0.85rem; display:grid; gap:5px;">
-                            <div>🍲 Food Quality: <strong id="avgFood" style="color:var(--primary)">-</strong> / 5</div>
-                            <div>🛎️ Service Score: <strong id="avgService" style="color:var(--primary)">-</strong> / 5</div>
-                            <div>📈 Usefulness: <strong id="avgUseful" style="color:var(--primary)">-</strong> / 5</div>
-                            <div>🧼 Health & Safety: <strong id="avgSafety" style="color:var(--primary)">-</strong> / 5</div>
+                    <div class="stat-card" style="text-align: left; margin-bottom: 20px; background: rgba(255,45,117,0.05); border-color: var(--primary-g);">
+                        <p style="font-weight: 800; margin-bottom: 10px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Global Rolling Averages</p>
+                        <div style="font-size: 0.9rem; display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-weight: 600;">
+                            <div>🍲 Food: <span id="avgFood" style="color:var(--primary)">-</span></div>
+                            <div>🛎️ Service: <span id="avgService" style="color:var(--primary)">-</span></div>
+                            <div>📈 Useful: <span id="avgUseful" style="color:var(--primary)">-</span></div>
+                            <div>🧼 Safety: <span id="avgSafety" style="color:var(--primary)">-</span></div>
                         </div>
                     </div>
                     <div id="feedbackContainer"></div>
                 </div>
 
-                <!-- SUB-TAB 2: RAW INPUT REC BOXES -->
                 <div id="tabRecs" class="tab-content">
                     <div id="recsContainer"></div>
                 </div>
@@ -292,32 +310,38 @@
         </div>
     </div>
 
+    <style>@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }</style>
+
     <script>
+        // CORE CONFIG
         const S_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
-        
         const _s = supabase.createClient(S_URL, S_KEY);
+        
         let currentDish = "";
-        let lastDataString = "";
-        let lastFeedbackString = "";
-        let lastRecsString = "";
         let staffInterval = null;
 
-        // QoL: Load saved theme
-        if(localStorage.getItem('theme') === 'cyber') document.body.setAttribute('data-theme', 'cyber');
+        // QoL: INIT / LocalStorage Memory
+        window.onload = () => {
+            if(localStorage.getItem('theme') === 'cyber') document.body.setAttribute('data-theme', 'cyber');
+            const savedName = localStorage.getItem('customerName');
+            if(savedName) {
+                document.getElementById('name').value = savedName;
+                document.getElementById('rateCustomerName').value = savedName;
+                document.getElementById('recName').value = savedName;
+            }
+        };
+
+        function saveName(val) { localStorage.setItem('customerName', val); }
 
         function toggleTheme() {
-            if(document.body.getAttribute('data-theme') === 'cyber') {
-                document.body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.setAttribute('data-theme', 'cyber');
-                localStorage.setItem('theme', 'cyber');
-            }
+            const isCyber = document.body.getAttribute('data-theme') === 'cyber';
+            document.body.toggleAttribute('data-theme', !isCyber);
+            localStorage.setItem('theme', isCyber ? 'dark' : 'cyber');
         }
 
-        // QoL: Toast Notification System
+        // QoL: Toast Notifications
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toast');
             t.className = `toast ${type} show`;
@@ -325,7 +349,6 @@
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // QoL: Dynamic Slider Labels
         function updateLabel(id, val) {
             const textMap = { "1": "1 (Poor)", "2": "2 (Subpar)", "3": "3 (Average)", "4": "4 (Great)", "5": "5 (Perfect)" };
             document.getElementById(id).innerText = textMap[val];
@@ -349,61 +372,90 @@
             e.classList.add('active');
         }
 
-        // QoL: Smooth UI Reset
         function resetUI() {
-            document.getElementById('name').value = '';
             document.getElementById('note').value = '';
             document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
-            currentDish = '';
-            document.getElementById('selDish').value = '';
-            document.getElementById('successScreen').style.opacity = '0';
+            currentDish = ''; document.getElementById('selDish').value = '';
+            
+            const ss = document.getElementById('successScreen');
+            ss.classList.remove('active');
             setTimeout(() => {
-                document.getElementById('successScreen').style.display = 'none';
+                ss.style.display = 'none';
                 document.getElementById('mainLayout').style.display = 'block';
                 window.scrollTo(0, 0);
-            }, 500);
-            document.getElementById('sendBtn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> PLACE ORDER`;
+            }, 400);
+            document.getElementById('sendBtn').innerHTML = `<i class="fa-solid fa-fire-burner"></i> FIRE ORDER`;
             document.getElementById('sendBtn').disabled = false;
         }
 
+        // QoL: Relative Time Formatter
+        function timeAgo(dateString) {
+            if(!dateString) return '';
+            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + "y ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + "mo ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + "d ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + "h ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + "m ago";
+            return "Just now";
+        }
+
+        // --- PIPELINE LOGIC (With Strict Error Catching) ---
         async function order() {
             const n = document.getElementById('name').value, nt = document.getElementById('note').value;
             if(!currentDish || !n) return showToast("Missing name or dish selection!", "error");
             
             const btn = document.getElementById('sendBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PIPING DATA...`;
-            btn.disabled = true;
-
-            const sF = document.getElementById('fFood').value, sS = document.getElementById('fService').value;
-            const sU = document.getElementById('fUseful').value, sH = document.getElementById('fSafety').value;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> TRANSMITTING...`; btn.disabled = true;
 
             try {
+                // 1. Send Discord Webhook
                 const res = await fetch(`${W_URL}?wait=true`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        embeds: [{ 
-                            title: "🌸 New Order Dispatch", color: 0xff2d75, 
-                            fields: [
-                                {name: "User", value: n, inline: true}, {name: "Dish", value: currentDish, inline: true}, {name: "Notes", value: nt || "None"},
-                                {name: "Metrics", value: `Food: ${sF}/5 | Service: ${sS}/5\nUtility: ${sU}/5 | Safety: ${sH}/5`}
-                            ] 
-                        }] 
-                    })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [{ title: "🌸 New Order Dispatch", color: 0xff2d75, fields: [{name: "User", value: n, inline: true}, {name: "Dish", value: currentDish, inline: true}, {name: "Notes", value: nt || "None"}] }] })
                 });
                 const d = await res.json();
                 
-                await _s.from('orders').insert([{ name: n, item: currentDish, note: nt, discord_id: d.id, status: 'pending' }]);
-                await _s.from('employee_feedback').insert([{ customer_name: n, food_score: parseInt(sF), service_score: parseInt(sS), usefulness_score: parseInt(sU), health_safety_score: parseInt(sH) }]);
+                // 2. Save to Supabase (Catch RLS errors here)
+                const { error } = await _s.from('orders').insert([{ name: n, item: currentDish, note: nt, discord_id: d.id, status: 'pending' }]);
+                if (error) throw new Error(error.message); // This will trigger the catch block if DB fails
 
                 document.getElementById('mainLayout').style.display = 'none';
                 const ss = document.getElementById('successScreen');
                 ss.style.display = 'flex';
-                setTimeout(() => ss.style.opacity = '1', 50);
+                setTimeout(() => ss.classList.add('active'), 50);
             } catch (e) {
-                showToast("Pipeline Interrupted: " + e.message, "error");
-                btn.disabled = false; btn.innerHTML = "RETRY ORDER";
+                console.error("DB Error:", e);
+                showToast("Database Error: " + e.message, "error");
+                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-fire-burner"></i> RETRY ORDER`;
             }
+        }
+
+        async function submitFeedback() {
+            const staff = document.getElementById('rateStaffName').value, cust = document.getElementById('rateCustomerName').value || 'Anonymous';
+            if(!staff) return showToast("Please specify the staff member!", "error");
+
+            const btn = document.getElementById('rateBtn');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SUBMITTING...`; btn.disabled = true;
+
+            try {
+                const { error } = await _s.from('employee_feedback').insert([{ 
+                    customer_name: cust, staff_name: staff,
+                    food_score: parseInt(document.getElementById('fFood').value), service_score: parseInt(document.getElementById('fService').value), 
+                    usefulness_score: parseInt(document.getElementById('fUseful').value), health_safety_score: parseInt(document.getElementById('fSafety').value) 
+                }]);
+                if (error) throw new Error(error.message);
+                
+                showToast("Evaluation stored securely!", "success");
+                document.getElementById('rateStaffName').value = ''; 
+                ['fFood', 'fService', 'fUseful', 'fSafety'].forEach((id, idx) => { document.getElementById(id).value = 5; updateLabel(`v${idx+1}`, "5"); });
+            } catch(e) { showToast("DB Error: " + e.message, "error"); }
+            btn.innerHTML = `<i class="fa-solid fa-star"></i> Submit Evaluation`; btn.disabled = false;
         }
 
         async function submitRecommendation() {
@@ -411,52 +463,40 @@
             if(!name || !txt) return showToast("Please fill in your name and proposal!", "error");
 
             const btn = document.getElementById('recBtn');
-            btn.innerText = "PROPOSING..."; btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PROPOSING...`; btn.disabled = true;
             try {
-                await _s.from('recommendations').insert([{ author_name: name, rec_type: type, suggestion_text: txt }]);
-                showToast("Proposal stored into core planning data!", "success");
-                document.getElementById('recName').value = ""; document.getElementById('recText').value = "";
-            } catch(e) { showToast("Submission failed: " + e.message, "error"); }
-            btn.innerText = "Submit Proposal"; btn.disabled = false;
+                const { error } = await _s.from('recommendations').insert([{ author_name: name, rec_type: type, suggestion_text: txt }]);
+                if (error) throw new Error(error.message);
+
+                showToast("Proposal stored into core R&D!", "success");
+                document.getElementById('recText').value = "";
+            } catch(e) { showToast("DB Error: " + e.message, "error"); }
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Proposal`; btn.disabled = false;
         }
 
-        // --- STAFF LOGIC ---
+        // --- STAFF SYSTEM ---
         function openStaff() {
-            if(prompt("PIN:") === '12344321-r') {
+            if(prompt("HQ PIN:") === '12344321-r') {
                 const s = document.getElementById('staff');
                 s.style.display='block';
                 setTimeout(() => s.style.opacity = '1', 50);
                 loadStaffPortalData(); 
-                staffInterval = setInterval(loadStaffPortalData, 10000);
-            } else {
-                showToast("Access Denied", "error");
-            }
+                staffInterval = setInterval(loadStaffPortalData, 5000); // Polling every 5s
+            } else { showToast("Security: Access Denied", "error"); }
         }
 
         function closeStaff() {
             clearInterval(staffInterval);
             const s = document.getElementById('staff');
             s.style.opacity = '0';
-            setTimeout(() => s.style.display = 'none', 300);
+            setTimeout(() => s.style.display = 'none', 400);
         }
 
-        function loadStaffPortalData() {
-            loadTickets(); loadFeedback(); loadRecommendations();
-        }
-
-        function formatTime(isoString) {
-            if(!isoString) return '';
-            const d = new Date(isoString);
-            return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
+        function loadStaffPortalData() { loadTickets(); loadFeedback(); loadRecommendations(); }
 
         async function loadTickets() {
             const { data } = await _s.from('orders').select('*').order('id', { ascending: false });
             if(!data) return;
-
-            const currentString = JSON.stringify(data);
-            if(currentString === lastDataString) return; 
-            lastDataString = currentString;
 
             document.getElementById('c1').innerText = data.filter(o => o.status==='pending').length;
             document.getElementById('c2').innerText = data.filter(o => o.status==='finished').length;
@@ -468,17 +508,17 @@
             }
 
             document.getElementById('staffList').innerHTML = data.map(o => `
-                <div class="order-card">
+                <div class="order-card" style="border-left: 4px solid ${o.status==='pending'?'#ffaa00':'#00ff88'}">
                     <div>
                         <span class="status-pill status-${o.status}">${o.status}</span>
-                        <span style="font-size:0.75rem; opacity:0.5; margin-left:10px;"><i class="fa-regular fa-clock"></i> ${formatTime(o.created_at) || 'Just now'}</span>
-                        <h2>${o.name}</h2>
-                        <p style="color:var(--primary); font-weight:700;">${o.item}</p>
-                        <p style="opacity:0.5; font-size:0.8rem;">${o.note || ''}</p>
+                        <span style="font-size:0.75rem; opacity:0.6; margin-left:10px; font-weight:600;"><i class="fa-regular fa-clock"></i> ${timeAgo(o.created_at)}</span>
+                        <h2 style="margin-top: 5px;">${o.name}</h2>
+                        <p style="color:var(--primary); font-weight:800; font-size:1.1rem;">${o.item}</p>
+                        ${o.note ? `<p style="opacity:0.7; font-size:0.85rem; margin-top:5px; background:rgba(255,255,255,0.05); padding:8px; border-radius:8px;">📝 ${o.note}</p>` : ''}
                     </div>
                     <div class="action-btns">
-                        ${o.status === 'pending' ? `<button class="a-btn" style="background:#00ff88; color:#000;" onclick="upd(${o.id}, '${o.discord_id}', '${o.name}', '${o.item}', '${o.note}')">FINISH</button>` : ''}
-                        <button class="a-btn" style="background:rgba(255,0,0,0.1); color:#ff4444;" onclick="del(${o.id}, '${o.discord_id}')"><i class="fa-solid fa-trash"></i></button>
+                        ${o.status === 'pending' ? `<button class="a-btn" style="background:#00ff88; color:#000;" onclick="upd(${o.id}, '${o.discord_id}', '${o.name}', '${o.item}')"><i class="fa-solid fa-check"></i></button>` : ''}
+                        <button class="a-btn" style="background:rgba(255,0,0,0.1); color:#ff2d55;" onclick="del(${o.id}, '${o.discord_id}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -486,35 +526,23 @@
 
         async function loadFeedback() {
             const { data } = await _s.from('employee_feedback').select('*').order('id', { ascending: false });
-            if(!data || data.length === 0) {
-                document.getElementById('feedbackContainer').innerHTML = `<div class="empty-state">No feedback submitted yet.</div>`;
-                return;
-            }
-
-            const currentStr = JSON.stringify(data);
-            if(currentStr === lastFeedbackString) return;
-            lastFeedbackString = currentStr;
+            if(!data || data.length === 0) return document.getElementById('feedbackContainer').innerHTML = `<div class="empty-state">No evaluations recorded.</div>`;
 
             let tFood=0, tServ=0, tUse=0, tSafe=0;
             data.forEach(f => { tFood+=f.food_score; tServ+=f.service_score; tUse+=f.usefulness_score; tSafe+=f.health_safety_score; });
-            const count = data.length;
-
-            document.getElementById('avgFood').innerText = (tFood/count).toFixed(1);
-            document.getElementById('avgService').innerText = (tServ/count).toFixed(1);
-            document.getElementById('avgUseful').innerText = (tUse/count).toFixed(1);
-            document.getElementById('avgSafety').innerText = (tSafe/count).toFixed(1);
+            
+            document.getElementById('avgFood').innerText = (tFood/data.length).toFixed(1); document.getElementById('avgService').innerText = (tServ/data.length).toFixed(1);
+            document.getElementById('avgUseful').innerText = (tUse/data.length).toFixed(1); document.getElementById('avgSafety').innerText = (tSafe/data.length).toFixed(1);
 
             document.getElementById('feedbackContainer').innerHTML = data.map(f => `
                 <div class="feedback-card">
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <strong style="font-size:0.9rem;">👤 ${f.customer_name || 'Anonymous'}</strong>
-                        <small style="opacity:0.4;">${new Date(f.created_at).toLocaleDateString()}</small>
+                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                        <div><strong style="font-size:1rem; color:var(--primary);">🎯 ${f.staff_name}</strong> <span style="font-size:0.8rem; opacity:0.6;">(by ${f.customer_name})</span></div>
+                        <small style="opacity:0.4; font-weight:600;">${timeAgo(f.created_at)}</small>
                     </div>
-                    <div>
-                        <span class="score-badge">🍲 F: ${f.food_score}</span>
-                        <span class="score-badge">🛎️ S: ${f.service_score}</span>
-                        <span class="score-badge">📈 U: ${f.usefulness_score}</span>
-                        <span class="score-badge">🧼 H: ${f.health_safety_score}</span>
+                    <div style="margin-top: 10px; display:flex; flex-wrap:wrap; gap:5px;">
+                        <span class="score-badge">🍲 ${f.food_score}/5</span> <span class="score-badge">🛎️ ${f.service_score}/5</span>
+                        <span class="score-badge">📈 ${f.usefulness_score}/5</span> <span class="score-badge">🧼 ${f.health_safety_score}/5</span>
                     </div>
                 </div>
             `).join('');
@@ -522,44 +550,29 @@
 
         async function loadRecommendations() {
             const { data } = await _s.from('recommendations').select('*').order('id', { ascending: false });
-            if(!data || data.length === 0) {
-                document.getElementById('recsContainer').innerHTML = `<div class="empty-state">No ideas submitted yet.</div>`;
-                return;
-            }
-
-            const currentStr = JSON.stringify(data);
-            if(currentStr === lastRecsString) return;
-            lastRecsString = currentStr;
+            if(!data || data.length === 0) return document.getElementById('recsContainer').innerHTML = `<div class="empty-state">No proposals submitted.</div>`;
 
             document.getElementById('recsContainer').innerHTML = data.map(r => `
                 <div class="rec-card">
                     <div style="display:flex; justify-content:space-between; width:100%;">
-                        <strong style="font-size:0.9rem; color:var(--primary);">💡 ${r.author_name}</strong>
-                        <span class="status-pill" style="background:rgba(255,255,255,0.1); color:#fff;">${r.rec_type.toUpperCase()}</span>
+                        <strong style="font-size:0.95rem; color:var(--primary);">💡 ${r.author_name}</strong>
+                        <span class="status-pill" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2);">${r.rec_type}</span>
                     </div>
-                    <p style="font-size:0.85rem; opacity:0.85; line-height:1.4;">${r.suggestion_text}</p>
-                    <small style="opacity:0.3; font-size:0.7rem;">${new Date(r.created_at).toLocaleDateString()} at ${formatTime(r.created_at)}</small>
+                    <p style="font-size:0.9rem; opacity:0.85; line-height:1.5; margin-top:5px;">"${r.suggestion_text}"</p>
+                    <small style="opacity:0.4; font-size:0.75rem; margin-top:10px; display:block; font-weight:600;">Submitted ${timeAgo(r.created_at)}</small>
                 </div>
             `).join('');
         }
 
-        async function upd(db_id, disc_id, name, item, note) {
-            try {
-                await fetch(`${W_URL}/messages/${disc_id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ embeds: [{ title: "✅ DISPATCH COMPLETION COMPLETE", color: 0x00ff88, fields: [{name:"User",value:name,inline:true},{name:"Dish",value:item,inline:true}] }] })
-                });
-            } catch (e) {}
-            await _s.from('orders').update({ status: 'finished' }).eq('id', db_id);
-            loadTickets();
+        async function upd(db_id, disc_id, name, item) {
+            try { await fetch(`${W_URL}/messages/${disc_id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ embeds: [{ title: "✅ DISPATCH COMPLETION", color: 0x00ff88, fields: [{name:"User",value:name,inline:true},{name:"Dish",value:item,inline:true}] }] }) }); } catch(e){}
+            await _s.from('orders').update({ status: 'finished' }).eq('id', db_id); loadTickets();
         }
 
         async function del(id, did) {
-            if(!confirm("Destroy logging record permanently?")) return;
-            await fetch(`${W_URL}/messages/${did}`, { method:'DELETE' }).catch(()=>{});
-            await _s.from('orders').delete().eq('id', id);
-            loadTickets();
+            if(!confirm("Erase core record?")) return;
+            try { await fetch(`${W_URL}/messages/${did}`, { method:'DELETE' }); } catch(e){}
+            await _s.from('orders').delete().eq('id', id); loadTickets();
         }
     </script>
 </body>
