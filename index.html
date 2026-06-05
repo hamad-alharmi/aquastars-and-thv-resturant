@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AQUASTAR & THV | Luxury Indomie</title>
     
+    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,23 +18,33 @@
             --bg: #050507;
             --glass: rgba(255, 255, 255, 0.04);
             --border: rgba(255, 255, 255, 0.1);
+            --orb-secondary: #00d4ff;
+        }
+
+        [data-theme="cyber"] {
+            --primary: #00ffcc;
+            --primary-g: rgba(0, 255, 204, 0.4);
+            --bg: #0a0612;
+            --orb-secondary: #ff00ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; transition: background 0.5s ease; scroll-behavior: smooth; }
 
         /* Background Effects */
-        .orb { position: fixed; filter: blur(80px); z-index: -1; border-radius: 50%; opacity: 0.3; animation: move 20s infinite alternate; }
+        .orb { position: fixed; filter: blur(80px); z-index: -1; border-radius: 50%; opacity: 0.3; animation: move 20s infinite alternate; transition: background 0.5s ease; }
         .orb-1 { width: 500px; height: 500px; background: var(--primary); top: -150px; left: -150px; }
-        .orb-2 { width: 400px; height: 400px; background: #00d4ff; bottom: -100px; right: -100px; animation-delay: -5s; }
+        .orb-2 { width: 400px; height: 400px; background: var(--orb-secondary); bottom: -100px; right: -100px; animation-delay: -5s; }
         @keyframes move { from { transform: translate(0,0); } to { transform: translate(120px, 120px); } }
 
         .container { max-width: 1300px; margin: 0 auto; padding: 60px 20px; transition: 0.5s; }
         header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
         header h1 { font-weight: 800; font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: -3px; line-height: 0.9; }
-        header h1 span { color: var(--primary); text-shadow: 0 0 30px var(--primary-g); }
+        header h1 span { color: var(--primary); text-shadow: 0 0 30px var(--primary-g); transition: color 0.3s; }
 
-        .layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; }
+        .header-controls { display: flex; gap: 10px; }
+
+        .layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; margin-bottom: 40px; }
         @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
 
         /* Glass Cards */
@@ -46,44 +57,75 @@
             background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 25px; border-radius: 20px; 
             cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 15px;
         }
-        .item:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 15px 35px var(--primary-g); }
+        .item:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 15px 35px var(--primary-g); color: #000; }
+        .item:hover small { color: #000; opacity: 0.8; }
         .item.active { border-color: var(--primary); background: var(--primary-g); }
 
-        /* Inputs */
-        input, textarea { 
+        /* Form Controls */
+        label { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 15px; display: block; opacity: 0.7; }
+        input, textarea, select { 
             width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); 
-            padding: 20px; border-radius: 18px; color: #fff; font-family: inherit; margin-top: 10px;
+            padding: 18px; border-radius: 18px; color: #fff; font-family: inherit; margin-top: 8px; transition: border 0.3s;
         }
-        input:focus { border-color: var(--primary); }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+
+        /* Feedback Sliders */
+        .feedback-group { margin: 15px 0 5px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; opacity: 0.8; }
+        .slider-label span { color: var(--primary); font-weight: 800; width: 100px; text-align: right;}
+        input[type="range"] { -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); height: 6px; border-radius: 50px; padding: 0; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 0 10px var(--primary); }
 
         .btn { 
             width: 100%; background: #fff; color: #000; border: none; padding: 22px; 
             border-radius: 22px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 25px;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
+            display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 0.95rem;
         }
-        .btn:hover { transform: scale(1.02); }
+        .btn:hover:not(:disabled) { transform: scale(1.02); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-p { background: var(--primary); color: #fff; box-shadow: 0 15px 35px var(--primary-g); }
+
+        /* Custom Toast Notifications */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: #fff; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; opacity: 0; pointer-events: none; }
+        .toast.show { transform: translate(-50%, 0); opacity: 1; }
+        .toast.error { background: #ff4444; color: #fff; }
+        .toast.success { background: #00ff88; color: #000; }
 
         /* Success Overlay */
         #successScreen {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
             z-index: 1000; align-items: center; justify-content: center; flex-direction: column; text-align: center;
+            opacity: 0; transition: opacity 0.5s ease;
         }
 
         /* --- STAFF PORTAL --- */
-        #staff { position: fixed; inset: 0; background: #000; z-index: 999; display: none; padding: 40px; overflow-y: auto; }
-        .stat-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0; }
-        .stat-card { background: var(--glass); padding: 25px; border-radius: 25px; border: 1px solid var(--border); text-align: center; }
+        #staff { position: fixed; inset: 0; background: #050508; z-index: 999; display: none; padding: 40px; overflow-y: auto; opacity: 0; transition: opacity 0.3s ease;}
+        .portal-layout { display: grid; grid-template-columns: 1fr 500px; gap: 40px; margin-top: 30px; }
+        @media (max-width: 1100px) { .portal-layout { grid-template-columns: 1fr; } }
         
-        .order-card { 
-            background: var(--glass); border: 1px solid var(--border); padding: 25px; border-radius: 25px; 
+        .stat-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+        
+        .order-card, .feedback-card, .rec-card { 
+            background: var(--glass); border: 1px solid var(--border); padding: 20px; border-radius: 20px; 
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
             transition: all 0.5s ease;
         }
+        .feedback-card, .rec-card { flex-direction: column; align-items: flex-start; gap: 10px; }
         
         .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
         .status-pending { background: #ffaa00; color: #000; }
         .status-finished { background: #00ff88; color: #000; }
+
+        .score-badge { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 5px 10px; border-radius: 10px; font-size: 0.75rem; margin-right: 5px; display: inline-block; }
+        .empty-state { text-align: center; padding: 40px 20px; opacity: 0.4; font-weight: 700; border: 1px dashed var(--border); border-radius: 20px; }
+        
+        /* Tab Controls */
+        .tab-headers { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .tab-btn { background: none; border: none; color: #fff; opacity: 0.4; font-weight: 700; cursor: pointer; padding: 5px 10px; font-size: 0.9rem; transition: 0.2s; }
+        .tab-btn.active { opacity: 1; color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .tab-content { display: none; max-height: 500px; overflow-y: auto; padding-right: 10px; }
+        .tab-content.active { display: block; }
 
         .action-btns { display: flex; gap: 10px; }
         .a-btn { padding: 12px 18px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; }
@@ -91,19 +133,27 @@
 </head>
 <body>
     <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div id="toast" class="toast">Notification</div>
 
     <div class="container" id="mainLayout">
+        <!-- HEADER -->
         <header>
             <div>
                 <p style="letter-spacing: 6px; opacity: 0.4; font-size: 0.7rem; font-weight: 700;">RAS AL KHAIMAH • UAE</p>
                 <h1>AQUA<span>STAR</span><br>& THV</h1>
             </div>
-            <button class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0; opacity: 0.1;" onclick="openStaff()">
-                <i class="fa-solid fa-gear"></i>
-            </button>
+            <div class="header-controls">
+                <button class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0; opacity: 0.6; background: var(--glass); color: #fff; border: 1px solid var(--border);" onclick="toggleTheme()" title="Toggle Theme">
+                    <i class="fa-solid fa-palette"></i>
+                </button>
+                <button class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0; opacity: 0.2;" onclick="openStaff()" title="Staff Portal">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+            </div>
         </header>
 
         <div class="layout">
+            <!-- MENU OPTIONS -->
             <div class="glass">
                 <span class="cat-label">The Pink Series 🌸</span>
                 <div class="grid">
@@ -120,126 +170,375 @@
 
                 <span class="cat-label">The Void Specials ⚫</span>
                 <div class="grid">
-                    <div class="item" onclick="sel('Duck Duck Black (Black indomie)', this)"><i class="fa-solid fa-moon"></i><strong>Duck Black<br><small style="opacity:0.6; font-weight:300;">Black indomie</small></strong></div>
+                    <div class="item" onclick="sel('Duck Duck Black (Charcoal Infused)', this)"><i class="fa-solid fa-moon"></i><strong>Duck Black<br><small style="opacity:0.6; font-weight:300;">Charcoal Fusion</small></strong></div>
                     <div class="item" onclick="sel('More Spicy Than Swicy (Legacy)', this)"><i class="fa-solid fa-fire"></i><strong>Extreme Swicy<br><small style="opacity:0.6; font-weight:300;">Legacy Blend</small></strong></div>
-                    <div class="item" onclick="sel('The KAI (Special Edition)', this)"><i class="fa-solid fa-star"></i><strong>The KAI<br><small style="opacity:0.6; font-weight:300;">Get ready to get KAI'd</small></strong></div>
-                    <div class="item" onclick="sel('The ZANE (Limited Edition)', this)"><i class="fa-solid fa-bolt"></i><strong>The ZANE<br><small style="opacity:0.6; font-weight:300;">I am a nindroid, and ninja never quit</small></strong></div>
+                    <div class="item" onclick="sel('The KAI (Special Edition)', this)"><i class="fa-solid fa-star"></i><strong>The KAI<br><small style="opacity:0.6; font-weight:300;">Seasonal Special</small></strong></div>
+                    <div class="item" onclick="sel('The ZANE (Limited Edition)', this)"><i class="fa-solid fa-bolt"></i><strong>The ZANE<br><small style="opacity:0.6; font-weight:300;">Limited Series</small></strong></div>
                 </div>
             </div>
 
+            <!-- CHECKOUT BLOCK & FEEDBACK METRICS -->
             <div class="glass" style="height: fit-content; position: sticky; top: 40px;">
-                <h3 style="margin-bottom: 25px;">Secure Checkout</h3>
+                <h3 style="margin-bottom: 10px;">Secure Checkout</h3>
                 <label>Selection</label>
                 <input type="text" id="selDish" readonly placeholder="Pick from menu...">
-                <label>Name</label>
+                <label>Your Name</label>
                 <input type="text" id="name" placeholder="Enter full name">
-                <label>Notes</label>
-                <textarea id="note" rows="3" placeholder="Extra spicy? Allergies?"></textarea>
+                <label>Kitchen Notes</label>
+                <textarea id="note" rows="2" placeholder="Extra spicy? Allergies?"></textarea>
+
+                <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <h4 style="font-size: 0.9rem; letter-spacing: 1px; color: var(--primary);">Rate Our Staff (Optional)</h4>
+                    
+                    <div class="feedback-group">
+                        <div class="slider-label">Food Execution <span id="v1">5 (Perfect)</span></div>
+                        <input type="range" id="fFood" min="1" max="5" value="5" oninput="updateLabel('v1', this.value)">
+                    </div>
+                    <div class="feedback-group">
+                        <div class="slider-label">Service / Hospitality <span id="v2">5 (Perfect)</span></div>
+                        <input type="range" id="fService" min="1" max="5" value="5" oninput="updateLabel('v2', this.value)">
+                    </div>
+                    <div class="feedback-group">
+                        <div class="slider-label">Usefulness <span id="v3">5 (Perfect)</span></div>
+                        <input type="range" id="fUseful" min="1" max="5" value="5" oninput="updateLabel('v3', this.value)">
+                    </div>
+                    <div class="feedback-group">
+                        <div class="slider-label">Health & Safety <span id="v4">5 (Perfect)</span></div>
+                        <input type="range" id="fSafety" min="1" max="5" value="5" oninput="updateLabel('v4', this.value)">
+                    </div>
+                </div>
+                
                 <button class="btn btn-p" id="sendBtn" onclick="order()"><i class="fa-solid fa-paper-plane"></i> PLACE ORDER</button>
+            </div>
+        </div>
+
+        <!-- RECOMMENDATIONS INTAKE BOX -->
+        <div class="glass" style="margin-top: 40px;">
+            <h3 style="color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-lightbulb"></i> Recommendations Sandbox</h3>
+            <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Have an amazing idea for a new Indomie recipe or a website feature? We want to build it.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div><label>Your Alias</label><input type="text" id="recName" placeholder="Chef / Dev Name"></div>
+                <div>
+                    <label>Target Area</label>
+                    <select id="recType">
+                        <option value="menu">New Menu Item Concept 🍲</option>
+                        <option value="website">Website Upgrade / Animation Idea 💻</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top: 15px;"><label>Proposal Details</label><textarea id="recText" rows="3" placeholder="Describe your recommendation..."></textarea></div>
+            <button class="btn" style="background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--border); width: auto; padding: 15px 30px; margin-top: 15px;" id="recBtn" onclick="submitRecommendation()">Submit Proposal</button>
+        </div>
+    </div>
+
+    <!-- SUCCESS INTERACTION COMPONENT -->
+    <div id="successScreen">
+        <i class="fa-solid fa-circle-check" style="font-size: 5rem; color: #00ff88; margin-bottom: 20px;"></i>
+        <h1>Order Transmitted!</h1>
+        <p style="opacity:0.7; margin-bottom:20px;">Your metrics have cleared verification pipelines.</p>
+        <button class="btn btn-p" style="width:auto; padding: 15px 40px;" onclick="resetUI()">Return to Menu</button>
+    </div>
+
+    <!-- CENTRAL CONTROL STAFF PORTAL -->
+    <div id="staff">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
+            <div>
+                <h1>Kitchen HQ Control</h1>
+                <p style="opacity:0.5; font-size:0.85rem;">Live orders, analytics tracking, and R&D systems</p>
+            </div>
+            <button class="a-btn" style="background:#fff; color:#000;" onclick="closeStaff()">EXIT SYSTEM</button>
+        </div>
+
+        <div class="portal-layout">
+            <!-- LEFT MODULE: LIVE TICKETS -->
+            <div>
+                <h3 style="margin-bottom: 15px; letter-spacing: 2px;">LIVE ORDERS</h3>
+                <div class="stat-bar">
+                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Pending</p><h3 id="c1">0</h3></div>
+                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Finished</p><h3 id="c2" style="color:#00ff88">0</h3></div>
+                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Total Tickets</p><h3 id="c3">0</h3></div>
+                </div>
+                <div id="staffList">
+                    <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Fetching Live Data...</div>
+                </div>
+            </div>
+
+            <!-- RIGHT MODULE: AUDIT TELEMETRY (TABS) -->
+            <div style="border-left: 1px solid var(--border); padding-left: 30px;">
+                <div class="tab-headers">
+                    <button class="tab-btn active" id="btnTabFeed" onclick="switchTab('feedback')">STAFF RATINGS</button>
+                    <button class="tab-btn" id="btnTabRec" onclick="switchTab('recs')">CUSTOMER SUGGESTIONS</button>
+                </div>
+                
+                <!-- SUB-TAB 1: PERFORMANCE FEEDBACK -->
+                <div id="tabFeedback" class="tab-content active">
+                    <div class="stat-card" style="text-align: left; margin-bottom: 20px; background: rgba(255,45,117,0.05);">
+                        <p style="font-weight: 700; margin-bottom: 10px;">Rolling Metric Averages:</p>
+                        <div style="font-size: 0.85rem; display:grid; gap:5px;">
+                            <div>🍲 Food Quality: <strong id="avgFood" style="color:var(--primary)">-</strong> / 5</div>
+                            <div>🛎️ Service Score: <strong id="avgService" style="color:var(--primary)">-</strong> / 5</div>
+                            <div>📈 Usefulness: <strong id="avgUseful" style="color:var(--primary)">-</strong> / 5</div>
+                            <div>🧼 Health & Safety: <strong id="avgSafety" style="color:var(--primary)">-</strong> / 5</div>
+                        </div>
+                    </div>
+                    <div id="feedbackContainer"></div>
+                </div>
+
+                <!-- SUB-TAB 2: RAW INPUT REC BOXES -->
+                <div id="tabRecs" class="tab-content">
+                    <div id="recsContainer"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="successScreen">
-        <i class="fa-solid fa-circle-check" style="font-size: 5rem; color: #00ff88; margin-bottom: 20px;"></i>
-        <h1>Order Transmitted!</h1>
-        <p style="opacity:0.7; margin-bottom:20px;">The kitchen has your request.</p>
-        <button class="btn btn-p" style="width:auto; padding: 15px 40px;" onclick="location.reload()">Return to Menu</button>
-    </div>
-
-    <div id="staff">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h1>Kitchen Management</h1>
-            <button class="a-btn" style="background:#fff;" onclick="document.getElementById('staff').style.display='none'">EXIT</button>
-        </div>
-        <div class="stat-bar">
-            <div class="stat-card"><p>Pending</p><h3 id="c1">0</h3></div>
-            <div class="stat-card"><p>Finished</p><h3 id="c2" style="color:#00ff88">0</h3></div>
-            <div class="stat-card"><p>Total</p><h3 id="c3">0</h3></div>
-        </div>
-        <div id="staffList"></div>
-    </div>
-
     <script>
-        // --- 1. SETTINGS ---
         const S_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
         
         const _s = supabase.createClient(S_URL, S_KEY);
         let currentDish = "";
-        let lastDataString = ""; // Stores a snapshot of data to prevent flickering
+        let lastDataString = "";
+        let lastFeedbackString = "";
+        let lastRecsString = "";
+        let staffInterval = null;
 
-        // --- 2. CUSTOMER FUNCTIONS ---
+        // QoL: Load saved theme
+        if(localStorage.getItem('theme') === 'cyber') document.body.setAttribute('data-theme', 'cyber');
+
+        function toggleTheme() {
+            if(document.body.getAttribute('data-theme') === 'cyber') {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.setAttribute('data-theme', 'cyber');
+                localStorage.setItem('theme', 'cyber');
+            }
+        }
+
+        // QoL: Toast Notification System
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.className = `toast ${type} show`;
+            t.innerText = msg;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // QoL: Dynamic Slider Labels
+        function updateLabel(id, val) {
+            const textMap = { "1": "1 (Poor)", "2": "2 (Subpar)", "3": "3 (Average)", "4": "4 (Great)", "5": "5 (Perfect)" };
+            document.getElementById(id).innerText = textMap[val];
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if(t === 'feedback') {
+                document.getElementById('btnTabFeed').classList.add('active');
+                document.getElementById('tabFeedback').classList.add('active');
+            } else {
+                document.getElementById('btnTabRec').classList.add('active');
+                document.getElementById('tabRecs').classList.add('active');
+            }
+        }
+
         function sel(d, e) {
             currentDish = d; document.getElementById('selDish').value = d;
             document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
             e.classList.add('active');
         }
 
+        // QoL: Smooth UI Reset
+        function resetUI() {
+            document.getElementById('name').value = '';
+            document.getElementById('note').value = '';
+            document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
+            currentDish = '';
+            document.getElementById('selDish').value = '';
+            document.getElementById('successScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('successScreen').style.display = 'none';
+                document.getElementById('mainLayout').style.display = 'block';
+                window.scrollTo(0, 0);
+            }, 500);
+            document.getElementById('sendBtn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> PLACE ORDER`;
+            document.getElementById('sendBtn').disabled = false;
+        }
+
         async function order() {
             const n = document.getElementById('name').value, nt = document.getElementById('note').value;
-            if(!currentDish || !n) return alert("Missing name or dish!");
+            if(!currentDish || !n) return showToast("Missing name or dish selection!", "error");
             
             const btn = document.getElementById('sendBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SENDING...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PIPING DATA...`;
             btn.disabled = true;
+
+            const sF = document.getElementById('fFood').value, sS = document.getElementById('fService').value;
+            const sU = document.getElementById('fUseful').value, sH = document.getElementById('fSafety').value;
 
             try {
                 const res = await fetch(`${W_URL}?wait=true`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        embeds: [{ title: "🌸 New Order", color: 0xff2d75, fields: [{name:"User",value:n,inline:true},{name:"Dish",value:currentDish,inline:true},{name:"Notes",value:nt||"None"}] }] 
+                        embeds: [{ 
+                            title: "🌸 New Order Dispatch", color: 0xff2d75, 
+                            fields: [
+                                {name: "User", value: n, inline: true}, {name: "Dish", value: currentDish, inline: true}, {name: "Notes", value: nt || "None"},
+                                {name: "Metrics", value: `Food: ${sF}/5 | Service: ${sS}/5\nUtility: ${sU}/5 | Safety: ${sH}/5`}
+                            ] 
+                        }] 
                     })
                 });
                 const d = await res.json();
+                
                 await _s.from('orders').insert([{ name: n, item: currentDish, note: nt, discord_id: d.id, status: 'pending' }]);
+                await _s.from('employee_feedback').insert([{ customer_name: n, food_score: parseInt(sF), service_score: parseInt(sS), usefulness_score: parseInt(sU), health_safety_score: parseInt(sH) }]);
+
                 document.getElementById('mainLayout').style.display = 'none';
-                document.getElementById('successScreen').style.display = 'flex';
+                const ss = document.getElementById('successScreen');
+                ss.style.display = 'flex';
+                setTimeout(() => ss.style.opacity = '1', 50);
             } catch (e) {
-                alert("Error: " + e.message);
-                btn.disabled = false;
-                btn.innerHTML = "RETRY ORDER";
+                showToast("Pipeline Interrupted: " + e.message, "error");
+                btn.disabled = false; btn.innerHTML = "RETRY ORDER";
             }
         }
 
-        // --- 3. STAFF FUNCTIONS ---
+        async function submitRecommendation() {
+            const name = document.getElementById('recName').value, type = document.getElementById('recType').value, txt = document.getElementById('recText').value;
+            if(!name || !txt) return showToast("Please fill in your name and proposal!", "error");
+
+            const btn = document.getElementById('recBtn');
+            btn.innerText = "PROPOSING..."; btn.disabled = true;
+            try {
+                await _s.from('recommendations').insert([{ author_name: name, rec_type: type, suggestion_text: txt }]);
+                showToast("Proposal stored into core planning data!", "success");
+                document.getElementById('recName').value = ""; document.getElementById('recText').value = "";
+            } catch(e) { showToast("Submission failed: " + e.message, "error"); }
+            btn.innerText = "Submit Proposal"; btn.disabled = false;
+        }
+
+        // --- STAFF LOGIC ---
         function openStaff() {
             if(prompt("PIN:") === '12344321-r') {
-                document.getElementById('staff').style.display='block';
-                loadStaff(); 
-                setInterval(loadStaff, 10000); // REFRESH EVERY 10 SECONDS (No flicker)
+                const s = document.getElementById('staff');
+                s.style.display='block';
+                setTimeout(() => s.style.opacity = '1', 50);
+                loadStaffPortalData(); 
+                staffInterval = setInterval(loadStaffPortalData, 10000);
+            } else {
+                showToast("Access Denied", "error");
             }
         }
 
-        async function loadStaff() {
+        function closeStaff() {
+            clearInterval(staffInterval);
+            const s = document.getElementById('staff');
+            s.style.opacity = '0';
+            setTimeout(() => s.style.display = 'none', 300);
+        }
+
+        function loadStaffPortalData() {
+            loadTickets(); loadFeedback(); loadRecommendations();
+        }
+
+        function formatTime(isoString) {
+            if(!isoString) return '';
+            const d = new Date(isoString);
+            return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        async function loadTickets() {
             const { data } = await _s.from('orders').select('*').order('id', { ascending: false });
             if(!data) return;
 
-            // PREVENT REFRESH IF DATA IS THE SAME
             const currentString = JSON.stringify(data);
             if(currentString === lastDataString) return; 
             lastDataString = currentString;
 
-            // Update Counts
             document.getElementById('c1').innerText = data.filter(o => o.status==='pending').length;
             document.getElementById('c2').innerText = data.filter(o => o.status==='finished').length;
             document.getElementById('c3').innerText = data.length;
 
-            // Render List
+            if(data.length === 0) {
+                document.getElementById('staffList').innerHTML = `<div class="empty-state">No active orders. The kitchen is clear! ✨</div>`;
+                return;
+            }
+
             document.getElementById('staffList').innerHTML = data.map(o => `
                 <div class="order-card">
                     <div>
                         <span class="status-pill status-${o.status}">${o.status}</span>
+                        <span style="font-size:0.75rem; opacity:0.5; margin-left:10px;"><i class="fa-regular fa-clock"></i> ${formatTime(o.created_at) || 'Just now'}</span>
                         <h2>${o.name}</h2>
                         <p style="color:var(--primary); font-weight:700;">${o.item}</p>
                         <p style="opacity:0.5; font-size:0.8rem;">${o.note || ''}</p>
                     </div>
                     <div class="action-btns">
-                        ${o.status === 'pending' ? `<button class="a-btn btn-finish" style="background:#00ff88;" onclick="upd(${o.id}, '${o.discord_id}', '${o.name}', '${o.item}', '${o.note}')">FINISH</button>` : ''}
+                        ${o.status === 'pending' ? `<button class="a-btn" style="background:#00ff88; color:#000;" onclick="upd(${o.id}, '${o.discord_id}', '${o.name}', '${o.item}', '${o.note}')">FINISH</button>` : ''}
                         <button class="a-btn" style="background:rgba(255,0,0,0.1); color:#ff4444;" onclick="del(${o.id}, '${o.discord_id}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadFeedback() {
+            const { data } = await _s.from('employee_feedback').select('*').order('id', { ascending: false });
+            if(!data || data.length === 0) {
+                document.getElementById('feedbackContainer').innerHTML = `<div class="empty-state">No feedback submitted yet.</div>`;
+                return;
+            }
+
+            const currentStr = JSON.stringify(data);
+            if(currentStr === lastFeedbackString) return;
+            lastFeedbackString = currentStr;
+
+            let tFood=0, tServ=0, tUse=0, tSafe=0;
+            data.forEach(f => { tFood+=f.food_score; tServ+=f.service_score; tUse+=f.usefulness_score; tSafe+=f.health_safety_score; });
+            const count = data.length;
+
+            document.getElementById('avgFood').innerText = (tFood/count).toFixed(1);
+            document.getElementById('avgService').innerText = (tServ/count).toFixed(1);
+            document.getElementById('avgUseful').innerText = (tUse/count).toFixed(1);
+            document.getElementById('avgSafety').innerText = (tSafe/count).toFixed(1);
+
+            document.getElementById('feedbackContainer').innerHTML = data.map(f => `
+                <div class="feedback-card">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <strong style="font-size:0.9rem;">👤 ${f.customer_name || 'Anonymous'}</strong>
+                        <small style="opacity:0.4;">${new Date(f.created_at).toLocaleDateString()}</small>
+                    </div>
+                    <div>
+                        <span class="score-badge">🍲 F: ${f.food_score}</span>
+                        <span class="score-badge">🛎️ S: ${f.service_score}</span>
+                        <span class="score-badge">📈 U: ${f.usefulness_score}</span>
+                        <span class="score-badge">🧼 H: ${f.health_safety_score}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadRecommendations() {
+            const { data } = await _s.from('recommendations').select('*').order('id', { ascending: false });
+            if(!data || data.length === 0) {
+                document.getElementById('recsContainer').innerHTML = `<div class="empty-state">No ideas submitted yet.</div>`;
+                return;
+            }
+
+            const currentStr = JSON.stringify(data);
+            if(currentStr === lastRecsString) return;
+            lastRecsString = currentStr;
+
+            document.getElementById('recsContainer').innerHTML = data.map(r => `
+                <div class="rec-card">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <strong style="font-size:0.9rem; color:var(--primary);">💡 ${r.author_name}</strong>
+                        <span class="status-pill" style="background:rgba(255,255,255,0.1); color:#fff;">${r.rec_type.toUpperCase()}</span>
+                    </div>
+                    <p style="font-size:0.85rem; opacity:0.85; line-height:1.4;">${r.suggestion_text}</p>
+                    <small style="opacity:0.3; font-size:0.7rem;">${new Date(r.created_at).toLocaleDateString()} at ${formatTime(r.created_at)}</small>
                 </div>
             `).join('');
         }
@@ -249,18 +548,18 @@
                 await fetch(`${W_URL}/messages/${disc_id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ embeds: [{ title: "✅ FINISHED", color: 0x00ff88, fields: [{name:"User",value:name,inline:true},{name:"Dish",value:item,inline:true}] }] })
+                    body: JSON.stringify({ embeds: [{ title: "✅ DISPATCH COMPLETION COMPLETE", color: 0x00ff88, fields: [{name:"User",value:name,inline:true},{name:"Dish",value:item,inline:true}] }] })
                 });
             } catch (e) {}
             await _s.from('orders').update({ status: 'finished' }).eq('id', db_id);
-            loadStaff();
+            loadTickets();
         }
 
         async function del(id, did) {
-            if(!confirm("Delete forever?")) return;
+            if(!confirm("Destroy logging record permanently?")) return;
             await fetch(`${W_URL}/messages/${did}`, { method:'DELETE' }).catch(()=>{});
             await _s.from('orders').delete().eq('id', id);
-            loadStaff();
+            loadTickets();
         }
     </script>
 </body>
