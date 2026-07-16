@@ -21,7 +21,6 @@
             --muted: #888888;
             --accent: #ffffff;
             --particle-color: 255, 255, 255; /* RGB format for canvas */
-            --particle-glow: 0.8;
         }
 
         body[data-mode="paper"] {
@@ -34,37 +33,22 @@
             --muted: #666666;
             --accent: #050505;
             --particle-color: 0, 0, 0;
-            --particle-glow: 0.2;
         }
 
-        /* Theme: WWE (Black, Red, White) */
+        /* Theme Accents (Only change colors, not base bg/fg to prevent toggle bugs) */
         body[data-theme="wwe"] {
-            --bg: #000000;
-            --surface: #1a1a1a;
-            --surface-2: #222222;
-            --fg: #ffffff;
             --accent: #d4151a;
             --border-focus: #d4151a;
             --particle-color: 212, 21, 26;
         }
 
-        /* Theme: Beta Squad (Green, Black) */
         body[data-theme="beta"] {
-            --bg: #0a0a0a;
-            --surface: #111111;
-            --surface-2: #1a1a1a;
-            --fg: #ffffff;
             --accent: #00ff00;
             --border-focus: #00ff00;
             --particle-color: 0, 255, 0;
         }
 
-        /* Theme: Marvel (Vivid Red, White) */
         body[data-theme="marvel"] {
-            --bg: #0f0f0f;
-            --surface: #1a1a1a;
-            --surface-2: #222222;
-            --fg: #ffffff;
             --accent: #ed1d24;
             --border-focus: #ed1d24;
             --particle-color: 237, 29, 36;
@@ -141,14 +125,51 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
             font-family: 'Fraunces', serif;
             font-weight: 400;
             font-size: 1.4rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.3s ease;
+        }
+
+        .logo-collab {
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo.has-collab .logo-collab {
+            display: flex;
+        }
+
+        .collab-x {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .collab-logo-img {
+            height: 28px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 2px;
+        }
+
+        .collab-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 1px;
         }
 
         .logo.flash { animation: flashAnim 0.6s ease; }
@@ -856,11 +877,19 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .collab-btn:hover, .collab-btn:active {
             border-color: var(--fg);
             transform: translateY(-2px);
+        }
+
+        .collab-btn img {
+            height: 20px;
         }
 
         /* Toast */
@@ -923,7 +952,10 @@
 
     <!-- STICKY NAVIGATION -->
     <nav>
-        <div class="logo" id="logo">MARSE</div>
+        <div class="logo" id="logo">
+            <span class="logo-text">MARSE</span>
+            <div class="logo-collab" id="logo-collab"></div>
+        </div>
         <div class="nav-actions">
             <button id="theme-toggle" class="theme-toggle-btn"><i class="fa-solid fa-circle-half-stroke"></i></button>
             <button id="btn-order-view" class="nav-btn active" onclick="switchTab('order')">Order</button>
@@ -953,7 +985,7 @@
                     </p>
                 </div>
 
-                <!-- New UI Tiles -->
+                <!-- UI Tiles -->
                 <div class="tile-grid animate-in" style="animation-delay: 0.15s;">
                     <div class="stat-tile">
                         <div class="tile-val">3:00</div>
@@ -1166,9 +1198,15 @@
             <div class="modal-title">Hidden Editions</div>
             <div class="collab-options">
                 <button class="collab-btn" data-theme="default">Standard MARSE</button>
-                <button class="collab-btn" data-theme="wwe">WWE</button>
-                <button class="collab-btn" data-theme="beta">Beta Squad</button>
-                <button class="collab-btn" data-theme="marvel">Marvel</button>
+                <button class="collab-btn" data-theme="wwe">
+                    <img src="https://z-cdn-media.chatglm.cn/files/60240669-eab8-45b7-8cad-81e30fc67064.png?auth_key=1884227190-481e3f7913dc432dbad11fcca90b11f9-0-e0c349582e6a0f3c60b23b74e551b140" alt="WWE"> WWE
+                </button>
+                <button class="collab-btn" data-theme="beta">
+                    <img src="https://z-cdn-media.chatglm.cn/files/f3736e85-fda1-4578-b26c-2306a5a12388.jpeg?auth_key=1884226987-82185dea37954bd9be8a71bc41489d8c-0-3ef57ebd006a75f75cb4c913497331e7" alt="Beta"> Beta Squad
+                </button>
+                <button class="collab-btn" data-theme="marvel">
+                    <img src="https://z-cdn-media.chatglm.cn/files/66cdc565-4741-4c25-9390-40a9a295999b.png?auth_key=1884226987-7e0a7708a55c47ba9691bfb0d656944f-0-e0d69e01eab7045096ed0c4542301604" alt="Marvel"> Marvel
+                </button>
             </div>
         </div>
     </div>
@@ -1195,26 +1233,38 @@
         // Theme definitions for UI updates
         const themeConfig = {
             default: {
-                logo: 'MARSE',
+                logoText: 'MARSE',
+                logoImg: '',
                 spiceTicks: ['Whisper', 'Glow', 'Fire'],
                 creamTicks: ['Broth', 'Velvet', 'Silk']
             },
             wwe: {
-                logo: 'MARSE × WWE',
+                logoText: 'MARSE',
+                logoImg: 'https://z-cdn-media.chatglm.cn/files/60240669-eab8-45b7-8cad-81e30fc67064.png?auth_key=1884227190-481e3f7913dc432dbad11fcca90b11f9-0-e0c349582e6a0f3c60b23b74e551b140',
                 spiceTicks: ['SmackDown', 'Raw', 'WrestleMania'],
                 creamTicks: ['Ring', 'Champion', 'Gold']
             },
             beta: {
-                logo: 'MARSE × BETA',
+                logoText: 'MARSE',
+                logoImg: 'https://z-cdn-media.chatglm.cn/files/f3736e85-fda1-4578-b26c-2306a5a12388.jpeg?auth_key=1884226987-82185dea37954bd9be8a71bc41489d8c-0-3ef57ebd006a75f75cb4c913497331e7',
                 spiceTicks: ['Banter', 'Challenge', 'Shutdown'],
                 creamTicks: ['Gaming', 'Chalk', 'Squad']
             },
             marvel: {
-                logo: 'MARSE × MARVEL',
+                logoText: 'MARSE',
+                logoImg: 'https://z-cdn-media.chatglm.cn/files/66cdc565-4741-4c25-9390-40a9a295999b.png?auth_key=1884226987-7e0a7708a55c47ba9691bfb0d656944f-0-e0d69e01eab7045096ed0c4542301604',
                 spiceTicks: ['Mutant', 'Gamma', 'Cosmic'],
                 creamTicks: ['Stark', 'Vibranium', 'Infinity']
             }
         };
+
+        // Preload images for canvas
+        const wweImg = new Image();
+        wweImg.src = themeConfig.wwe.logoImg;
+        const betaImg = new Image();
+        betaImg.src = themeConfig.beta.logoImg;
+        const marvelImg = new Image();
+        marvelImg.src = themeConfig.marvel.logoImg;
 
         // --- INITS ---
         window.onload = () => {
@@ -1572,7 +1622,7 @@
                 btn.addEventListener('click', () => {
                     applyTheme(btn.dataset.theme);
                     modal.classList.remove('show');
-                    triggerToast(`${btn.innerText} Edition Activated`);
+                    triggerToast(`${btn.innerText.trim()} Edition Activated`);
                     vibrate(15);
                 });
             });
@@ -1583,7 +1633,16 @@
             document.body.setAttribute('data-theme', themeName);
             
             const config = themeConfig[themeName];
-            document.getElementById('logo').innerText = config.logo;
+            const logoContainer = document.getElementById('logo');
+            const collabDiv = document.getElementById('logo-collab');
+            
+            if (themeName === 'default') {
+                logoContainer.classList.remove('has-collab');
+                collabDiv.innerHTML = '';
+            } else {
+                logoContainer.classList.add('has-collab');
+                collabDiv.innerHTML = `<span class="collab-x">×</span><img src="${config.logoImg}" class="collab-logo-img">`;
+            }
             
             const spiceTicks = document.getElementById('spice-ticks');
             spiceTicks.innerHTML = `
@@ -1610,7 +1669,7 @@
             });
         }
 
-        // --- GLOWING PARTICLES (DYNAMIC SHAPES) ---
+        // --- GLOWING PARTICLES & LOGO SHAPES ---
         function initParticles() {
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
@@ -1631,10 +1690,10 @@
                     particles.push({
                         x: Math.random() * w,
                         y: Math.random() * h,
-                        r: Math.random() * 10 + 5, // Size for text rendering
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: -Math.random() * 0.5 - 0.2,
-                        opacity: Math.random() * 0.4 + 0.1
+                        r: Math.random() * 15 + 10, // Size for image rendering
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: -Math.random() * 0.4 - 0.1,
+                        opacity: Math.random() * 0.3 + 0.05 // Subtle opacity
                     });
                 }
             }
@@ -1650,12 +1709,24 @@
                     p.x += p.vx;
                     p.y += p.vy;
 
-                    if (p.y < -20) { p.y = h + 20; p.x = Math.random() * w; }
-                    if (p.x < -20) p.x = w + 20;
-                    if (p.x > w + 20) p.x = -20;
+                    if (p.y < -40) { p.y = h + 40; p.x = Math.random() * w; }
+                    if (p.x < -40) p.x = w + 40;
+                    if (p.x > w + 40) p.x = -40;
 
-                    if (currentTheme === 'default') {
-                        // Glowing orbs
+                    ctx.save();
+                    ctx.globalAlpha = p.opacity;
+                    
+                    if (currentTheme === 'wwe' && wweImg.complete) {
+                        const aspect = wweImg.width / wweImg.height || 1;
+                        ctx.drawImage(wweImg, p.x - (p.r * aspect)/2, p.y - p.r/2, p.r * aspect, p.r);
+                    } else if (currentTheme === 'beta' && betaImg.complete) {
+                        const aspect = betaImg.width / betaImg.height || 1;
+                        ctx.drawImage(betaImg, p.x - (p.r * aspect)/2, p.y - p.r/2, p.r * aspect, p.r);
+                    } else if (currentTheme === 'marvel' && marvelImg.complete) {
+                        const aspect = marvelImg.width / marvelImg.height || 1.5;
+                        ctx.drawImage(marvelImg, p.x - (p.r * aspect)/2, p.y - p.r/2, p.r * aspect, p.r);
+                    } else {
+                        // Default glowing orbs
                         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
                         gradient.addColorStop(0, `rgba(${color}, 0.8)`);
                         gradient.addColorStop(0.5, `rgba(${color}, 0.2)`);
@@ -1664,19 +1735,9 @@
                         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                         ctx.fillStyle = gradient;
                         ctx.fill();
-                    } else {
-                        // Logo text particles
-                        let char = 'M';
-                        if (currentTheme === 'wwe') char = 'W';
-                        if (currentTheme === 'beta') char = 'B';
-                        if (currentTheme === 'marvel') char = 'M';
-
-                        ctx.font = `bold ${p.r}px Arial`;
-                        ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(char, p.x, p.y);
                     }
+                    
+                    ctx.restore();
                 });
                 requestAnimationFrame(animate);
             }
