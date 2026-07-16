@@ -20,7 +20,7 @@
             --border-focus: rgba(255, 255, 255, 0.4);
             --muted: #888888;
             --accent: #ffffff;
-            --particle-color: 255, 255, 255; /* RGB format for canvas */
+            --particle-color: 255, 255, 255;
         }
 
         body[data-mode="paper"] {
@@ -35,7 +35,7 @@
             --particle-color: 0, 0, 0;
         }
 
-        /* Theme Accents (Only change colors, not base bg/fg to prevent toggle bugs) */
+        /* Theme Accents */
         body[data-theme="wwe"] {
             --accent: #d4151a;
             --border-focus: #d4151a;
@@ -160,7 +160,6 @@
             height: 28px;
             width: auto;
             object-fit: contain;
-            border-radius: 2px;
         }
 
         .collab-text {
@@ -1199,13 +1198,13 @@
             <div class="collab-options">
                 <button class="collab-btn" data-theme="default">Standard MARSE</button>
                 <button class="collab-btn" data-theme="wwe">
-                    <img src="https://z-cdn-media.chatglm.cn/files/60240669-eab8-45b7-8cad-81e30fc67064.png?auth_key=1884227190-481e3f7913dc432dbad11fcca90b11f9-0-e0c349582e6a0f3c60b23b74e551b140" alt="WWE"> WWE
+                    <img src="https://z-cdn-media.chatglm.cn/files/b9ffab66-ba93-4d7d-a622-c734759102d0.png?auth_key=1884228335-822ef35e831549408db5766318f5b65d-0-21e38da7458d476734e437dcef25c826" alt="WWE"> WWE
                 </button>
                 <button class="collab-btn" data-theme="beta">
-                    <img src="https://z-cdn-media.chatglm.cn/files/f3736e85-fda1-4578-b26c-2306a5a12388.jpeg?auth_key=1884226987-82185dea37954bd9be8a71bc41489d8c-0-3ef57ebd006a75f75cb4c913497331e7" alt="Beta"> Beta Squad
+                    <img src="https://z-cdn-media.chatglm.cn/files/bc0093e1-4a82-41c8-b45e-0525c1df67b3.png?auth_key=1884228335-6fa80afb9a274490b06355a474dd7712-0-f323ff980fde73bb217e0bc621aa8b4f" alt="Beta"> Beta Squad
                 </button>
                 <button class="collab-btn" data-theme="marvel">
-                    <img src="https://z-cdn-media.chatglm.cn/files/66cdc565-4741-4c25-9390-40a9a295999b.png?auth_key=1884226987-7e0a7708a55c47ba9691bfb0d656944f-0-e0d69e01eab7045096ed0c4542301604" alt="Marvel"> Marvel
+                    <img src="https://z-cdn-media.chatglm.cn/files/e285d29d-457e-4d22-b606-5e921e5019cc.png?auth_key=1884228335-84868b285df54edda0071b978c404ca1-0-15444ced10b0856fb7f5657a2e65e4eb" alt="Marvel"> Marvel
                 </button>
             </div>
         </div>
@@ -1230,7 +1229,7 @@
             theme: 'default'
         };
 
-        // Theme definitions for UI updates
+        // Theme definitions
         const themeConfig = {
             default: {
                 logoText: 'MARSE',
@@ -1240,31 +1239,23 @@
             },
             wwe: {
                 logoText: 'MARSE',
-                logoImg: 'https://z-cdn-media.chatglm.cn/files/60240669-eab8-45b7-8cad-81e30fc67064.png?auth_key=1884227190-481e3f7913dc432dbad11fcca90b11f9-0-e0c349582e6a0f3c60b23b74e551b140',
+                logoImg: 'https://z-cdn-media.chatglm.cn/files/b9ffab66-ba93-4d7d-a622-c734759102d0.png?auth_key=1884228335-822ef35e831549408db5766318f5b65d-0-21e38da7458d476734e437dcef25c826',
                 spiceTicks: ['SmackDown', 'Raw', 'WrestleMania'],
                 creamTicks: ['Ring', 'Champion', 'Gold']
             },
             beta: {
                 logoText: 'MARSE',
-                logoImg: 'https://z-cdn-media.chatglm.cn/files/f3736e85-fda1-4578-b26c-2306a5a12388.jpeg?auth_key=1884226987-82185dea37954bd9be8a71bc41489d8c-0-3ef57ebd006a75f75cb4c913497331e7',
+                logoImg: 'https://z-cdn-media.chatglm.cn/files/bc0093e1-4a82-41c8-b45e-0525c1df67b3.png?auth_key=1884228335-6fa80afb9a274490b06355a474dd7712-0-f323ff980fde73bb217e0bc621aa8b4f',
                 spiceTicks: ['Banter', 'Challenge', 'Shutdown'],
                 creamTicks: ['Gaming', 'Chalk', 'Squad']
             },
             marvel: {
                 logoText: 'MARSE',
-                logoImg: 'https://z-cdn-media.chatglm.cn/files/66cdc565-4741-4c25-9390-40a9a295999b.png?auth_key=1884226987-7e0a7708a55c47ba9691bfb0d656944f-0-e0d69e01eab7045096ed0c4542301604',
+                logoImg: 'https://z-cdn-media.chatglm.cn/files/e285d29d-457e-4d22-b606-5e921e5019cc.png?auth_key=1884228335-84868b285df54edda0071b978c404ca1-0-15444ced10b0856fb7f5657a2e65e4eb',
                 spiceTicks: ['Mutant', 'Gamma', 'Cosmic'],
                 creamTicks: ['Stark', 'Vibranium', 'Infinity']
             }
         };
-
-        // Preload images for canvas
-        const wweImg = new Image();
-        wweImg.src = themeConfig.wwe.logoImg;
-        const betaImg = new Image();
-        betaImg.src = themeConfig.beta.logoImg;
-        const marvelImg = new Image();
-        marvelImg.src = themeConfig.marvel.logoImg;
 
         // --- INITS ---
         window.onload = () => {
@@ -1676,6 +1667,14 @@
             let particles = [];
             let w, h;
 
+            // Preload images for canvas
+            const wweImg = new Image();
+            wweImg.src = themeConfig.wwe.logoImg;
+            const betaImg = new Image();
+            betaImg.src = themeConfig.beta.logoImg;
+            const marvelImg = new Image();
+            marvelImg.src = themeConfig.marvel.logoImg;
+
             function resize() {
                 w = canvas.width = window.innerWidth;
                 h = canvas.height = window.innerHeight;
@@ -1690,10 +1689,10 @@
                     particles.push({
                         x: Math.random() * w,
                         y: Math.random() * h,
-                        r: Math.random() * 15 + 10, // Size for image rendering
+                        r: Math.random() * 15 + 10,
                         vx: (Math.random() - 0.5) * 0.3,
                         vy: -Math.random() * 0.4 - 0.1,
-                        opacity: Math.random() * 0.3 + 0.05 // Subtle opacity
+                        opacity: Math.random() * 0.3 + 0.05
                     });
                 }
             }
