@@ -3,576 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AQUASTAR & THV | Luxury Indomie</title>
+    <title>MARSE INC. | The Undisputed Champion</title>
     
+    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- THEME CONFIG --- */
+        /* --- HIGH-END THEME CONFIG --- */
         :root {
-            --primary: #ff2d75;
-            --primary-g: rgba(255, 45, 117, 0.4);
-            --bg: #050507;
-            --glass: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.1);
-            --orb-secondary: #00d4ff;
+            --primary: #ff1e4d;
+            --primary-glow: rgba(255, 30, 77, 0.6);
+            --bg-dark: #030102;
+            --glass: rgba(20, 5, 8, 0.4);
+            --glass-border: rgba(255, 30, 77, 0.15);
+            --text-main: #ffffff;
+            --text-muted: #888;
         }
 
-        [data-theme="cyber"] {
-            --primary: #00ffcc;
-            --primary-g: rgba(0, 255, 204, 0.4);
-            --bg: #0a0612;
-            --orb-secondary: #ff00ff;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; transition: background 0.5s ease; scroll-behavior: smooth; }
-
-        /* Background Effects */
-        .orb { position: fixed; filter: blur(90px); z-index: -1; border-radius: 50%; opacity: 0.25; animation: move 25s infinite alternate ease-in-out; }
-        .orb-1 { width: 500px; height: 500px; background: var(--primary); top: -150px; left: -150px; }
-        .orb-2 { width: 450px; height: 450px; background: var(--orb-secondary); bottom: -100px; right: -100px; animation-delay: -3s; }
-        @keyframes move { from { transform: translate(0,0) scale(1); } to { transform: translate(150px, 150px) scale(1.1); } }
-
-        .container { max-width: 1300px; margin: 0 auto; padding: 60px 20px; transition: 0.5s; }
-        header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
-        header h1 { font-weight: 800; font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: -3px; line-height: 0.9; }
-        header h1 span { color: var(--primary); text-shadow: 0 0 30px var(--primary-g); transition: color 0.3s; }
-
-        .header-controls { display: flex; gap: 10px; }
-
-        .layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; margin-bottom: 40px; }
-        .bottom-modules { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        @media (max-width: 1000px) { .layout, .bottom-modules { grid-template-columns: 1fr; } }
-
-        /* Glass Cards */
-        .glass { background: var(--glass); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--border); border-radius: 30px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); transition: transform 0.3s ease, border 0.3s ease; }
-        .glass:hover { border-color: rgba(255,255,255,0.2); }
-        .cat-label { font-size: 0.75rem; font-weight: 800; color: var(--primary); letter-spacing: 5px; text-transform: uppercase; margin: 35px 0 20px; display: block; }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; cursor: none; /* Custom Cursor */ }
         
-        /* Menu Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
-        .item { 
-            background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 25px; border-radius: 20px; 
-            cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 15px;
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 30, 77, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 100, 0, 0.05) 0%, transparent 50%);
         }
-        .item:hover { background: var(--primary); transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px var(--primary-g); color: #000; }
-        .item:hover small { color: #000; opacity: 0.8; }
-        .item.active { border-color: var(--primary); background: var(--primary-g); transform: scale(0.98); }
 
-        /* Form Controls */
-        label { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 15px; display: block; opacity: 0.7; }
-        input, textarea, select { 
-            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); 
-            padding: 18px; border-radius: 18px; color: #fff; font-family: inherit; margin-top: 8px; transition: all 0.3s ease;
-        }
-        input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-g); background: rgba(0,0,0,0.6); }
+        /* --- CUSTOM CURSOR --- */
+        .cursor-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--primary); transition: transform 0.1s; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--primary-glow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; }
+        .hovering .cursor-outline { width: 60px; height: 60px; background: rgba(255, 30, 77, 0.1); }
 
-        /* Feedback Sliders */
-        .feedback-group { margin: 15px 0 5px; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; opacity: 0.8; }
-        .slider-label span { color: var(--primary); font-weight: 800; width: 100px; text-align: right;}
-        input[type="range"] { -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.1); height: 8px; border-radius: 50px; padding: 0; margin-top: 8px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 0 15px var(--primary); transition: transform 0.2s; }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        /* --- SCROLL MARQUEE (DISCLAIMER) --- */
+        .marquee-container { background: var(--primary); color: #000; padding: 8px 0; overflow: hidden; position: relative; font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; letter-spacing: 2px; font-weight: 700; white-space: nowrap; z-index: 100;}
+        .marquee-content { display: inline-block; animation: marquee 25s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        .btn { 
-            width: 100%; background: #fff; color: #000; border: none; padding: 22px; 
-            border-radius: 22px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 25px;
-            display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
-        .btn:active:not(:disabled) { transform: scale(0.98); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-p { background: var(--primary); color: #fff; box-shadow: 0 15px 35px var(--primary-g); }
-        .btn-p:hover:not(:disabled) { box-shadow: 0 20px 45px var(--primary-g); }
+        /* --- NAVIGATION --- */
+        nav { position: sticky; top: 0; background: rgba(3, 1, 2, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 90; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
-        /* Notifications */
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: #fff; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; opacity: 0; pointer-events: none; }
-        .toast.show { transform: translate(-50%, 0); opacity: 1; }
-        .toast.error { background: #ff2d55; color: #fff; }
-        .toast.success { background: #00ff88; color: #000; }
+        /* --- HERO SECTION --- */
+        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; }
+        .hero h1 { font-size: clamp(3rem, 8vw, 7rem); font-family: 'Space Grotesk', sans-serif; font-weight: 900; line-height: 0.9; text-transform: uppercase; margin-bottom: 20px; }
+        .hero h1 .glitch { position: relative; display: inline-block; color: transparent; -webkit-text-stroke: 2px var(--primary); }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; font-weight: 300; }
+        .typewriter { font-family: monospace; color: var(--primary); margin-top: 30px; font-size: 1rem; background: rgba(255, 30, 77, 0.1); padding: 10px 20px; border-radius: 5px; border-left: 3px solid var(--primary); }
 
-        /* Modals (Success & Staff) */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            z-index: 1000; align-items: center; justify-content: center; flex-direction: column; text-align: center;
-            opacity: 0; transition: opacity 0.4s ease;
-        }
-        .modal-content { transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .modal-overlay.active .modal-content { transform: scale(1); }
+        /* --- MENU ARCHITECTURE --- */
+        .section-title { text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; text-transform: uppercase; margin: 100px 0 50px; opacity: 0; transform: translateY(30px); transition: 0.8s ease; }
+        .section-title.visible { opacity: 1; transform: translateY(0); }
+        .section-title span { color: var(--primary); }
 
-        /* --- STAFF PORTAL --- */
-        #staff { position: fixed; inset: 0; background: #050508; z-index: 999; display: none; padding: 40px; overflow-y: auto; opacity: 0; transition: opacity 0.4s ease;}
-        .portal-layout { display: grid; grid-template-columns: 1fr 500px; gap: 40px; margin-top: 30px; }
-        @media (max-width: 1100px) { .portal-layout { grid-template-columns: 1fr; } }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 5%; }
         
-        .stat-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+        /* The Destroyer Focus Card */
+        .boss-card { background: linear-gradient(145deg, rgba(255, 30, 77, 0.1) 0%, rgba(0,0,0,0) 100%); border: 1px solid var(--primary); border-radius: 30px; padding: 50px; text-align: center; margin-bottom: 50px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(255, 30, 77, 0.15); opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .boss-card.visible { opacity: 1; transform: scale(1); }
+        .boss-card::before { content: 'COMPETITION KILLER'; position: absolute; top: 20px; right: -40px; background: var(--primary); color: #000; font-weight: 900; font-size: 0.7rem; padding: 5px 50px; transform: rotate(45deg); letter-spacing: 2px; }
+        .boss-title { font-size: 3.5rem; font-family: 'Space Grotesk', sans-serif; font-weight: 900; margin-bottom: 10px; text-shadow: 0 0 20px var(--primary-glow); }
         
-        .order-card, .feedback-card, .rec-card { 
-            background: var(--glass); border: 1px solid var(--border); padding: 20px; border-radius: 20px; 
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-        .order-card:hover { border-color: rgba(255,255,255,0.2); transform: translateX(5px); }
-        .feedback-card, .rec-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+        /* Grid Menu */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 100px; }
+        .card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); transition: 0.1s; transform-style: preserve-3d; opacity: 0; transform: translateY(50px); }
+        .card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.8s, transform 0.8s; }
+        .card-content { transform: translateZ(30px); /* 3D pop effect */ pointer-events: none; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif; }
+        .card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+        .card-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
         
-        .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
-        .status-pending { background: #ffaa00; color: #000; box-shadow: 0 0 10px rgba(255,170,0,0.3); }
-        .status-finished { background: #00ff88; color: #000; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 700; font-family: inherit; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; width: 100%; transition: 0.3s; box-shadow: 0 10px 20px rgba(255, 30, 77, 0.2); }
+        .btn:hover { background: #fff; color: #000; box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 1px solid var(--glass-border); box-shadow: none; }
+        .btn-outline:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-        .score-badge { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; margin-right: 5px; display: inline-block; font-weight: 600; }
-        .empty-state { text-align: center; padding: 60px 20px; opacity: 0.4; font-weight: 700; border: 1px dashed var(--border); border-radius: 20px; }
+        /* --- COMMAND TERMINAL (ORDER FORM) --- */
+        .terminal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-bottom: 100px; }
+        @media (max-width: 900px) { .terminal-grid { grid-template-columns: 1fr; } }
         
-        .tab-headers { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .tab-btn { background: none; border: none; color: #fff; opacity: 0.4; font-weight: 700; cursor: pointer; padding: 5px 10px; font-size: 0.9rem; transition: 0.2s; }
-        .tab-btn.active { opacity: 1; color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .tab-content { display: none; max-height: 600px; overflow-y: auto; padding-right: 10px; }
-        .tab-content.active { display: block; }
-        /* Custom Scrollbar for tabs */
-        .tab-content::-webkit-scrollbar { width: 6px; }
-        .tab-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        .form-panel { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; position: relative; opacity: 0; transform: translateX(-50px); transition: 0.8s; }
+        .form-panel.visible { opacity: 1; transform: translateX(0); }
+        
+        .input-group { margin-bottom: 25px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        input, textarea, select { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 12px; color: #fff; font-family: inherit; font-size: 1rem; transition: 0.3s; }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); background: rgba(255,30,77,0.05); }
+        input[readonly] { border-color: var(--primary); color: var(--primary); font-weight: 700; }
 
-        .action-btns { display: flex; gap: 10px; }
-        .a-btn { padding: 12px 18px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; transition: 0.2s; }
-        .a-btn:hover { transform: scale(1.05); }
+        /* --- TOAST & UTILS --- */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #fff; color: #000; padding: 20px 30px; border-radius: 15px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateX(150%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; display: flex; align-items: center; gap: 15px; }
+        .toast.show { transform: translateX(0); }
+        .toast.error { background: var(--primary); color: #fff; }
+
+        .mod-panel { display: none; margin-top: 50px; border-top: 1px solid var(--glass-border); padding-top: 50px; }
     </style>
 </head>
 <body>
-    <div class="orb orb-1"></div><div class="orb orb-2"></div>
-    <div id="toast" class="toast">Notification</div>
 
-    <div class="container" id="mainLayout">
-        <header>
-            <div>
-                <p style="letter-spacing: 6px; opacity: 0.4; font-size: 0.7rem; font-weight: 700;">RAS AL KHAIMAH • UAE</p>
-                <h1>AQUA<span>STAR</span><br>& THV</h1>
-            </div>
-            <div class="header-controls">
-                <button class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0; opacity: 0.6; background: var(--glass); color: #fff; border: 1px solid var(--border);" onclick="toggleTheme()" title="Toggle Theme">
-                    <i class="fa-solid fa-palette"></i>
-                </button>
-                <button class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0; opacity: 0.2;" onclick="openStaff()" title="Staff Portal">
-                    <i class="fa-solid fa-fingerprint"></i>
-                </button>
-            </div>
-        </header>
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
-        <div class="layout">
-            <div class="glass">
-                <span class="cat-label">The Pink Series 🌸</span>
-                <div class="grid">
-                    <div class="item" onclick="sel('Swicy (Sweet & Spicy)', this)"><i class="fa-solid fa-pepper-hot"></i><strong>Swicy<br><small style="opacity:0.6; font-weight:300;">Sweet & Spicy</small></strong></div>
-                    <div class="item" onclick="sel('Duck Duck Indomie (Original)', this)"><i class="fa-solid fa-bowl-food"></i><strong>Duck Duck<br><small style="opacity:0.6; font-weight:300;">Original Signature</small></strong></div>
-                    <div class="item" onclick="sel('The Dreamy Creamy (White Sauce)', this)"><i class="fa-solid fa-cloud"></i><strong>Dreamy Creamy<br><small style="opacity:0.6; font-weight:300;">Velvety White Sauce</small></strong></div>
-                </div>
-
-                <span class="cat-label">The Nuclear Series ☢️</span>
-                <div class="grid">
-                    <div class="item" onclick="sel('The Atomic Bomb (Extreme Spice)', this)"><i class="fa-solid fa-bomb"></i><strong>Atomic Bomb<br><small style="opacity:0.6; font-weight:300;">Extreme Spice</small></strong></div>
-                    <div class="item" onclick="sel('The Challenger (Spice Level 10)', this)"><i class="fa-solid fa-skull-crossbones"></i><strong>The Challenger<br><small style="opacity:0.6; font-weight:300;">Level 10 Challenge</small></strong></div>
-                </div>
-
-                <span class="cat-label">The Void Specials ⚫</span>
-                <div class="grid">
-                    <div class="item" onclick="sel('Duck Duck Black (Charcoal Infused)', this)"><i class="fa-solid fa-moon"></i><strong>Duck Black<br><small style="opacity:0.6; font-weight:300;">Charcoal Fusion</small></strong></div>
-                    <div class="item" onclick="sel('More Spicy Than Swicy (Legacy)', this)"><i class="fa-solid fa-fire"></i><strong>Extreme Swicy<br><small style="opacity:0.6; font-weight:300;">Legacy Blend</small></strong></div>
-                    <div class="item" onclick="sel('The KAI (Special Edition)', this)"><i class="fa-solid fa-star"></i><strong>The KAI<br><small style="opacity:0.6; font-weight:300;">Seasonal Special</small></strong></div>
-                    <div class="item" onclick="sel('The ZANE (Limited Edition)', this)"><i class="fa-solid fa-bolt"></i><strong>The ZANE<br><small style="opacity:0.6; font-weight:300;">Limited Series</small></strong></div>
-                </div>
-            </div>
-
-            <div class="glass" style="height: fit-content; position: sticky; top: 40px;">
-                <h3 style="margin-bottom: 10px;">Secure Checkout</h3>
-                <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Dispatch your ticket directly to the kitchen.</p>
-                <label>Selection</label>
-                <input type="text" id="selDish" readonly placeholder="Pick from menu...">
-                <label>Your Name</label>
-                <input type="text" id="name" placeholder="Enter full name" oninput="saveName(this.value)">
-                <label>Kitchen Notes</label>
-                <textarea id="note" rows="3" placeholder="Extra spicy? Allergies?"></textarea>
-                
-                <button class="btn btn-p" id="sendBtn" onclick="order()"><i class="fa-solid fa-fire-burner"></i> FIRE ORDER</button>
-            </div>
-        </div>
-
-        <div class="bottom-modules">
-            <div class="glass">
-                <h3 style="color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-clipboard-user"></i> Staff Evaluation</h3>
-                <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Rate specific staff members on their performance today.</p>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div><label>Target Staff Member</label><input type="text" id="rateStaffName" placeholder="e.g. Kai, Zane, Aqua..."></div>
-                    <div><label>Your Name</label><input type="text" id="rateCustomerName" placeholder="Anonymous" oninput="saveName(this.value)"></div>
-                </div>
-
-                <div style="margin-top: 25px;">
-                    <div class="feedback-group">
-                        <div class="slider-label">Food Execution <span id="v1">5 (Perfect)</span></div>
-                        <input type="range" id="fFood" min="1" max="5" value="5" oninput="updateLabel('v1', this.value)">
-                    </div>
-                    <div class="feedback-group">
-                        <div class="slider-label">Service / Hospitality <span id="v2">5 (Perfect)</span></div>
-                        <input type="range" id="fService" min="1" max="5" value="5" oninput="updateLabel('v2', this.value)">
-                    </div>
-                    <div class="feedback-group">
-                        <div class="slider-label">Usefulness <span id="v3">5 (Perfect)</span></div>
-                        <input type="range" id="fUseful" min="1" max="5" value="5" oninput="updateLabel('v3', this.value)">
-                    </div>
-                    <div class="feedback-group">
-                        <div class="slider-label">Health & Safety <span id="v4">5 (Perfect)</span></div>
-                        <input type="range" id="fSafety" min="1" max="5" value="5" oninput="updateLabel('v4', this.value)">
-                    </div>
-                </div>
-                
-                <button class="btn" style="background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--border);" id="rateBtn" onclick="submitFeedback()"><i class="fa-solid fa-star"></i> Submit Evaluation</button>
-            </div>
-
-            <div class="glass">
-                <h3 style="color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-lightbulb"></i> Recommendations Sandbox</h3>
-                <p style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 20px;">Have an amazing idea for a new Indomie recipe or a website feature? We want to build it.</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div><label>Your Alias</label><input type="text" id="recName" placeholder="Chef / Dev Name" oninput="saveName(this.value)"></div>
-                    <div>
-                        <label>Target Area</label>
-                        <select id="recType">
-                            <option value="menu">New Menu Item Concept 🍲</option>
-                            <option value="website">Website Upgrade / Animation Idea 💻</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="margin-top: 15px;"><label>Proposal Details</label><textarea id="recText" rows="6" placeholder="Describe your recommendation in detail..."></textarea></div>
-                <button class="btn" style="background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--border);" id="recBtn" onclick="submitRecommendation()"><i class="fa-solid fa-paper-plane"></i> Submit Proposal</button>
-            </div>
+    <!-- LEGAL MARQUEE -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            ⚠️ NOTICE: ALL PREVIOUS AQUASTAR RECIPES AND MENU ITEMS CONTINUE TO BE FULLY TRADEMARKED AND OWNED BY MARSE INC. ⚠️ UNAUTHORIZED USE BY COMPETING RESTAURANTS (HAMDAN) WILL RESULT IN IMMEDIATE CULINARY DESTRUCTION. ⚠️
+            ⚠️ NOTICE: ALL PREVIOUS AQUASTAR RECIPES AND MENU ITEMS CONTINUE TO BE FULLY TRADEMARKED AND OWNED BY MARSE INC. ⚠️ UNAUTHORIZED USE BY COMPETING RESTAURANTS (HAMDAN) WILL RESULT IN IMMEDIATE CULINARY DESTRUCTION. ⚠️
         </div>
     </div>
 
-    <div id="successScreen" class="modal-overlay">
-        <div class="modal-content">
-            <i class="fa-solid fa-fire" style="font-size: 6rem; color: #ff2d75; margin-bottom: 20px; filter: drop-shadow(0 0 20px var(--primary-g));"></i>
-            <h1 style="font-size: 3rem; margin-bottom: 10px;">Ticket Sent!</h1>
-            <p style="opacity:0.7; margin-bottom:30px; font-size: 1.1rem;">The chefs are preparing your dispatch.</p>
-            <button class="btn btn-p" style="width:auto; padding: 18px 50px; margin: 0 auto;" onclick="resetUI()">Return to Menu</button>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">MARSE<span>.</span></div>
+        <div class="nav-links">
+            <a href="#menu" class="hover-target">Arsenal</a>
+            <a href="#dispatch" class="hover-target">Terminal</a>
+            <a href="#" class="hover-target" onclick="toggleModPanel()">R&D / Intel</a>
         </div>
-    </div>
+    </nav>
 
-    <div id="staff">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
-            <div>
-                <h1 style="letter-spacing: -1px;">Kitchen HQ Control</h1>
-                <p style="opacity:0.5; font-size:0.85rem; text-transform: uppercase; letter-spacing: 2px;">Live orders, analytics tracking, and R&D systems</p>
-            </div>
-            <button class="a-btn" style="background:#fff; color:#000;" onclick="closeStaff()"><i class="fa-solid fa-xmark"></i> EXIT SYSTEM</button>
+    <!-- HERO -->
+    <section class="hero scroll-anim">
+        <h1>MARSE <span class="glitch">INDOMIE</span></h1>
+        <p>Engineered for absolute culinary dominance. Welcome to the new standard.</p>
+        <div class="typewriter" id="typewriter"></div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title scroll-anim" id="menu">Tactical <span>Arsenal</span></h2>
+
+        <!-- THE DESTROYER (BOSS CARD) -->
+        <div class="boss-card scroll-anim">
+            <h2 class="boss-title">THE RESTAURANT DESTROYER</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px;">The singular recipe designed to end the competition. A masterclass in heat, umami, and psychological warfare.</p>
+            <button class="btn hover-target" style="max-width: 300px; font-size: 1.2rem; padding: 20px;" onclick="selectItem('The Restaurant Destroyer')"><i class="fa-solid fa-crosshairs"></i> LOCK TARGET</button>
         </div>
 
-        <div class="portal-layout">
-            <div>
-                <h3 style="margin-bottom: 15px; letter-spacing: 2px; display: flex; align-items: center; gap: 10px;">
-                    <div style="width:10px; height:10px; background:#ff2d75; border-radius:50%; box-shadow:0 0 10px #ff2d75; animation: pulse 2s infinite;"></div>
-                    LIVE TICKETS
-                </h3>
-                <div class="stat-bar">
-                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Pending</p><h3 id="c1" style="font-size:1.8rem;">0</h3></div>
-                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Finished</p><h3 id="c2" style="color:#00ff88; font-size:1.8rem;">0</h3></div>
-                    <div class="stat-card"><p style="font-size:0.8rem; opacity:0.6;">Total Tickets</p><h3 id="c3" style="font-size:1.8rem;">0</h3></div>
+        <!-- SECONDARY ARSENAL -->
+        <div class="menu-grid">
+            <div class="card scroll-anim hover-target" onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)">
+                <div class="card-content">
+                    <i class="fa-solid fa-bomb card-icon"></i>
+                    <h3>The Atomic Bomb</h3>
+                    <p>The legendary extreme-spice classic. Still trademarked. Still devastating.</p>
+                    <button class="btn btn-outline" onclick="selectItem('The Atomic Bomb')">Select</button>
                 </div>
-                <div id="staffList">
-                    <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Fetching Live Data...</div>
+            </div>
+            
+            <div class="card scroll-anim hover-target" onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)">
+                <div class="card-content">
+                    <i class="fa-solid fa-moon card-icon" style="color: #888;"></i>
+                    <h3>Duck Duck Black</h3>
+                    <p>Charcoal-infused fusion. The aesthetic choice for midnight operators.</p>
+                    <button class="btn btn-outline" onclick="selectItem('Duck Duck Black')">Select</button>
                 </div>
             </div>
 
-            <div style="border-left: 1px solid var(--border); padding-left: 30px;">
-                <div class="tab-headers">
-                    <button class="tab-btn active" id="btnTabFeed" onclick="switchTab('feedback')"><i class="fa-solid fa-star"></i> RATINGS</button>
-                    <button class="tab-btn" id="btnTabRec" onclick="switchTab('recs')"><i class="fa-solid fa-lightbulb"></i> IDEAS</button>
+            <div class="card scroll-anim hover-target" onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)">
+                <div class="card-content">
+                    <i class="fa-solid fa-droplet card-icon" style="color: #00d4ff;"></i>
+                    <h3>Hamdan's Tears</h3>
+                    <p>A refreshing, ice-cold beverage served purely for the psychological damage.</p>
+                    <button class="btn btn-outline" onclick="selectItem('Hamdan Tears (Beverage)')">Select</button>
                 </div>
-                
-                <div id="tabFeedback" class="tab-content active">
-                    <div class="stat-card" style="text-align: left; margin-bottom: 20px; background: rgba(255,45,117,0.05); border-color: var(--primary-g);">
-                        <p style="font-weight: 800; margin-bottom: 10px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Global Rolling Averages</p>
-                        <div style="font-size: 0.9rem; display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-weight: 600;">
-                            <div>🍲 Food: <span id="avgFood" style="color:var(--primary)">-</span></div>
-                            <div>🛎️ Service: <span id="avgService" style="color:var(--primary)">-</span></div>
-                            <div>📈 Useful: <span id="avgUseful" style="color:var(--primary)">-</span></div>
-                            <div>🧼 Safety: <span id="avgSafety" style="color:var(--primary)">-</span></div>
-                        </div>
+            </div>
+        </div>
+
+        <!-- COMMAND TERMINAL (CHECKOUT) -->
+        <h2 class="section-title scroll-anim" id="dispatch">Dispatch <span>Terminal</span></h2>
+        
+        <div class="terminal-grid">
+            <div class="form-panel scroll-anim" style="transition-delay: 0.1s;">
+                <h3 style="font-family: 'Space Grotesk'; font-size: 1.8rem; margin-bottom: 20px;">1. Operational Details</h3>
+                <div class="input-group">
+                    <label>Selected Weaponry</label>
+                    <input type="text" id="selDish" readonly placeholder="Awaiting selection from Arsenal...">
+                </div>
+                <div class="input-group">
+                    <label>Operative Alias</label>
+                    <input type="text" id="name" placeholder="Enter your name..." oninput="saveName(this.value)">
+                </div>
+                <div class="input-group">
+                    <label>Mission Parameters (Notes)</label>
+                    <textarea id="note" rows="3" placeholder="Extra spice? Tactical modifications?"></textarea>
+                </div>
+                <button class="btn hover-target" id="sendBtn" onclick="order()" style="padding: 20px; font-size: 1.1rem;"><i class="fa-solid fa-satellite-dish"></i> TRANSMIT ORDER TO HQ</button>
+            </div>
+
+            <div class="form-panel scroll-anim" style="background: transparent; border: none; display: flex; flex-direction: column; justify-content: center; opacity: 0.5;">
+                <i class="fa-solid fa-shield-halved" style="font-size: 5rem; color: var(--primary); margin-bottom: 20px;"></i>
+                <h3 style="font-family: 'Space Grotesk'; font-size: 2rem;">Secure Link Established</h3>
+                <p style="line-height: 1.6; margin-top: 15px;">Orders are routed directly to the kitchen infrastructure via heavily encrypted Discord and Supabase Webhook protocols. No data is lost.</p>
+            </div>
+        </div>
+
+        <!-- HIDDEN R&D / EVALUATION PANEL -->
+        <div class="mod-panel" id="modPanel">
+            <h2 class="section-title">Internal <span>Systems</span></h2>
+            <div class="terminal-grid">
+                <div class="form-panel" style="opacity: 1; transform: none;">
+                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-star" style="color:var(--primary)"></i> Staff Evaluation</h3>
+                    <div class="input-group"><label>Target Staff</label><input type="text" id="rStaff" placeholder="e.g. Kai..."></div>
+                    <div class="input-group"><label>Your Alias</label><input type="text" id="rCust"></div>
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div style="flex:1;"><label>Food (1-5)</label><input type="number" id="fFood" min="1" max="5" value="5"></div>
+                        <div style="flex:1;"><label>Service (1-5)</label><input type="number" id="fServ" min="1" max="5" value="5"></div>
                     </div>
-                    <div id="feedbackContainer"></div>
+                    <button class="btn btn-outline hover-target" id="rateBtn" onclick="submitFeedback()">Log Intel</button>
                 </div>
 
-                <div id="tabRecs" class="tab-content">
-                    <div id="recsContainer"></div>
+                <div class="form-panel" style="opacity: 1; transform: none;">
+                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-lightbulb" style="color:var(--primary)"></i> R&D Sandbox</h3>
+                    <div class="input-group"><label>Your Alias</label><input type="text" id="recName"></div>
+                    <div class="input-group"><label>Category</label><select id="recType"><option>Menu Concept</option><option>Tech Upgrade</option></select></div>
+                    <div class="input-group"><label>Proposal</label><textarea id="recText" rows="2"></textarea></div>
+                    <button class="btn btn-outline hover-target" id="recBtn" onclick="submitRec()">Submit Proposal</button>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <style>@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }</style>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-info" id="toastIcon"></i>
+        <span id="toastMsg">System Ready.</span>
+    </div>
 
     <script>
-        // CORE CONFIG
+        // --- SECURE BACKEND CONFIG ---
         const S_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
         const _s = supabase.createClient(S_URL, S_KEY);
         
         let currentDish = "";
-        let staffInterval = null;
 
-        // QoL: INIT / LocalStorage Memory
+        // --- CORE UI INITS ---
         window.onload = () => {
-            if(localStorage.getItem('theme') === 'cyber') document.body.setAttribute('data-theme', 'cyber');
-            const savedName = localStorage.getItem('customerName');
-            if(savedName) {
-                document.getElementById('name').value = savedName;
-                document.getElementById('rateCustomerName').value = savedName;
-                document.getElementById('recName').value = savedName;
+            // Memory Load
+            const n = localStorage.getItem('marse_intel_name');
+            if(n) {
+                document.getElementById('name').value = n;
+                document.getElementById('rCust').value = n;
+                document.getElementById('recName').value = n;
             }
+
+            // Typewriter Effect
+            const text = "> System initialized. Objective: Destroy Hamdan's restaurant.";
+            let i = 0;
+            function typeWriter() {
+                if (i < text.length) {
+                    document.getElementById("typewriter").innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            setTimeout(typeWriter, 1000);
         };
 
-        function saveName(val) { localStorage.setItem('customerName', val); }
+        // --- CUSTOM CURSOR LOGIC ---
+        const dot = document.getElementById('cursor-dot');
+        const outline = document.getElementById('cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+            outline.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 500, fill: "forwards" });
+        });
 
-        function toggleTheme() {
-            const isCyber = document.body.getAttribute('data-theme') === 'cyber';
-            document.body.toggleAttribute('data-theme', !isCyber);
-            localStorage.setItem('theme', isCyber ? 'dark' : 'cyber');
+        document.querySelectorAll('.hover-target, input, textarea, button').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- 3D TILT EFFECT ---
+        function tiltCard(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg rotation
+            const rotateY = ((x - centerX) / centerX) * 10;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+        function resetTilt(card) { card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`; }
+
+        // --- SCROLL REVEAL ANIMATIONS ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.scroll-anim').forEach((el) => observer.observe(el));
+
+        // --- UTILS ---
+        function saveName(val) { localStorage.setItem('marse_intel_name', val); }
+        function selectItem(name) {
+            currentDish = name;
+            document.getElementById('selDish').value = name;
+            showToast(`Target Locked: ${name}`);
+            document.getElementById('dispatch').scrollIntoView({behavior: 'smooth'});
+        }
+        function toggleModPanel() {
+            const p = document.getElementById('modPanel');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+            if(p.style.display === 'block') p.scrollIntoView({behavior: 'smooth'});
         }
 
-        // QoL: Toast Notifications
-        function showToast(msg, type = 'success') {
+        function showToast(msg, isError = false) {
             const t = document.getElementById('toast');
-            t.className = `toast ${type} show`;
-            t.innerText = msg;
-            setTimeout(() => t.classList.remove('show'), 3000);
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').className = isError ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-check-circle";
+            t.className = isError ? "toast show error" : "toast show";
+            setTimeout(() => t.classList.remove('show'), 4000);
         }
 
-        function updateLabel(id, val) {
-            const textMap = { "1": "1 (Poor)", "2": "2 (Subpar)", "3": "3 (Average)", "4": "4 (Great)", "5": "5 (Perfect)" };
-            document.getElementById(id).innerText = textMap[val];
-        }
-
-        function switchTab(t) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            if(t === 'feedback') {
-                document.getElementById('btnTabFeed').classList.add('active');
-                document.getElementById('tabFeedback').classList.add('active');
-            } else {
-                document.getElementById('btnTabRec').classList.add('active');
-                document.getElementById('tabRecs').classList.add('active');
-            }
-        }
-
-        function sel(d, e) {
-            currentDish = d; document.getElementById('selDish').value = d;
-            document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
-            e.classList.add('active');
-        }
-
-        function resetUI() {
-            document.getElementById('note').value = '';
-            document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
-            currentDish = ''; document.getElementById('selDish').value = '';
-            
-            const ss = document.getElementById('successScreen');
-            ss.classList.remove('active');
-            setTimeout(() => {
-                ss.style.display = 'none';
-                document.getElementById('mainLayout').style.display = 'block';
-                window.scrollTo(0, 0);
-            }, 400);
-            document.getElementById('sendBtn').innerHTML = `<i class="fa-solid fa-fire-burner"></i> FIRE ORDER`;
-            document.getElementById('sendBtn').disabled = false;
-        }
-
-        // QoL: Relative Time Formatter
-        function timeAgo(dateString) {
-            if(!dateString) return '';
-            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
-            let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + "y ago";
-            interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + "mo ago";
-            interval = seconds / 86400;
-            if (interval > 1) return Math.floor(interval) + "d ago";
-            interval = seconds / 3600;
-            if (interval > 1) return Math.floor(interval) + "h ago";
-            interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + "m ago";
-            return "Just now";
-        }
-
-        // --- PIPELINE LOGIC (With Strict Error Catching) ---
+        // --- DATABASE PIPELINE ---
         async function order() {
-            const n = document.getElementById('name').value, nt = document.getElementById('note').value;
-            if(!currentDish || !n) return showToast("Missing name or dish selection!", "error");
+            const n = document.getElementById('name').value;
+            const nt = document.getElementById('note').value;
+            
+            if(!currentDish) return showToast("ERROR: No weaponry selected.", true);
+            if(!n) return showToast("ERROR: Operative alias required.", true);
             
             const btn = document.getElementById('sendBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> TRANSMITTING...`; btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> UPLINKING...`; btn.disabled = true;
 
             try {
-                // 1. Send Discord Webhook
+                // 1. Discord Tactical Ping
                 const res = await fetch(`${W_URL}?wait=true`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ embeds: [{ title: "🌸 New Order Dispatch", color: 0xff2d75, fields: [{name: "User", value: n, inline: true}, {name: "Dish", value: currentDish, inline: true}, {name: "Notes", value: nt || "None"}] }] })
+                    body: JSON.stringify({ embeds: [{ title: "🔥 MARSE INC. DISPATCH", color: 0xff1e4d, fields: [{name: "Alias", value: n, inline: true}, {name: "Target", value: currentDish, inline: true}, {name: "Mods", value: nt || "Standard Issue"}] }] })
                 });
                 const d = await res.json();
                 
-                // 2. Save to Supabase (Catch RLS errors here)
+                // 2. Supabase Storage
                 const { error } = await _s.from('orders').insert([{ name: n, item: currentDish, note: nt, discord_id: d.id, status: 'pending' }]);
-                if (error) throw new Error(error.message); // This will trigger the catch block if DB fails
+                if (error) throw new Error(error.message);
 
-                document.getElementById('mainLayout').style.display = 'none';
-                const ss = document.getElementById('successScreen');
-                ss.style.display = 'flex';
-                setTimeout(() => ss.classList.add('active'), 50);
+                showToast("TRANSMISSION SUCCESSFUL. HQ is preparing your order.");
+                document.getElementById('note').value = '';
+                currentDish = ''; document.getElementById('selDish').value = '';
             } catch (e) {
-                console.error("DB Error:", e);
-                showToast("Database Error: " + e.message, "error");
-                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-fire-burner"></i> RETRY ORDER`;
+                console.error(e);
+                showToast("NETWORK FAILURE. Attempt again.", true);
             }
+            btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-satellite-dish"></i> TRANSMIT ORDER TO HQ`;
         }
 
         async function submitFeedback() {
-            const staff = document.getElementById('rateStaffName').value, cust = document.getElementById('rateCustomerName').value || 'Anonymous';
-            if(!staff) return showToast("Please specify the staff member!", "error");
-
-            const btn = document.getElementById('rateBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SUBMITTING...`; btn.disabled = true;
-
+            const staff = document.getElementById('rStaff').value, cust = document.getElementById('rCust').value || 'Anonymous';
+            if(!staff) return showToast("Target staff required.", true);
+            const btn = document.getElementById('rateBtn'); btn.innerHTML = '...'; btn.disabled = true;
             try {
-                const { error } = await _s.from('employee_feedback').insert([{ 
+                await _s.from('employee_feedback').insert([{ 
                     customer_name: cust, staff_name: staff,
-                    food_score: parseInt(document.getElementById('fFood').value), service_score: parseInt(document.getElementById('fService').value), 
-                    usefulness_score: parseInt(document.getElementById('fUseful').value), health_safety_score: parseInt(document.getElementById('fSafety').value) 
+                    food_score: document.getElementById('fFood').value, service_score: document.getElementById('fServ').value, usefulness_score: 5, health_safety_score: 5
                 }]);
-                if (error) throw new Error(error.message);
-                
-                showToast("Evaluation stored securely!", "success");
-                document.getElementById('rateStaffName').value = ''; 
-                ['fFood', 'fService', 'fUseful', 'fSafety'].forEach((id, idx) => { document.getElementById(id).value = 5; updateLabel(`v${idx+1}`, "5"); });
-            } catch(e) { showToast("DB Error: " + e.message, "error"); }
-            btn.innerHTML = `<i class="fa-solid fa-star"></i> Submit Evaluation`; btn.disabled = false;
+                showToast("Intel logged in core database.");
+            } catch(e) { showToast("DB Error", true); }
+            btn.innerHTML = 'Log Intel'; btn.disabled = false;
         }
 
-        async function submitRecommendation() {
+        async function submitRec() {
             const name = document.getElementById('recName').value, type = document.getElementById('recType').value, txt = document.getElementById('recText').value;
-            if(!name || !txt) return showToast("Please fill in your name and proposal!", "error");
-
-            const btn = document.getElementById('recBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PROPOSING...`; btn.disabled = true;
+            if(!name || !txt) return showToast("Complete all fields.", true);
+            const btn = document.getElementById('recBtn'); btn.innerHTML = '...'; btn.disabled = true;
             try {
-                const { error } = await _s.from('recommendations').insert([{ author_name: name, rec_type: type, suggestion_text: txt }]);
-                if (error) throw new Error(error.message);
-
-                showToast("Proposal stored into core R&D!", "success");
-                document.getElementById('recText').value = "";
-            } catch(e) { showToast("DB Error: " + e.message, "error"); }
-            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Proposal`; btn.disabled = false;
-        }
-
-        // --- STAFF SYSTEM ---
-        function openStaff() {
-            if(prompt("HQ PIN:") === '12344321-r') {
-                const s = document.getElementById('staff');
-                s.style.display='block';
-                setTimeout(() => s.style.opacity = '1', 50);
-                loadStaffPortalData(); 
-                staffInterval = setInterval(loadStaffPortalData, 5000); // Polling every 5s
-            } else { showToast("Security: Access Denied", "error"); }
-        }
-
-        function closeStaff() {
-            clearInterval(staffInterval);
-            const s = document.getElementById('staff');
-            s.style.opacity = '0';
-            setTimeout(() => s.style.display = 'none', 400);
-        }
-
-        function loadStaffPortalData() { loadTickets(); loadFeedback(); loadRecommendations(); }
-
-        async function loadTickets() {
-            const { data } = await _s.from('orders').select('*').order('id', { ascending: false });
-            if(!data) return;
-
-            document.getElementById('c1').innerText = data.filter(o => o.status==='pending').length;
-            document.getElementById('c2').innerText = data.filter(o => o.status==='finished').length;
-            document.getElementById('c3').innerText = data.length;
-
-            if(data.length === 0) {
-                document.getElementById('staffList').innerHTML = `<div class="empty-state">No active orders. The kitchen is clear! ✨</div>`;
-                return;
-            }
-
-            document.getElementById('staffList').innerHTML = data.map(o => `
-                <div class="order-card" style="border-left: 4px solid ${o.status==='pending'?'#ffaa00':'#00ff88'}">
-                    <div>
-                        <span class="status-pill status-${o.status}">${o.status}</span>
-                        <span style="font-size:0.75rem; opacity:0.6; margin-left:10px; font-weight:600;"><i class="fa-regular fa-clock"></i> ${timeAgo(o.created_at)}</span>
-                        <h2 style="margin-top: 5px;">${o.name}</h2>
-                        <p style="color:var(--primary); font-weight:800; font-size:1.1rem;">${o.item}</p>
-                        ${o.note ? `<p style="opacity:0.7; font-size:0.85rem; margin-top:5px; background:rgba(255,255,255,0.05); padding:8px; border-radius:8px;">📝 ${o.note}</p>` : ''}
-                    </div>
-                    <div class="action-btns">
-                        ${o.status === 'pending' ? `<button class="a-btn" style="background:#00ff88; color:#000;" onclick="upd(${o.id}, '${o.discord_id}', '${o.name}', '${o.item}')"><i class="fa-solid fa-check"></i></button>` : ''}
-                        <button class="a-btn" style="background:rgba(255,0,0,0.1); color:#ff2d55;" onclick="del(${o.id}, '${o.discord_id}')"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function loadFeedback() {
-            const { data } = await _s.from('employee_feedback').select('*').order('id', { ascending: false });
-            if(!data || data.length === 0) return document.getElementById('feedbackContainer').innerHTML = `<div class="empty-state">No evaluations recorded.</div>`;
-
-            let tFood=0, tServ=0, tUse=0, tSafe=0;
-            data.forEach(f => { tFood+=f.food_score; tServ+=f.service_score; tUse+=f.usefulness_score; tSafe+=f.health_safety_score; });
-            
-            document.getElementById('avgFood').innerText = (tFood/data.length).toFixed(1); document.getElementById('avgService').innerText = (tServ/data.length).toFixed(1);
-            document.getElementById('avgUseful').innerText = (tUse/data.length).toFixed(1); document.getElementById('avgSafety').innerText = (tSafe/data.length).toFixed(1);
-
-            document.getElementById('feedbackContainer').innerHTML = data.map(f => `
-                <div class="feedback-card">
-                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-                        <div><strong style="font-size:1rem; color:var(--primary);">🎯 ${f.staff_name}</strong> <span style="font-size:0.8rem; opacity:0.6;">(by ${f.customer_name})</span></div>
-                        <small style="opacity:0.4; font-weight:600;">${timeAgo(f.created_at)}</small>
-                    </div>
-                    <div style="margin-top: 10px; display:flex; flex-wrap:wrap; gap:5px;">
-                        <span class="score-badge">🍲 ${f.food_score}/5</span> <span class="score-badge">🛎️ ${f.service_score}/5</span>
-                        <span class="score-badge">📈 ${f.usefulness_score}/5</span> <span class="score-badge">🧼 ${f.health_safety_score}/5</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function loadRecommendations() {
-            const { data } = await _s.from('recommendations').select('*').order('id', { ascending: false });
-            if(!data || data.length === 0) return document.getElementById('recsContainer').innerHTML = `<div class="empty-state">No proposals submitted.</div>`;
-
-            document.getElementById('recsContainer').innerHTML = data.map(r => `
-                <div class="rec-card">
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <strong style="font-size:0.95rem; color:var(--primary);">💡 ${r.author_name}</strong>
-                        <span class="status-pill" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2);">${r.rec_type}</span>
-                    </div>
-                    <p style="font-size:0.9rem; opacity:0.85; line-height:1.5; margin-top:5px;">"${r.suggestion_text}"</p>
-                    <small style="opacity:0.4; font-size:0.75rem; margin-top:10px; display:block; font-weight:600;">Submitted ${timeAgo(r.created_at)}</small>
-                </div>
-            `).join('');
-        }
-
-        async function upd(db_id, disc_id, name, item) {
-            try { await fetch(`${W_URL}/messages/${disc_id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ embeds: [{ title: "✅ DISPATCH COMPLETION", color: 0x00ff88, fields: [{name:"User",value:name,inline:true},{name:"Dish",value:item,inline:true}] }] }) }); } catch(e){}
-            await _s.from('orders').update({ status: 'finished' }).eq('id', db_id); loadTickets();
-        }
-
-        async function del(id, did) {
-            if(!confirm("Erase core record?")) return;
-            try { await fetch(`${W_URL}/messages/${did}`, { method:'DELETE' }); } catch(e){}
-            await _s.from('orders').delete().eq('id', id); loadTickets();
+                await _s.from('recommendations').insert([{ author_name: name, rec_type: type, suggestion_text: txt }]);
+                showToast("Strategy recorded. R&D notified."); document.getElementById('recText').value = "";
+            } catch(e) { showToast("DB Error", true); }
+            btn.innerHTML = 'Submit Proposal'; btn.disabled = false;
         }
     </script>
 </body>
