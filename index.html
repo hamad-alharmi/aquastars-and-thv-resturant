@@ -3,977 +3,524 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARSE | THE RESTAURANT DESTROYER</title>
+    <title>MARSE | Premium Noodle Architecture</title>
     
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- LUXURY STREETWEAR THEME (MONOCHROME) --- */
+        /* --- DYNAMIC THEME SYSTEM (INK TO PAPER) --- */
         :root {
-            --bg: #070707;
-            --surface: #121212;
-            --surface-hover: #1c1c1c;
+            --bg: #050505;
+            --surface: #111111;
             --fg: #ffffff;
-            --border: rgba(255, 255, 255, 0.1);
-            --border-focus: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.15);
+            --border-focus: rgba(255, 255, 255, 0.8);
             --muted: #888888;
-            --success: #ffffff;
+            --accent: #ffffff;
             --font-display: 'Space Grotesk', sans-serif;
             --font-sans: 'Inter', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
+        [data-theme="light"] {
+            --bg: #f4f4f0; /* Premium textured paper feel */
+            --surface: #ffffff;
+            --fg: #050505;
+            --border: rgba(0, 0, 0, 0.15);
+            --border-focus: rgba(0, 0, 0, 0.8);
+            --muted: #666666;
+            --accent: #000000;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
         body {
             background-color: var(--bg);
             color: var(--fg);
             font-family: var(--font-sans);
             line-height: 1.5;
             overflow-x: hidden;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 24px 24px;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* --- HIGH-END PARTNERSHIP BAR --- */
+        /* --- BACKGROUND PARTICLES --- */
+        .particle-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .particle {
+            position: absolute; background: var(--fg); border-radius: 50%;
+            opacity: 0.15; animation: float linear infinite;
+            transition: background 0.4s ease;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) translateX(20px); opacity: 0; }
+        }
+
+        /* --- NAV & SPONSOR TAPE --- */
         .sponsor-marquee {
-            background: var(--fg);
-            color: var(--bg);
-            padding: 10px 0;
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            overflow: hidden;
-            white-space: nowrap;
-            border-bottom: 1px solid var(--border);
+            background: var(--fg); color: var(--bg); padding: 8px 0;
+            font-family: var(--font-display); font-weight: 800; font-size: 0.7rem;
+            letter-spacing: 2px; text-transform: uppercase; overflow: hidden; white-space: nowrap;
+            transition: background 0.4s, color 0.4s;
         }
+        .sponsor-track { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        .sponsor-track {
-            display: inline-block;
-            animation: marquee 25s linear infinite;
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* --- STICKY NAV --- */
         nav {
-            position: sticky;
-            top: 0;
-            background: rgba(7, 7, 7, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--border);
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            transition: all 0.3s ease;
+            position: sticky; top: 0; background: var(--bg);
+            border-bottom: 1px solid var(--border); padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center; z-index: 100;
+            transition: all 0.4s ease;
         }
+        .logo { font-family: var(--font-display); font-weight: 900; font-size: 1.5rem; text-transform: uppercase; cursor: pointer; user-select: none; }
+        
+        .controls { display: flex; gap: 15px; align-items: center; }
+        .icon-btn { background: none; border: none; color: var(--fg); font-size: 1.2rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .icon-btn:active { transform: scale(0.85); }
 
-        .logo {
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            position: relative;
+        .wrapper { max-width: 600px; margin: 0 auto; padding: 40px 20px 100px; }
+
+        /* --- ANIMATIONS & HAPTICS --- */
+        .spring-tap { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .spring-tap:active { transform: scale(0.96); }
+        .fade-in { animation: fadeInUp 0.5s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- THE BLUEPRINT VISUALIZER --- */
+        .blueprint-container {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 30px; margin-bottom: 30px;
+            display: flex; justify-content: center; align-items: center;
+            position: relative; overflow: hidden; transition: all 0.4s ease;
         }
+        .bp-svg { width: 200px; height: auto; stroke: var(--fg); stroke-width: 2; fill: none; transition: stroke 0.4s ease; }
+        .bp-layer { opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform: translateY(10px); }
+        .bp-layer.visible { opacity: 1; transform: translateY(0); }
+        .bp-title { position: absolute; top: 15px; left: 15px; font-family: var(--font-display); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
 
-        .nav-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--muted);
-            padding: 8px 16px;
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .nav-btn.active, .nav-btn:hover {
-            color: var(--fg);
-            border-color: var(--border-focus);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* --- CONTAINER --- */
-        .wrapper {
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 40px 20px 100px;
-        }
-
-        /* --- ANIMATIONS --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade {
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* --- TITLE HEADER --- */
-        .brand-hero {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .brand-hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-            font-weight: 900;
-            letter-spacing: -2px;
-            text-transform: uppercase;
-            line-height: 1.0;
-            margin-bottom: 10px;
-        }
-
-        .brand-hero p {
-            color: var(--muted);
-            font-size: 1rem;
-            font-weight: 400;
-        }
-
-        /* --- THE CORE DISPLAY --- */
-        .hero-display-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.3s ease;
-        }
-
-        .hero-display-card:hover {
-            border-color: var(--border-focus);
-        }
-
-        .tag {
-            display: inline-block;
-            background: var(--fg);
-            color: var(--bg);
-            font-family: var(--font-display);
-            font-size: 0.7rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
-
-        .display-title {
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .display-desc {
-            color: var(--muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* --- INTERACTIVE BUILDER (QoL) --- */
-        .builder-title {
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-        }
-
-        /* Spice Matrix Grid */
-        .spice-matrix {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 25px;
-        }
-
-        .spice-btn {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            padding: 12px 0;
-            font-family: var(--font-display);
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 8px;
+        /* --- CUSTOM SLIDERS --- */
+        .section-title { font-family: var(--font-display); font-size: 1rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        
+        .slider-container { display: flex; justify-content: space-between; gap: 5px; margin-bottom: 25px; }
+        .slider-block {
+            flex: 1; height: 40px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; color: var(--muted);
             transition: all 0.2s ease;
         }
+        .slider-block:hover { border-color: var(--border-focus); }
+        .slider-block.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 
-        .spice-btn:hover {
-            border-color: var(--border-focus);
-            color: var(--fg);
+        /* --- ENHANCEMENTS --- */
+        .chip-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .enh-chip {
+            background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+            padding: 12px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .enh-chip.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+        .enh-chip:active { transform: scale(0.95); }
 
-        .spice-btn.active {
-            background: var(--fg);
-            color: var(--bg);
-            border-color: var(--fg);
-        }
+        .sub-menu { display: none; margin-top: 10px; padding: 15px; background: rgba(0,0,0,0.03); border: 1px dashed var(--border); border-radius: 12px; animation: fadeInUp 0.3s ease forwards; }
+        .sub-menu.active { display: block; }
+        .sub-btn { background: transparent; border: 1px solid var(--border); color: var(--fg); padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; margin: 4px; cursor: pointer; transition: 0.2s; }
+        .sub-btn.selected { background: var(--fg); color: var(--bg); }
 
-        /* Boost Chip Options */
-        .boost-matrix {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+        /* --- INPUTS & BUTTONS --- */
+        input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--fg); padding: 16px; font-family: inherit; font-size: 1rem; border-radius: 12px; margin-bottom: 20px; transition: 0.3s; }
+        input:focus { border-color: var(--border-focus); }
+        
+        .btn-main { width: 100%; background: var(--fg); color: var(--bg); border: none; padding: 18px; border-radius: 12px; font-family: var(--font-display); font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
 
-        .boost-chip {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        /* --- SECRET COLLAB MENU --- */
+        #collab-menu { display: none; border: 1px solid #FFD700; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 16px; margin-bottom: 25px; animation: fadeInUp 0.5s ease; }
+        .collab-title { color: #FFD700; font-family: var(--font-display); font-weight: 900; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; }
 
-        .boost-chip:hover {
-            border-color: var(--border-focus);
-            color: var(--fg);
-        }
+        /* --- POST-ORDER VIEWS (RECEIPT & SHOW) --- */
+        .receipt-card { background: var(--surface); border: 1px dashed var(--border); padding: 30px; border-radius: 8px; margin-bottom: 30px; text-align: center; font-family: monospace; font-size: 0.9rem; }
+        .receipt-card h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .show-menu { display: flex; flex-direction: column; gap: 10px; }
+        .show-btn { background: var(--surface); border: 1px solid var(--border); color: var(--fg); padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; }
+        .show-btn:hover { border-color: var(--border-focus); }
 
-        .boost-chip.active {
-            border-color: var(--fg);
-            color: var(--fg);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .boost-chip i {
-            font-size: 0.8rem;
-            opacity: 0.5;
-        }
-
-        .boost-chip.active i {
-            opacity: 1;
-            color: var(--fg);
-        }
-
-        /* --- STANDARD FORM SYSTEM --- */
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--fg);
-            padding: 16px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            border-radius: 12px;
-            transition: all 0.25s ease;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--border-focus);
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* --- THE DISPATCH BUTTON --- */
-        .btn-dispatch {
-            width: 100%;
-            background: var(--fg);
-            color: var(--bg);
-            border: 1px solid var(--fg);
-            padding: 18px;
-            border-radius: 12px;
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
-        }
-
-        .btn-dispatch:hover {
-            background: var(--bg);
-            color: var(--fg);
-        }
-
-        .btn-dispatch:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* --- LIVE ORDER TRACKER PANEL (QoL) --- */
-        .tracker-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 25px;
-            margin-top: 30px;
-            display: none;
-            animation: fadeInUp 0.4s ease forwards;
-        }
-
-        .tracker-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-        }
-
-        .tracker-title {
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .live-indicator {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            background: rgba(255,255,255,0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            background: #fff;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        .steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .steps::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 10%;
-            right: 10%;
-            height: 2px;
-            background: var(--border);
-            z-index: 1;
-        }
-
-        .step-node {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            width: 30%;
-        }
-
-        .step-circle {
-            width: 30px;
-            height: 30px;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .step-node.active .step-circle {
-            background: var(--fg);
-            border-color: var(--fg);
-            color: var(--bg);
-        }
-
-        .step-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-
-        .step-node.active .step-label {
-            color: var(--fg);
-        }
-
-        /* --- GENERAL HIDDEN PANELS --- */
-        .content-panel {
-            display: none;
-        }
-
-        .content-panel.active {
-            display: block;
-            animation: fadeInUp 0.4s ease forwards;
-        }
-
-        /* --- PREVIOUS LOGS PANEL --- */
-        .archive-list {
-            margin-top: 20px;
-        }
-
-        .archive-item {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-        }
-
-        .archive-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--muted);
-            font-size: 0.75rem;
-            margin-bottom: 8px;
-        }
+        /* --- HISTORY LOG --- */
+        .history-item { background: var(--surface); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .reorder-btn { background: var(--fg); color: var(--bg); border: none; padding: 8px 12px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; }
 
         /* --- TOAST --- */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--fg);
-            color: var(--bg);
-            padding: 14px 28px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            border-radius: 50px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000;
-            font-family: var(--font-display);
-            letter-spacing: 1px;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* --- CLEAN FOOTER --- */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.75rem;
-        }
-
-        footer p {
-            margin-bottom: 8px;
-        }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: var(--bg); padding: 12px 24px; font-weight: 700; border-radius: 30px; font-size: 0.85rem; font-family: var(--font-display); transition: 0.3s; z-index: 1000; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <!-- SPONSOR COLLAB TRACK -->
+    <!-- PARTICLES -->
+    <div class="particle-container" id="particles"></div>
+
     <div class="sponsor-marquee">
         <div class="sponsor-track">
-            ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★
+            ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★
         </div>
     </div>
 
-    <!-- STICKY NAVIGATION -->
     <nav>
-        <div class="logo">MARSE</div>
-        <div class="nav-links">
-            <button id="btn-order-view" class="nav-btn active" onclick="switchTab('order')">Order</button>
-            <button id="btn-eval-view" class="nav-btn" onclick="switchTab('eval')">R&D / Feedback</button>
+        <div class="logo" id="brand-logo">MARSE</div>
+        <div class="controls">
+            <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
         </div>
     </nav>
 
-    <!-- WRAPPER -->
     <div class="wrapper">
-
-        <!-- ORDER VIEW -->
-        <div id="view-order" class="content-panel active">
+        
+        <!-- MAIN ORDER FORM -->
+        <div id="view-order" class="fade-in">
             
-            <header class="brand-hero">
-                <h1>MARSE</h1>
-                <p>Designed to break the traditional culinary blueprint.</p>
-            </header>
-
-            <!-- ONLY MAIN PRODUCT DISPLAY CARD -->
-            <div class="hero-display-card animate-fade">
-                <span class="tag">Active Rebrand</span>
-                <h2 class="display-title">The Restaurant Destroyer</h2>
-                <p class="display-desc">
-                    The absolute flagship. Built on premium noodle structures, hyper-balanced seasoning algorithms, and unmatched flavor retention. Zero compromises.
-                </p>
+            <!-- BLUEPRINT VISUALIZER -->
+            <div class="blueprint-container">
+                <div class="bp-title">Blueprint Visualizer</div>
+                <svg class="bp-svg" viewBox="0 0 200 150">
+                    <!-- Base Bowl -->
+                    <path d="M40 80 Q100 140 160 80 Z" />
+                    <path d="M40 80 L160 80" />
+                    <!-- Noodles -->
+                    <path d="M60 70 Q70 60 80 75 T100 65 T120 75 T140 70" stroke-width="3"/>
+                    
+                    <!-- Double Seasoning Sparks (Hidden by default) -->
+                    <g id="svg-seasoning" class="bp-layer">
+                        <circle cx="70" cy="50" r="2" fill="var(--fg)" stroke="none"/>
+                        <circle cx="100" cy="40" r="3" fill="var(--fg)" stroke="none"/>
+                        <circle cx="130" cy="45" r="2" fill="var(--fg)" stroke="none"/>
+                    </g>
+                    
+                    <!-- Soda Cup (Hidden) -->
+                    <g id="svg-soda" class="bp-layer">
+                        <rect x="15" y="30" width="25" height="40" rx="2" />
+                        <line x1="27" y1="30" x2="35" y2="10" stroke-width="2"/>
+                    </g>
+                    
+                    <!-- Chip Bag (Hidden) -->
+                    <g id="svg-chips" class="bp-layer">
+                        <path d="M165 40 L185 35 L190 75 L160 70 Z" />
+                        <line x1="165" y1="40" x2="185" y2="35" stroke-dasharray="2 2" />
+                    </g>
+                </svg>
             </div>
 
-            <!-- TACTICAL SELECTION CUSTOMIZER -->
-            <div class="animate-fade" style="animation-delay: 0.1s;">
-                <h3 class="builder-title">1. Spice Calibration</h3>
-                <div class="spice-matrix">
-                    <button class="spice-btn" onclick="setSpice(1, 'Mild Variant')">Level 1</button>
-                    <button class="spice-btn active" onclick="setSpice(2, 'Standard Fire')">Level 2</button>
-                    <button class="spice-btn" onclick="setSpice(3, 'Atomic Core')">Level 3</button>
-                    <button class="spice-btn" onclick="setSpice(4, 'Destroyer Prep')">Level 4</button>
-                    <button class="spice-btn" onclick="setSpice(5, 'Nuclear')">Level 5</button>
-                </div>
-
-                <h3 class="builder-title">2. Tactical Enhancements</h3>
-                <div class="boost-matrix">
-                    <button class="boost-chip" id="boost-seasoning" onclick="toggleBoost('Double Seasoning')">
-                        <i class="fa-solid fa-plus"></i> Double Seasoning
-                    </button>
-                    <button class="boost-chip" id="boost-onions" onclick="toggleBoost('Crispy Onions')">
-                        <i class="fa-solid fa-plus"></i> Crispy Onions
-                    </button>
-                    <button class="boost-chip" id="boost-egg" onclick="toggleBoost('Soft Egg')">
-                        <i class="fa-solid fa-plus"></i> Soft Boiled Egg
-                    </button>
-                </div>
-
-                <!-- MAIN ORDER SUBMISSION FORM -->
-                <h3 class="builder-title">3. Destination</h3>
-                
-                <div class="input-group">
-                    <label>Operative Name / Alias</label>
-                    <input type="text" id="name" placeholder="Enter your identifier..." oninput="saveName(this.value)">
-                </div>
-
-                <div class="input-group">
-                    <label>Operational Guidelines (Optional)</label>
-                    <textarea id="note" rows="3" placeholder="Specific culinary modifications, extra notes, or packaging requests..."></textarea>
-                </div>
-
-                <button class="btn-dispatch" id="dispatchBtn" onclick="dispatchOrder()">
-                    <i class="fa-solid fa-satellite-dish"></i> Dispatch Order
-                </button>
-            </div>
-
-            <!-- LIVE ORDER TRACKER (QoL) -->
-            <div class="tracker-panel" id="order-tracker">
-                <div class="tracker-header">
-                    <span class="tracker-title">Active Transmission Status</span>
-                    <div class="live-indicator"><span class="live-dot"></span>Live Connection</div>
-                </div>
-                <div class="steps">
-                    <div class="step-node active" id="step-1">
-                        <div class="step-circle">1</div>
-                        <div class="step-label">Uplinked</div>
-                    </div>
-                    <div class="step-node" id="step-2">
-                        <div class="step-circle">2</div>
-                        <div class="step-label">Received</div>
-                    </div>
-                    <div class="step-node" id="step-3">
-                        <div class="step-circle">3</div>
-                        <div class="step-label">Assembled</div>
-                    </div>
+            <!-- SECRET COLLAB MENU -->
+            <div id="collab-menu">
+                <div class="collab-title">💎 Vault Unlocked: Partner Exclusives</div>
+                <div class="chip-grid">
+                    <button class="enh-chip" onclick="selectCollab(this, 'WWE Championship Gold Foil')">WWE Gold Foil</button>
+                    <button class="enh-chip" onclick="selectCollab(this, 'Marvel Gamma Sauce (Green)')">Marvel Gamma Sauce</button>
+                    <button class="enh-chip" onclick="selectCollab(this, 'Shades by Niko Tinted Bowl')">Niko Tinted Bowl</button>
                 </div>
             </div>
 
-            <!-- ORDER ARCHIVE HISTORY LOGS -->
-            <div id="local-archive-section" style="margin-top: 50px; display: none;">
-                <h3 class="builder-title">Transmission Log</h3>
-                <div class="archive-list" id="archive-list-container"></div>
+            <div class="section-title">1. Spice Calibration</div>
+            <div class="slider-container" id="spice-slider">
+                <div class="slider-block active" onclick="setSlider('spice', 1)">I</div>
+                <div class="slider-block" onclick="setSlider('spice', 2)">II</div>
+                <div class="slider-block" onclick="setSlider('spice', 3)">III</div>
+                <div class="slider-block" onclick="setSlider('spice', 4)">IV</div>
+                <div class="slider-block" onclick="setSlider('spice', 5)">V</div>
             </div>
 
+            <div class="section-title">2. Creaminess Level</div>
+            <div class="slider-container" id="cream-slider">
+                <div class="slider-block active" onclick="setSlider('cream', 1)">I</div>
+                <div class="slider-block" onclick="setSlider('cream', 2)">II</div>
+                <div class="slider-block" onclick="setSlider('cream', 3)">III</div>
+                <div class="slider-block" onclick="setSlider('cream', 4)">IV</div>
+                <div class="slider-block" onclick="setSlider('cream', 5)">V</div>
+            </div>
+
+            <div class="section-title">3. Enhancements</div>
+            <div class="chip-grid">
+                <button class="enh-chip" id="btn-seasoning" onclick="toggleEnhancement('seasoning')">Double Seasoning</button>
+                <button class="enh-chip" id="btn-soda" onclick="toggleMenu('soda')">Soda Variant</button>
+                <button class="enh-chip" id="btn-chips" onclick="toggleMenu('chips')">Chip Pairing</button>
+            </div>
+
+            <!-- SUB MENUS -->
+            <div id="menu-soda" class="sub-menu">
+                <p style="font-size: 0.75rem; color: var(--muted); margin-bottom: 8px;">SELECT SODA:</p>
+                <button class="sub-btn" onclick="setSub('soda', 'Coca-Cola')">Coca-Cola</button>
+                <button class="sub-btn" onclick="setSub('soda', 'Sprite')">Sprite</button>
+                <button class="sub-btn" onclick="setSub('soda', 'Fanta')">Fanta</button>
+            </div>
+            <div id="menu-chips" class="sub-menu">
+                <p style="font-size: 0.75rem; color: var(--muted); margin-bottom: 8px;">SELECT CHIPS:</p>
+                <button class="sub-btn" onclick="setSub('chips', 'Doritos')">Doritos</button>
+                <button class="sub-btn" onclick="setSub('chips', 'Cheetos')">Cheetos</button>
+                <button class="sub-btn" onclick="setSub('chips', 'Takis')">Takis</button>
+            </div>
+
+            <div class="section-title" style="margin-top: 20px;">4. Destination</div>
+            <input type="text" id="custName" placeholder="Enter your name...">
+            
+            <button class="btn-main spring-tap" id="btnSubmit" onclick="processOrder()">Confirm Assembly</button>
+
+            <!-- HISTORY -->
+            <div id="history-container" style="margin-top: 50px; display: none;">
+                <div class="section-title">Past Assemblies</div>
+                <div id="history-list"></div>
+            </div>
         </div>
 
-        <!-- EVALUATION & R&D VIEW -->
-        <div id="view-eval" class="content-panel">
+        <!-- POST-ORDER VIEW -->
+        <div id="view-post" class="fade-in" style="display: none;">
             
-            <header class="brand-hero">
-                <h1 style="font-size: 2.5rem;">Database Intake</h1>
-                <p>Register operations, staff evaluations, and conceptual designs.</p>
-            </header>
-
-            <div class="hero-display-card">
-                <h2 class="display-title">Staff Evaluation</h2>
-                <div class="input-group" style="margin-top: 15px;"><label>Staff Member</label><input type="text" id="evalStaff" placeholder="e.g. Kai"></div>
-                <div class="input-group"><label>Your Identifier</label><input type="text" id="evalCust" placeholder="Your Name"></div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                    <div class="input-group" style="margin-bottom:0;"><label>Food Execution (1-5)</label><input type="number" id="fFood" min="1" max="5" value="5"></div>
-                    <div class="input-group" style="margin-bottom:0;"><label>Service Response (1-5)</label><input type="number" id="fService" min="1" max="5" value="5"></div>
-                </div>
-                
-                <button class="btn-dispatch" id="evalBtn" onclick="submitStaffFeedback()">Log Evaluation</button>
+            <div class="receipt-card" id="receipt-box">
+                <h2>MARSE INC.</h2>
+                <p>========================</p>
+                <p style="text-align: left; margin: 10px 0;" id="receipt-details"></p>
+                <p>========================</p>
+                <p style="font-size: 0.7rem; margin-top: 10px;">AUTHORIZED TRANSACTION</p>
             </div>
 
-            <div class="hero-display-card">
-                <h2 class="display-title">R&D Conceptualizing</h2>
-                <div class="input-group" style="margin-top: 15px;"><label>Your Name</label><input type="text" id="rdAuthor" placeholder="Your Name"></div>
-                <div class="input-group">
-                    <label>Proposal Category</label>
-                    <select id="rdType">
-                        <option value="Menu Concept">Noodle Formulation Idea</option>
-                        <option value="Tech Upgrade">Infrastructure Upgrade</option>
-                    </select>
-                </div>
-                <div class="input-group"><label>Specification / Text</label><textarea id="rdText" rows="3" placeholder="Enter conceptual schematics..."></textarea></div>
-                <button class="btn-dispatch" id="rdBtn" onclick="submitRDConcept()">Submit Schematic</button>
+            <div class="section-title">Select Entertainment Protocol</div>
+            <div class="show-menu">
+                <button class="show-btn spring-tap" onclick="selectShow('Before Meal')"><span>Waiting (Pre-Cook)</span> <i class="fa-solid fa-tv"></i></button>
+                <button class="show-btn spring-tap" onclick="selectShow('During Cooking')"><span>While Cooking</span> <i class="fa-solid fa-fire-burner"></i></button>
+                <button class="show-btn spring-tap" onclick="selectShow('During Meal')"><span>Main Event (Eating)</span> <i class="fa-solid fa-utensils"></i></button>
+                <button class="show-btn spring-tap" onclick="selectShow('After Meal')"><span>Post-Meal Wind Down</span> <i class="fa-solid fa-couch"></i></button>
+                <button class="show-btn spring-tap" onclick="selectShow('Custom')"><span>Custom Search</span> <i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-
         </div>
 
     </div>
 
-    <!-- LUXURY BOTTOM BAR & DISCLAIMER -->
-    <footer>
-        <p style="text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">⚠️ ALL PREVIOUS RECIPES AND MENU ITEMS WILL CONTINUE TO BE TRADEMARKED UNDER MARSE INC. ⚠️</p>
-        <p>&copy; 2026 MARSE INC. ALL RIGHTS RESERVED.</p>
-    </footer>
-
-    <!-- ALERT TOAST -->
-    <div id="toast" class="toast">Action Authenticated</div>
+    <div id="toast" class="toast">Action Logged</div>
 
     <script>
-        // --- SECURE SUPABASE CONFIGURATION ---
+        // --- BACKGROUND PARTICLES ---
+        const pContainer = document.getElementById('particles');
+        for(let i=0; i<15; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            let size = Math.random() * 4 + 2;
+            p.style.width = size + 'px'; p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            pContainer.appendChild(p);
+        }
+
+        // --- THEME SWITCHER ---
+        let isLight = false;
+        function toggleTheme() {
+            isLight = !isLight;
+            document.body.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        }
+
+        // --- EASTER EGG (COLLAB) ---
+        let logoClicks = 0;
+        let logoTimer;
+        document.getElementById('brand-logo').addEventListener('click', () => {
+            logoClicks++;
+            clearTimeout(logoTimer);
+            if (logoClicks >= 3) {
+                document.getElementById('collab-menu').style.display = 'block';
+                showToast("Vault Unlocked");
+                logoClicks = 0;
+            }
+            logoTimer = setTimeout(() => logoClicks = 0, 800);
+        });
+
+        // --- STATE MANAGEMENT ---
+        let orderState = {
+            spice: 1, cream: 1,
+            seasoning: false, soda: false, chips: false,
+            sodaType: '', chipsType: '',
+            collab: ''
+        };
+
+        // --- UI CONTROLS ---
+        function setSlider(type, level) {
+            orderState[type] = level;
+            const container = document.getElementById(`${type}-slider`);
+            Array.from(container.children).forEach((el, idx) => {
+                el.classList.toggle('active', idx < level);
+            });
+        }
+
+        function toggleEnhancement(type) {
+            orderState[type] = !orderState[type];
+            document.getElementById(`btn-${type}`).classList.toggle('active', orderState[type]);
+            if(type === 'seasoning') document.getElementById('svg-seasoning').classList.toggle('visible', orderState[type]);
+        }
+
+        function toggleMenu(type) {
+            const menu = document.getElementById(`menu-${type}`);
+            const btn = document.getElementById(`btn-${type}`);
+            
+            if(menu.classList.contains('active')) {
+                menu.classList.remove('active');
+                btn.classList.remove('active');
+                orderState[type] = false;
+                document.getElementById(`svg-${type}`).classList.remove('visible');
+            } else {
+                menu.classList.add('active');
+                btn.classList.add('active');
+                orderState[type] = true;
+                document.getElementById(`svg-${type}`).classList.add('visible');
+            }
+        }
+
+        function setSub(type, val) {
+            orderState[`${type}Type`] = val;
+            const menu = document.getElementById(`menu-${type}`);
+            Array.from(menu.getElementsByClassName('sub-btn')).forEach(btn => {
+                btn.classList.toggle('selected', btn.innerText === val);
+            });
+            showToast(`${val} Attached`);
+        }
+
+        function selectCollab(btn, val) {
+            orderState.collab = val;
+            document.querySelectorAll('#collab-menu .enh-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            showToast("Collab Applied");
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // --- DATABASE & SUBMISSION ---
         const S_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
         const _s = supabase.createClient(S_URL, S_KEY);
 
-        const baseDish = "The Restaurant Destroyer";
-        let activeSpiceLevel = "Standard Fire (Level 2)";
-        let activeBoosts = [];
+        async function processOrder() {
+            const name = document.getElementById('custName').value.trim();
+            if(!name) return showToast("Name is required");
 
-        // --- LOCAL ARCHIVE INITS ---
-        window.onload = () => {
-            const savedName = localStorage.getItem('marse_alias_v2');
-            if (savedName) {
-                document.getElementById('name').value = savedName;
-                document.getElementById('evalCust').value = savedName;
-                document.getElementById('rdAuthor').value = savedName;
-            }
-            renderPastTransmissions();
-        };
-
-        function saveName(val) {
-            localStorage.setItem('marse_alias_v2', val);
-            document.getElementById('evalCust').value = val;
-            document.getElementById('rdAuthor').value = val;
-        }
-
-        // --- UI ROUTER ---
-        function switchTab(view) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
-
-            if (view === 'order') {
-                document.getElementById('btn-order-view').classList.add('active');
-                document.getElementById('view-order').classList.add('active');
-            } else {
-                document.getElementById('btn-eval-view').classList.add('active');
-                document.getElementById('view-eval').classList.add('active');
-            }
-        }
-
-        // --- INTERACTIVE CUSTOMIZER ---
-        function setSpice(level, desc) {
-            activeSpiceLevel = `${desc} (Level ${level})`;
-            const btns = document.querySelectorAll('.spice-btn');
-            btns.forEach((b, idx) => {
-                if (idx === (level - 1)) {
-                    b.classList.add('active');
-                } else {
-                    b.classList.remove('active');
-                }
-            });
-            triggerToast(`Spice Matrix set to: ${desc}`);
-        }
-
-        function toggleBoost(boostName) {
-            const index = activeBoosts.indexOf(boostName);
-            let chipId = "";
-            if (boostName === 'Double Seasoning') chipId = 'boost-seasoning';
-            if (boostName === 'Crispy Onions') chipId = 'boost-onions';
-            if (boostName === 'Soft Egg') chipId = 'boost-egg';
-
-            const chip = document.getElementById(chipId);
-
-            if (index > -1) {
-                activeBoosts.splice(index, 1);
-                chip.classList.remove('active');
-                triggerToast(`Removed Boost: ${boostName}`);
-            } else {
-                activeBoosts.push(boostName);
-                chip.classList.add('active');
-                triggerToast(`Injected Boost: ${boostName}`);
-            }
-        }
-
-        // --- TOAST SYSTEM ---
-        function triggerToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3500);
-        }
-
-        // --- ORDER PIPELINE & CORE CORS DISCORD REPAIR ---
-        async function dispatchOrder() {
-            const nameInput = document.getElementById('name');
-            const noteInput = document.getElementById('note');
-            const n = nameInput.value.trim();
-            const nt = noteInput.value.trim();
-
-            if (!n) {
-                triggerToast("Identity designation is required.");
-                nameInput.focus();
-                return;
-            }
-
-            const btn = document.getElementById('dispatchBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
-            btn.disabled = true;
-
-            // Generate precise descriptive parameters
-            const configuredDish = `${baseDish} [Spice: ${activeSpiceLevel}] [Boosts: ${activeBoosts.length > 0 ? activeBoosts.join(', ') : 'None'}]`;
+            const btn = document.getElementById('btnSubmit');
+            let originalText = btn.innerText;
             
-            // Build visual trackers
-            const tracker = document.getElementById('order-tracker');
-            tracker.style.display = "block";
-            const s1 = document.getElementById('step-1');
-            const s2 = document.getElementById('step-2');
-            const s3 = document.getElementById('step-3');
+            // Premium text scramble effect
+            let scramble = setInterval(() => {
+                const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                btn.innerText = Array(10).fill(0).map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+            }, 50);
 
-            s1.classList.add('active');
-            s2.classList.remove('active');
-            s3.classList.remove('active');
-
-            // Fallback generated ID in case Discord is blocked by CORS (which was causing your fake error bug!)
-            let resolvedDiscordId = "fallback_" + Math.random().toString(36).substring(2, 11);
+            let desc = `Spice: Level ${orderState.spice} | Cream: Level ${orderState.cream}`;
+            if(orderState.seasoning) desc += " | Double Seasoning";
+            if(orderState.soda && orderState.sodaType) desc += ` | Drink: ${orderState.sodaType}`;
+            if(orderState.chips && orderState.chipsType) desc += ` | Side: ${orderState.chipsType}`;
+            if(orderState.collab) desc += ` | COLLAB: ${orderState.collab}`;
 
             try {
-                // 1. Fire and handle Discord Hook Webhook safely
-                // Since browsers block raw responses from Discord due to CORS, we isolate this try/catch block.
-                // The Discord message will POST successfully even if the browser claims a Network/CORS Error!
-                try {
-                    const discordRes = await fetch(`${W_URL}?wait=true`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            embeds: [{
-                                title: "🍜 MARSE DISPATCH DEPLOYED",
-                                color: 0x000000,
-                                fields: [
-                                    { name: "Operative", value: n, inline: true },
-                                    { name: "Selected Weaponry", value: configuredDish, inline: false },
-                                    { name: "Specific Guidelines", value: nt || "Standard Assembly Setup", inline: false }
-                                ],
-                                timestamp: new Date().toISOString()
-                            }]
-                        })
-                    });
+                // Discord (Safe CORS bypass)
+                fetch(`${W_URL}?wait=true`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [{ title: "🍜 MARSE ORDER", color: 0xffffff, fields: [{name: "Name", value: name}, {name: "Build", value: desc}] }] })
+                }).catch(() => {});
 
-                    if (discordRes.ok) {
-                        const discordData = await discordRes.json();
-                        if (discordData && discordData.id) {
-                            resolvedDiscordId = discordData.id;
-                        }
-                    }
-                } catch (discordException) {
-                    // Safe Bypass: This swallows CORS errors safely!
-                    console.warn("Discord message dispatched. Opaque network block bypassed seamlessly.");
-                }
-
-                // Smooth Tracker updates
-                setTimeout(() => s2.classList.add('active'), 800);
-
-                // 2. Perform DB insert into Supabase
-                const { error } = await _s.from('orders').insert([{
-                    name: n,
-                    item: configuredDish,
-                    note: nt,
-                    discord_id: resolvedDiscordId,
-                    status: 'pending'
-                }]);
-
-                if (error) throw new Error(error.message);
-
-                // Complete Animation Stages
+                // DB Save
+                await _s.from('orders').insert([{ name: name, item: "The Restaurant Destroyer", note: desc, status: 'pending' }]);
+                
+                // Success Flow
+                clearInterval(scramble);
+                btn.innerText = "ORDER SECURED";
+                
+                saveHistory(name, desc);
+                buildReceipt(name, desc);
+                
                 setTimeout(() => {
-                    s3.classList.add('active');
-                    triggerToast("DISPATCH ARCHIVED IN DATABASE");
-                    saveToLocalHistory(configuredDish, nt);
-                }, 1600);
+                    document.getElementById('view-order').style.display = 'none';
+                    document.getElementById('view-post').style.display = 'block';
+                }, 1000);
 
-                // Reset inputs gently
-                noteInput.value = '';
-
-            } catch (globalError) {
-                console.error("Pipeline failure: ", globalError);
-                triggerToast("System offline. Check connection parameters.");
-            } finally {
-                setTimeout(() => {
-                    btn.innerHTML = `<i class="fa-solid fa-satellite-dish"></i> Dispatch Order`;
-                    btn.disabled = false;
-                }, 2000);
+            } catch(e) {
+                clearInterval(scramble);
+                btn.innerText = "Error. Retry.";
             }
         }
 
-        // --- LOCAL PAST HISTORY TRACKER (QoL) ---
-        function saveToLocalHistory(dishSpec, notes) {
-            let history = JSON.parse(localStorage.getItem('marse_orders_archive')) || [];
-            history.unshift({
-                dish: dishSpec,
-                notes: notes || "No specifications",
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
-            localStorage.setItem('marse_orders_archive', JSON.stringify(history.slice(0, 5))); // Keep last 5
-            renderPastTransmissions();
+        // --- RECEIPT & SHOW SELECTOR ---
+        function buildReceipt(name, desc) {
+            const date = new Date();
+            const timeStr = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            let receiptHTML = `
+                CLIENT: ${name.toUpperCase()}<br>
+                TIME: ${timeStr}<br>
+                ------------------------<br>
+                1x RESTAURANT DESTROYER<br><br>
+                CONFIG:<br>
+                > SPICE LVL: ${orderState.spice}<br>
+                > CREAM LVL: ${orderState.cream}<br>
+            `;
+            
+            if(orderState.seasoning) receiptHTML += "> 2X SEASONING<br>";
+            if(orderState.sodaType) receiptHTML += `> BEV: ${orderState.sodaType.toUpperCase()}<br>`;
+            if(orderState.chipsType) receiptHTML += `> SIDE: ${orderState.chipsType.toUpperCase()}<br>`;
+            if(orderState.collab) receiptHTML += `> EXCLUSIVE: ${orderState.collab.toUpperCase()}<br>`;
+            
+            document.getElementById('receipt-details').innerHTML = receiptHTML;
         }
 
-        function renderPastTransmissions() {
-            const container = document.getElementById('archive-list-container');
-            const section = document.getElementById('local-archive-section');
-            let history = JSON.parse(localStorage.getItem('marse_orders_archive')) || [];
+        function selectShow(phase) {
+            showToast(`Loading parameters for: ${phase}`);
+            setTimeout(() => {
+                let query = "best shows to watch while eating";
+                if(phase === 'Custom') query = prompt("What are you in the mood for?") || query;
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+            }, 800);
+        }
 
-            if (history.length === 0) {
-                section.style.display = "none";
-                return;
-            }
+        // --- HISTORY LOGIC ---
+        function saveHistory(name, desc) {
+            let hist = JSON.parse(localStorage.getItem('marse_hist')) || [];
+            hist.unshift({ name, desc, state: JSON.stringify(orderState) });
+            localStorage.setItem('marse_hist', JSON.stringify(hist.slice(0, 3)));
+        }
 
-            section.style.display = "block";
-            container.innerHTML = history.map(item => `
-                <div class="archive-item">
-                    <div class="archive-meta">
-                        <span>CONFIRMED ASSEMBLY</span>
-                        <span>${item.timestamp}</span>
+        function loadHistory() {
+            let hist = JSON.parse(localStorage.getItem('marse_hist')) || [];
+            if(hist.length > 0) {
+                document.getElementById('history-container').style.display = 'block';
+                document.getElementById('history-list').innerHTML = hist.map((h, i) => `
+                    <div class="history-item">
+                        <div style="font-size: 0.8rem;">
+                            <strong style="color: var(--fg)">${h.name}</strong><br>
+                            <span style="color: var(--muted)">${h.desc}</span>
+                        </div>
+                        <button class="reorder-btn spring-tap" onclick='reorder(${i})'>Re-Order</button>
                     </div>
-                    <strong style="display:block; margin-bottom:5px; font-family: var(--font-display); font-size:0.95rem;">${item.dish}</strong>
-                    <span style="color:var(--muted); font-size:0.85rem;">Note: ${item.notes}</span>
-                </div>
-            `).join('');
-        }
-
-        // --- DB DATA LOGGERS ---
-        async function submitStaffFeedback() {
-            const staff = document.getElementById('evalStaff').value.trim();
-            const cust = document.getElementById('evalCust').value.trim() || 'Anonymous';
-            if (!staff) return triggerToast("Please designate target staff.");
-
-            const btn = document.getElementById('evalBtn');
-            btn.innerHTML = "Processing Transmission...";
-            btn.disabled = true;
-
-            try {
-                const { error } = await _s.from('employee_feedback').insert([{
-                    customer_name: cust,
-                    staff_name: staff,
-                    food_score: parseInt(document.getElementById('fFood').value),
-                    service_score: parseInt(document.getElementById('fService').value),
-                    usefulness_score: 5,
-                    health_safety_score: 5
-                }]);
-
-                if (error) throw error;
-                triggerToast("EVALUATION RECORDED");
-                document.getElementById('evalStaff').value = "";
-            } catch (e) {
-                triggerToast("Failure mapping data.");
-            } finally {
-                btn.innerHTML = "Log Evaluation";
-                btn.disabled = false;
+                `).join('');
             }
         }
 
-        async function submitRDConcept() {
-            const author = document.getElementById('rdAuthor').value.trim();
-            const type = document.getElementById('rdType').value;
-            const text = document.getElementById('rdText').value.trim();
-
-            if (!author || !text) return triggerToast("Provide identity & description.");
-
-            const btn = document.getElementById('rdBtn');
-            btn.innerHTML = "Processing Transmission...";
-            btn.disabled = true;
-
-            try {
-                const { error } = await _s.from('recommendations').insert([{
-                    author_name: author,
-                    rec_type: type,
-                    suggestion_text: text
-                }]);
-
-                if (error) throw error;
-                triggerToast("SCHEMATIC SECURED IN DATABASE");
-                document.getElementById('rdText').value = "";
-            } catch (e) {
-                triggerToast("Failure mapping schema.");
-            } finally {
-                btn.innerHTML = "Submit Schematic";
-                btn.disabled = false;
-            }
+        function reorder(index) {
+            let hist = JSON.parse(localStorage.getItem('marse_hist'));
+            let data = hist[index];
+            document.getElementById('custName').value = data.name;
+            orderState = JSON.parse(data.state);
+            
+            // Visually update form to match state
+            setSlider('spice', orderState.spice);
+            setSlider('cream', orderState.cream);
+            if(orderState.seasoning && !document.getElementById('btn-seasoning').classList.contains('active')) toggleEnhancement('seasoning');
+            
+            showToast("Configuration Loaded");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        window.onload = loadHistory;
     </script>
 </body>
 </html>
