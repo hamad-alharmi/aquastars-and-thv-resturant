@@ -7,7 +7,7 @@
     
     <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -20,6 +20,8 @@
             --border-focus: rgba(255, 255, 255, 0.4);
             --muted: #888888;
             --accent: #ffffff;
+            --particle-color: 255, 255, 255; /* RGB format for canvas */
+            --particle-glow: 0.8;
         }
 
         body[data-mode="paper"] {
@@ -31,10 +33,42 @@
             --border-focus: rgba(0, 0, 0, 0.5);
             --muted: #666666;
             --accent: #050505;
+            --particle-color: 0, 0, 0;
+            --particle-glow: 0.2;
         }
 
-        body[data-theme="wwe"] { --accent: #d4af37; --border-focus: #d4af37; }
-        body[data-theme="marvel"] { --accent: #ed1d24; --border-focus: #ed1d24; }
+        /* Theme: WWE (Black, Red, White) */
+        body[data-theme="wwe"] {
+            --bg: #000000;
+            --surface: #1a1a1a;
+            --surface-2: #222222;
+            --fg: #ffffff;
+            --accent: #d4151a;
+            --border-focus: #d4151a;
+            --particle-color: 212, 21, 26;
+        }
+
+        /* Theme: Beta Squad (Green, Black) */
+        body[data-theme="beta"] {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --surface-2: #1a1a1a;
+            --fg: #ffffff;
+            --accent: #00ff00;
+            --border-focus: #00ff00;
+            --particle-color: 0, 255, 0;
+        }
+
+        /* Theme: Marvel (Vivid Red, White) */
+        body[data-theme="marvel"] {
+            --bg: #0f0f0f;
+            --surface: #1a1a1a;
+            --surface-2: #222222;
+            --fg: #ffffff;
+            --accent: #ed1d24;
+            --border-focus: #ed1d24;
+            --particle-color: 237, 29, 36;
+        }
 
         * {
             margin: 0; padding: 0; box-sizing: border-box;
@@ -70,7 +104,7 @@
             color: var(--bg);
             padding: 12px 0;
             font-family: 'Inter', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.7rem;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -110,17 +144,17 @@
             font-family: 'Fraunces', serif;
             font-weight: 400;
             font-size: 1.4rem;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             cursor: pointer;
             user-select: none;
-            transition: opacity 0.2s;
+            transition: all 0.3s ease;
         }
 
         .logo.flash { animation: flashAnim 0.6s ease; }
         @keyframes flashAnim {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.95); }
         }
 
         .nav-actions {
@@ -189,7 +223,7 @@
         /* Hero */
         .brand-hero {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             margin-top: 20px;
         }
 
@@ -218,13 +252,25 @@
             border: 1px solid var(--border);
             border-radius: 24px;
             padding: 40px 30px;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             position: relative;
             overflow: hidden;
             transition: border-color 0.3s ease, background-color 0.6s ease;
         }
 
+        .display-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+            opacity: 0.05;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
         .display-card:hover { border-color: var(--border-focus); }
+        .display-card:hover::before { opacity: 0.1; }
 
         .tag {
             display: inline-block;
@@ -254,6 +300,45 @@
             font-size: 0.95rem;
             line-height: 1.7;
             font-weight: 300;
+        }
+
+        /* Tiles Grid */
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .stat-tile {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-tile:hover {
+            border-color: var(--border-focus);
+            transform: translateY(-2px);
+        }
+
+        .tile-val {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-style: italic;
+        }
+
+        .tile-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Builder Titles */
@@ -357,10 +442,12 @@
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
-            font-family: 'Fraunces', serif;
-            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
             color: var(--muted);
-            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         /* Expandable Addons */
@@ -368,7 +455,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .addon-card {
@@ -417,6 +504,7 @@
             justify-content: center;
             transition: all 0.3s ease;
             color: transparent;
+            font-size: 0.8rem;
         }
 
         .addon-card.active .select-indicator {
@@ -518,8 +606,20 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
+            position: relative;
+            overflow: hidden;
         }
 
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-submit:hover::after { left: 100%; }
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-submit i { transition: transform 0.3s ease; }
@@ -760,6 +860,7 @@
 
         .collab-btn:hover, .collab-btn:active {
             border-color: var(--fg);
+            transform: translateY(-2px);
         }
 
         /* Toast */
@@ -852,6 +953,26 @@
                     </p>
                 </div>
 
+                <!-- New UI Tiles -->
+                <div class="tile-grid animate-in" style="animation-delay: 0.15s;">
+                    <div class="stat-tile">
+                        <div class="tile-val">3:00</div>
+                        <div class="tile-label">Prep Time</div>
+                    </div>
+                    <div class="stat-tile">
+                        <div class="tile-val">100%</div>
+                        <div class="tile-label">Domination</div>
+                    </div>
+                    <div class="stat-tile">
+                        <div class="tile-val">01</div>
+                        <div class="tile-label">Menu Size</div>
+                    </div>
+                    <div class="stat-tile">
+                        <div class="tile-val">∞</div>
+                        <div class="tile-label">Flavor Depth</div>
+                    </div>
+                </div>
+
                 <div class="animate-in" style="animation-delay: 0.2s;">
                     <h3 class="builder-title">The Composition</h3>
                     
@@ -866,7 +987,7 @@
                             </div>
                             <div class="slider-thumb" id="spice-thumb"></div>
                         </div>
-                        <div class="slider-ticks">
+                        <div class="slider-ticks" id="spice-ticks">
                             <span>Whisper</span>
                             <span>Glow</span>
                             <span>Fire</span>
@@ -884,7 +1005,7 @@
                             </div>
                             <div class="slider-thumb" id="cream-thumb"></div>
                         </div>
-                        <div class="slider-ticks">
+                        <div class="slider-ticks" id="cream-ticks">
                             <span>Broth</span>
                             <span>Velvet</span>
                             <span>Silk</span>
@@ -1045,7 +1166,8 @@
             <div class="modal-title">Hidden Editions</div>
             <div class="collab-options">
                 <button class="collab-btn" data-theme="default">Standard MARSE</button>
-                <button class="collab-btn" data-theme="wwe">WWE Beta Squad</button>
+                <button class="collab-btn" data-theme="wwe">WWE</button>
+                <button class="collab-btn" data-theme="beta">Beta Squad</button>
                 <button class="collab-btn" data-theme="marvel">Marvel</button>
             </div>
         </div>
@@ -1066,7 +1188,32 @@
             cream: 2,
             seasoning: false,
             soda: { active: false, brand: 'Coca-Cola' },
-            chips: { active: false, brand: "Lay's" }
+            chips: { active: false, brand: "Lay's" },
+            theme: 'default'
+        };
+
+        // Theme definitions for UI updates
+        const themeConfig = {
+            default: {
+                logo: 'MARSE',
+                spiceTicks: ['Whisper', 'Glow', 'Fire'],
+                creamTicks: ['Broth', 'Velvet', 'Silk']
+            },
+            wwe: {
+                logo: 'MARSE × WWE',
+                spiceTicks: ['SmackDown', 'Raw', 'WrestleMania'],
+                creamTicks: ['Ring', 'Champion', 'Gold']
+            },
+            beta: {
+                logo: 'MARSE × BETA',
+                spiceTicks: ['Banter', 'Challenge', 'Shutdown'],
+                creamTicks: ['Gaming', 'Chalk', 'Squad']
+            },
+            marvel: {
+                logo: 'MARSE × MARVEL',
+                spiceTicks: ['Mutant', 'Gamma', 'Cosmic'],
+                creamTicks: ['Stark', 'Vibranium', 'Infinity']
+            }
         };
 
         // --- INITS ---
@@ -1163,7 +1310,6 @@
                 }
             });
 
-            // Init position
             const initPct = (state[name] / max) * 100;
             thumb.style.left = `${initPct}%`;
             fill.style.width = `${initPct}%`;
@@ -1236,7 +1382,10 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Preparing...`;
             btn.disabled = true;
 
-            const configuredDish = `Restaurant Destroyer [Spice: ${state.spice}/5] [Cream: ${state.cream}/5]`;
+            const spiceLabel = themeConfig[state.theme].spiceTicks[Math.min(2, Math.floor(state.spice / 2))];
+            const creamLabel = themeConfig[state.theme].creamTicks[Math.min(2, Math.floor(state.cream / 2))];
+            
+            const configuredDish = `Restaurant Destroyer [Spice: ${state.spice}/5 (${spiceLabel})] [Cream: ${state.cream}/5 (${creamLabel})]`;
             let boosts = [];
             if (state.seasoning) boosts.push('Double Seasoning');
             if (state.soda.active) boosts.push(`Soda (${state.soda.brand})`);
@@ -1421,12 +1570,34 @@
 
             document.querySelectorAll('.collab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.body.setAttribute('data-theme', btn.dataset.theme);
+                    applyTheme(btn.dataset.theme);
                     modal.classList.remove('show');
                     triggerToast(`${btn.innerText} Edition Activated`);
                     vibrate(15);
                 });
             });
+        }
+
+        function applyTheme(themeName) {
+            state.theme = themeName;
+            document.body.setAttribute('data-theme', themeName);
+            
+            const config = themeConfig[themeName];
+            document.getElementById('logo').innerText = config.logo;
+            
+            const spiceTicks = document.getElementById('spice-ticks');
+            spiceTicks.innerHTML = `
+                <span>${config.spiceTicks[0]}</span>
+                <span>${config.spiceTicks[1]}</span>
+                <span>${config.spiceTicks[2]}</span>
+            `;
+            
+            const creamTicks = document.getElementById('cream-ticks');
+            creamTicks.innerHTML = `
+                <span>${config.creamTicks[0]}</span>
+                <span>${config.creamTicks[1]}</span>
+                <span>${config.creamTicks[2]}</span>
+            `;
         }
 
         // --- THEME TOGGLE ---
@@ -1439,7 +1610,7 @@
             });
         }
 
-        // --- GLOWING PARTICLES ---
+        // --- GLOWING PARTICLES (DYNAMIC SHAPES) ---
         function initParticles() {
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
@@ -1455,14 +1626,15 @@
 
             function createParticles() {
                 particles = [];
-                const count = Math.min(50, Math.floor(w / 15));
+                const count = Math.min(40, Math.floor(w / 20));
                 for (let i = 0; i < count; i++) {
                     particles.push({
                         x: Math.random() * w,
                         y: Math.random() * h,
-                        r: Math.random() * 1.5 + 0.5,
-                        vx: (Math.random() - 0.5) * 0.1,
-                        vy: -Math.random() * 0.2 - 0.05
+                        r: Math.random() * 10 + 5, // Size for text rendering
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: -Math.random() * 0.5 - 0.2,
+                        opacity: Math.random() * 0.4 + 0.1
                     });
                 }
             }
@@ -1471,34 +1643,40 @@
             function animate() {
                 ctx.clearRect(0, 0, w, h);
                 
-                // Check mode for particle color
-                const mode = document.body.getAttribute('data-mode');
-                const color = mode === 'ink' ? '255, 255, 255' : '0, 0, 0';
+                const currentTheme = document.body.getAttribute('data-theme');
+                const color = getComputedStyle(document.body).getPropertyValue('--particle-color').trim();
                 
                 particles.forEach(p => {
                     p.x += p.vx;
                     p.y += p.vy;
 
-                    if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
-                    if (p.x < -10) p.x = w + 10;
-                    if (p.x > w + 10) p.x = -10;
+                    if (p.y < -20) { p.y = h + 20; p.x = Math.random() * w; }
+                    if (p.x < -20) p.x = w + 20;
+                    if (p.x > w + 20) p.x = -20;
 
-                    // Glow effect
-                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
-                    gradient.addColorStop(0, `rgba(${color}, 0.8)`);
-                    gradient.addColorStop(0.5, `rgba(${color}, 0.2)`);
-                    gradient.addColorStop(1, `rgba(${color}, 0)`);
-                    
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-                    
-                    // Core
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(${color}, 0.9)`;
-                    ctx.fill();
+                    if (currentTheme === 'default') {
+                        // Glowing orbs
+                        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+                        gradient.addColorStop(0, `rgba(${color}, 0.8)`);
+                        gradient.addColorStop(0.5, `rgba(${color}, 0.2)`);
+                        gradient.addColorStop(1, `rgba(${color}, 0)`);
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fillStyle = gradient;
+                        ctx.fill();
+                    } else {
+                        // Logo text particles
+                        let char = 'M';
+                        if (currentTheme === 'wwe') char = 'W';
+                        if (currentTheme === 'beta') char = 'B';
+                        if (currentTheme === 'marvel') char = 'M';
+
+                        ctx.font = `bold ${p.r}px Arial`;
+                        ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(char, p.x, p.y);
+                    }
                 });
                 requestAnimationFrame(animate);
             }
