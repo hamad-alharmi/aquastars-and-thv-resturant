@@ -3,390 +3,514 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARSE INC. | The Undisputed Champion</title>
+    <title>MARSE | THE RESTAURANT DESTROYER</title>
     
-    <!-- Libraries -->
+    <!-- Fonts & Icons -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- HIGH-END THEME CONFIG --- */
+        /* --- MINIMALIST B&W SYSTEM --- */
         :root {
-            --primary: #ff1e4d;
-            --primary-glow: rgba(255, 30, 77, 0.6);
-            --bg-dark: #030102;
-            --glass: rgba(20, 5, 8, 0.4);
-            --glass-border: rgba(255, 30, 77, 0.15);
-            --text-main: #ffffff;
-            --text-muted: #888;
+            --bg: #000000;
+            --fg: #ffffff;
+            --border: #222222;
+            --muted: #666666;
+            --light-bg: #111111;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; cursor: none; /* Custom Cursor */ }
-        
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: var(--text-main); 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
             overflow-x: hidden;
-            scroll-behavior: smooth;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(255, 30, 77, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(255, 100, 0, 0.05) 0%, transparent 50%);
         }
 
-        /* --- CUSTOM CURSOR --- */
-        .cursor-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--primary); transition: transform 0.1s; }
-        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--primary-glow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; }
-        .hovering .cursor-outline { width: 60px; height: 60px; background: rgba(255, 30, 77, 0.1); }
+        /* --- SPONSOR HEADER (WWE, SHADES BY NIKO, MARVEL) --- */
+        .sponsor-ticker {
+            background: var(--fg);
+            color: var(--bg);
+            padding: 12px 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+        }
 
-        /* --- SCROLL MARQUEE (DISCLAIMER) --- */
-        .marquee-container { background: var(--primary); color: #000; padding: 8px 0; overflow: hidden; position: relative; font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; letter-spacing: 2px; font-weight: 700; white-space: nowrap; z-index: 100;}
-        .marquee-content { display: inline-block; animation: marquee 25s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .sponsor-track {
+            display: inline-block;
+            animation: scroll-ticker 20s linear infinite;
+        }
 
-        /* --- NAVIGATION --- */
-        nav { position: sticky; top: 0; background: rgba(3, 1, 2, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 90; }
-        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; }
-        .logo span { color: var(--primary); }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
+        @keyframes scroll-ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
-        /* --- HERO SECTION --- */
-        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; }
-        .hero h1 { font-size: clamp(3rem, 8vw, 7rem); font-family: 'Space Grotesk', sans-serif; font-weight: 900; line-height: 0.9; text-transform: uppercase; margin-bottom: 20px; }
-        .hero h1 .glitch { position: relative; display: inline-block; color: transparent; -webkit-text-stroke: 2px var(--primary); }
-        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; font-weight: 300; }
-        .typewriter { font-family: monospace; color: var(--primary); margin-top: 30px; font-size: 1rem; background: rgba(255, 30, 77, 0.1); padding: 10px 20px; border-radius: 5px; border-left: 3px solid var(--primary); }
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
 
-        /* --- MENU ARCHITECTURE --- */
-        .section-title { text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; text-transform: uppercase; margin: 100px 0 50px; opacity: 0; transform: translateY(30px); transition: 0.8s ease; }
-        .section-title.visible { opacity: 1; transform: translateY(0); }
-        .section-title span { color: var(--primary); }
+        .brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
 
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 5%; }
-        
-        /* The Destroyer Focus Card */
-        .boss-card { background: linear-gradient(145deg, rgba(255, 30, 77, 0.1) 0%, rgba(0,0,0,0) 100%); border: 1px solid var(--primary); border-radius: 30px; padding: 50px; text-align: center; margin-bottom: 50px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(255, 30, 77, 0.15); opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .boss-card.visible { opacity: 1; transform: scale(1); }
-        .boss-card::before { content: 'COMPETITION KILLER'; position: absolute; top: 20px; right: -40px; background: var(--primary); color: #000; font-weight: 900; font-size: 0.7rem; padding: 5px 50px; transform: rotate(45deg); letter-spacing: 2px; }
-        .boss-title { font-size: 3.5rem; font-family: 'Space Grotesk', sans-serif; font-weight: 900; margin-bottom: 10px; text-shadow: 0 0 20px var(--primary-glow); }
-        
-        /* Grid Menu */
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 100px; }
-        .card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); transition: 0.1s; transform-style: preserve-3d; opacity: 0; transform: translateY(50px); }
-        .card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.8s, transform 0.8s; }
-        .card-content { transform: translateZ(30px); /* 3D pop effect */ pointer-events: none; }
-        .card h3 { font-size: 1.5rem; margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif; }
-        .card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-        .card-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        
-        .btn { background: var(--primary); color: #fff; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 700; font-family: inherit; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; width: 100%; transition: 0.3s; box-shadow: 0 10px 20px rgba(255, 30, 77, 0.2); }
-        .btn:hover { background: #fff; color: #000; box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
-        .btn-outline { background: transparent; border: 1px solid var(--glass-border); box-shadow: none; }
-        .btn-outline:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .nav-links button {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+            margin-left: 20px;
+        }
 
-        /* --- COMMAND TERMINAL (ORDER FORM) --- */
-        .terminal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-bottom: 100px; }
-        @media (max-width: 900px) { .terminal-grid { grid-template-columns: 1fr; } }
-        
-        .form-panel { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; position: relative; opacity: 0; transform: translateX(-50px); transition: 0.8s; }
-        .form-panel.visible { opacity: 1; transform: translateX(0); }
-        
-        .input-group { margin-bottom: 25px; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        input, textarea, select { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 18px; border-radius: 12px; color: #fff; font-family: inherit; font-size: 1rem; transition: 0.3s; }
-        input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); background: rgba(255,30,77,0.05); }
-        input[readonly] { border-color: var(--primary); color: var(--primary); font-weight: 700; }
+        .nav-links button:hover, .nav-links button.active {
+            color: var(--fg);
+        }
 
-        /* --- TOAST & UTILS --- */
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #fff; color: #000; padding: 20px 30px; border-radius: 15px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateX(150%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; display: flex; align-items: center; gap: 15px; }
-        .toast.show { transform: translateX(0); }
-        .toast.error { background: var(--primary); color: #fff; }
+        /* --- MAIN HERO SECTION --- */
+        .hero {
+            padding: 80px 5% 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-        .mod-panel { display: none; margin-top: 50px; border-top: 1px solid var(--glass-border); padding-top: 50px; }
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--muted);
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        /* --- THE SINGLE FOCUS CARD (THE DESTROYER) --- */
+        .showcase {
+            max-width: 600px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+        }
+
+        .dish-card {
+            border: 1px solid var(--fg);
+            padding: 40px;
+            background: var(--light-bg);
+            text-align: left;
+            position: relative;
+        }
+
+        .dish-card .badge {
+            display: inline-block;
+            border: 1px solid var(--fg);
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .dish-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .dish-desc {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        /* --- FORMS & INPUTS --- */
+        .form-section {
+            border-top: 1px solid var(--border);
+            padding: 60px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            padding: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            border-radius: 0; /* Sharp Brutalist Edges */
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--fg);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            width: 100%;
+            background: var(--fg);
+            color: var(--bg);
+            border: 1px solid var(--fg);
+            padding: 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg);
+            color: var(--fg);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* --- SECONDARY/SLIDE OUT PANEL --- */
+        .side-panel {
+            display: none;
+            border-top: 1px solid var(--border);
+            padding: 60px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- FOOTER & LEGAL --- */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- TOAST SYSTEM --- */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--fg);
+            color: var(--bg);
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
 
-    <!-- CUSTOM CURSOR -->
-    <div class="cursor-dot" id="cursor-dot"></div>
-    <div class="cursor-outline" id="cursor-outline"></div>
-
-    <!-- LEGAL MARQUEE -->
-    <div class="marquee-container">
-        <div class="marquee-content">
-            ⚠️ NOTICE: ALL PREVIOUS AQUASTAR RECIPES AND MENU ITEMS CONTINUE TO BE FULLY TRADEMARKED AND OWNED BY MARSE INC. ⚠️ UNAUTHORIZED USE BY COMPETING RESTAURANTS (HAMDAN) WILL RESULT IN IMMEDIATE CULINARY DESTRUCTION. ⚠️
-            ⚠️ NOTICE: ALL PREVIOUS AQUASTAR RECIPES AND MENU ITEMS CONTINUE TO BE FULLY TRADEMARKED AND OWNED BY MARSE INC. ⚠️ UNAUTHORIZED USE BY COMPETING RESTAURANTS (HAMDAN) WILL RESULT IN IMMEDIATE CULINARY DESTRUCTION. ⚠️
+    <!-- SPONSOR SLIDE -->
+    <div class="sponsor-ticker">
+        <div class="sponsor-track">
+            ★ SPONSORED BY WWE ★ SPONSORED BY SHADES BY NIKO ★ SPONSORED BY MARVEL ★ SPONSORED BY WWE ★ SPONSORED BY SHADES BY NIKO ★ SPONSORED BY MARVEL ★ SPONSORED BY WWE ★ SPONSORED BY SHADES BY NIKO ★ SPONSORED BY MARVEL ★
         </div>
     </div>
 
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="logo">MARSE<span>.</span></div>
+    <!-- NATIVE HEADER -->
+    <header>
+        <div class="brand">MARSE</div>
         <div class="nav-links">
-            <a href="#menu" class="hover-target">Arsenal</a>
-            <a href="#dispatch" class="hover-target">Terminal</a>
-            <a href="#" class="hover-target" onclick="toggleModPanel()">R&D / Intel</a>
+            <button id="nav-order" class="active" onclick="setView('order')">Order</button>
+            <button id="nav-feedback" onclick="setView('feedback')">Evaluation / R&D</button>
         </div>
-    </nav>
+    </header>
 
     <!-- HERO -->
-    <section class="hero scroll-anim">
-        <h1>MARSE <span class="glitch">INDOMIE</span></h1>
-        <p>Engineered for absolute culinary dominance. Welcome to the new standard.</p>
-        <div class="typewriter" id="typewriter"></div>
+    <section class="hero">
+        <h1>THE RESTAURANT DESTROYER</h1>
+        <p>A single recipe engineered to redefine the culinary landscape. Accept no substitutes.</p>
     </section>
 
-    <div class="container">
-        <h2 class="section-title scroll-anim" id="menu">Tactical <span>Arsenal</span></h2>
-
-        <!-- THE DESTROYER (BOSS CARD) -->
-        <div class="boss-card scroll-anim">
-            <h2 class="boss-title">THE RESTAURANT DESTROYER</h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px;">The singular recipe designed to end the competition. A masterclass in heat, umami, and psychological warfare.</p>
-            <button class="btn hover-target" style="max-width: 300px; font-size: 1.2rem; padding: 20px;" onclick="selectItem('The Restaurant Destroyer')"><i class="fa-solid fa-crosshairs"></i> LOCK TARGET</button>
+    <!-- MAIN DISPLAY (THE ONLY MENU ITEM) -->
+    <div class="showcase" id="menu-view">
+        <div class="dish-card">
+            <div class="badge">Current Offering</div>
+            <h2 class="dish-title">The Restaurant Destroyer</h2>
+            <p class="dish-desc">The masterfully designed Indomie concept featuring complex, bold flavors and premium seasoning architecture. Curated for the highest standards.</p>
         </div>
+    </div>
 
-        <!-- SECONDARY ARSENAL -->
-        <div class="menu-grid">
-            <div class="card scroll-anim hover-target" onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)">
-                <div class="card-content">
-                    <i class="fa-solid fa-bomb card-icon"></i>
-                    <h3>The Atomic Bomb</h3>
-                    <p>The legendary extreme-spice classic. Still trademarked. Still devastating.</p>
-                    <button class="btn btn-outline" onclick="selectItem('The Atomic Bomb')">Select</button>
-                </div>
-            </div>
-            
-            <div class="card scroll-anim hover-target" onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)">
-                <div class="card-content">
-                    <i class="fa-solid fa-moon card-icon" style="color: #888;"></i>
-                    <h3>Duck Duck Black</h3>
-                    <p>Charcoal-infused fusion. The aesthetic choice for midnight operators.</p>
-                    <button class="btn btn-outline" onclick="selectItem('Duck Duck Black')">Select</button>
-                </div>
-            </div>
-
-            <div class="card scroll-anim hover-target" onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)">
-                <div class="card-content">
-                    <i class="fa-solid fa-droplet card-icon" style="color: #00d4ff;"></i>
-                    <h3>Hamdan's Tears</h3>
-                    <p>A refreshing, ice-cold beverage served purely for the psychological damage.</p>
-                    <button class="btn btn-outline" onclick="selectItem('Hamdan Tears (Beverage)')">Select</button>
-                </div>
-            </div>
+    <!-- ORDER FORM SECTION -->
+    <section class="form-section" id="order-form-container">
+        <div class="input-group">
+            <label>Confirm Weapon of Choice</label>
+            <input type="text" value="The Restaurant Destroyer" readonly style="font-weight: 700; opacity: 0.8;">
         </div>
-
-        <!-- COMMAND TERMINAL (CHECKOUT) -->
-        <h2 class="section-title scroll-anim" id="dispatch">Dispatch <span>Terminal</span></h2>
         
-        <div class="terminal-grid">
-            <div class="form-panel scroll-anim" style="transition-delay: 0.1s;">
-                <h3 style="font-family: 'Space Grotesk'; font-size: 1.8rem; margin-bottom: 20px;">1. Operational Details</h3>
-                <div class="input-group">
-                    <label>Selected Weaponry</label>
-                    <input type="text" id="selDish" readonly placeholder="Awaiting selection from Arsenal...">
-                </div>
-                <div class="input-group">
-                    <label>Operative Alias</label>
-                    <input type="text" id="name" placeholder="Enter your name..." oninput="saveName(this.value)">
-                </div>
-                <div class="input-group">
-                    <label>Mission Parameters (Notes)</label>
-                    <textarea id="note" rows="3" placeholder="Extra spice? Tactical modifications?"></textarea>
-                </div>
-                <button class="btn hover-target" id="sendBtn" onclick="order()" style="padding: 20px; font-size: 1.1rem;"><i class="fa-solid fa-satellite-dish"></i> TRANSMIT ORDER TO HQ</button>
-            </div>
-
-            <div class="form-panel scroll-anim" style="background: transparent; border: none; display: flex; flex-direction: column; justify-content: center; opacity: 0.5;">
-                <i class="fa-solid fa-shield-halved" style="font-size: 5rem; color: var(--primary); margin-bottom: 20px;"></i>
-                <h3 style="font-family: 'Space Grotesk'; font-size: 2rem;">Secure Link Established</h3>
-                <p style="line-height: 1.6; margin-top: 15px;">Orders are routed directly to the kitchen infrastructure via heavily encrypted Discord and Supabase Webhook protocols. No data is lost.</p>
-            </div>
+        <div class="input-group">
+            <label>Name / Alias</label>
+            <input type="text" id="name" placeholder="Enter your name..." oninput="saveName(this.value)">
         </div>
 
-        <!-- HIDDEN R&D / EVALUATION PANEL -->
-        <div class="mod-panel" id="modPanel">
-            <h2 class="section-title">Internal <span>Systems</span></h2>
-            <div class="terminal-grid">
-                <div class="form-panel" style="opacity: 1; transform: none;">
-                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-star" style="color:var(--primary)"></i> Staff Evaluation</h3>
-                    <div class="input-group"><label>Target Staff</label><input type="text" id="rStaff" placeholder="e.g. Kai..."></div>
-                    <div class="input-group"><label>Your Alias</label><input type="text" id="rCust"></div>
-                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-                        <div style="flex:1;"><label>Food (1-5)</label><input type="number" id="fFood" min="1" max="5" value="5"></div>
-                        <div style="flex:1;"><label>Service (1-5)</label><input type="number" id="fServ" min="1" max="5" value="5"></div>
-                    </div>
-                    <button class="btn btn-outline hover-target" id="rateBtn" onclick="submitFeedback()">Log Intel</button>
-                </div>
-
-                <div class="form-panel" style="opacity: 1; transform: none;">
-                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-lightbulb" style="color:var(--primary)"></i> R&D Sandbox</h3>
-                    <div class="input-group"><label>Your Alias</label><input type="text" id="recName"></div>
-                    <div class="input-group"><label>Category</label><select id="recType"><option>Menu Concept</option><option>Tech Upgrade</option></select></div>
-                    <div class="input-group"><label>Proposal</label><textarea id="recText" rows="2"></textarea></div>
-                    <button class="btn btn-outline hover-target" id="recBtn" onclick="submitRec()">Submit Proposal</button>
-                </div>
-            </div>
+        <div class="input-group">
+            <label>Operational Notes (Optional)</label>
+            <textarea id="note" rows="3" placeholder="Specify any preferences or custom parameters..."></textarea>
         </div>
 
-    </div>
+        <button class="btn" id="sendBtn" onclick="submitOrder()">Dispatch Order</button>
+    </section>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="toast">
-        <i class="fa-solid fa-circle-info" id="toastIcon"></i>
-        <span id="toastMsg">System Ready.</span>
-    </div>
+    <!-- FEEDBACK & R&D PANELS (CLEANLY SPLIT) -->
+    <section class="side-panel" id="eval-panel">
+        <div style="margin-bottom: 50px;">
+            <h2 style="font-family: 'Space Grotesk'; text-transform: uppercase; margin-bottom: 20px;">Staff Evaluation</h2>
+            <div class="input-group"><label>Staff Name</label><input type="text" id="rStaff" placeholder="e.g. Kai"></div>
+            <div class="input-group"><label>Your Alias</label><input type="text" id="rCust" placeholder="Your name"></div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                <div class="input-group" style="margin-bottom: 0;"><label>Food (1-5)</label><input type="number" id="fFood" min="1" max="5" value="5"></div>
+                <div class="input-group" style="margin-bottom: 0;"><label>Service (1-5)</label><input type="number" id="fServ" min="1" max="5" value="5"></div>
+            </div>
+            <button class="btn" id="rateBtn" onclick="submitFeedback()">Log Intel</button>
+        </div>
+
+        <div>
+            <h2 style="font-family: 'Space Grotesk'; text-transform: uppercase; margin-bottom: 20px;">R&D Proposal</h2>
+            <div class="input-group"><label>Your Alias</label><input type="text" id="recName" placeholder="Your name"></div>
+            <div class="input-group">
+                <label>Category</label>
+                <select id="recType"><option>Menu Concept</option><option>Tech Upgrade</option></select>
+            </div>
+            <div class="input-group"><label>Proposal Details</label><textarea id="recText" rows="3" placeholder="Enter suggestions..."></textarea></div>
+            <button class="btn" id="recBtn" onclick="submitRec()">Submit Concept</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p style="margin-bottom: 10px;">ALL PREVIOUS RECIPES AND MENU ITEMS WILL CONTINUE TO BE TRADEMARKED UNDER MARSE INC.</p>
+        <p>&copy; 2026 MARSE INC. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <!-- SUCCESS TOAST -->
+    <div id="toast" class="toast">Action Logged</div>
 
     <script>
-        // --- SECURE BACKEND CONFIG ---
+        // --- SECURE SUPABASE CONFIGURATION ---
         const S_URL = 'https://bfykhlcqukfhgpfdwywg.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeWtobGNxdWtmaGdwZmR3eXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIzMTgsImV4cCI6MjA5MzA0ODMxOH0.TWQjUNxTdXkHzYYuLoPJ2txzIDb8w_p_N2lX9qDf_JE';
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
         const _s = supabase.createClient(S_URL, S_KEY);
-        
-        let currentDish = "";
 
-        // --- CORE UI INITS ---
+        const dishName = "The Restaurant Destroyer";
+
         window.onload = () => {
-            // Memory Load
-            const n = localStorage.getItem('marse_intel_name');
-            if(n) {
-                document.getElementById('name').value = n;
-                document.getElementById('rCust').value = n;
-                document.getElementById('recName').value = n;
+            const savedName = localStorage.getItem('marse_user_alias');
+            if (savedName) {
+                document.getElementById('name').value = savedName;
+                document.getElementById('rCust').value = savedName;
+                document.getElementById('recName').value = savedName;
             }
-
-            // Typewriter Effect
-            const text = "> System initialized. Objective: Destroy Hamdan's restaurant.";
-            let i = 0;
-            function typeWriter() {
-                if (i < text.length) {
-                    document.getElementById("typewriter").innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 50);
-                }
-            }
-            setTimeout(typeWriter, 1000);
         };
 
-        // --- CUSTOM CURSOR LOGIC ---
-        const dot = document.getElementById('cursor-dot');
-        const outline = document.getElementById('cursor-outline');
-        
-        window.addEventListener('mousemove', (e) => {
-            dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
-            outline.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 500, fill: "forwards" });
-        });
-
-        document.querySelectorAll('.hover-target, input, textarea, button').forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-        });
-
-        // --- 3D TILT EFFECT ---
-        function tiltCard(e, card) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg rotation
-            const rotateY = ((x - centerX) / centerX) * 10;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        }
-        function resetTilt(card) { card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`; }
-
-        // --- SCROLL REVEAL ANIMATIONS ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.scroll-anim').forEach((el) => observer.observe(el));
-
-        // --- UTILS ---
-        function saveName(val) { localStorage.setItem('marse_intel_name', val); }
-        function selectItem(name) {
-            currentDish = name;
-            document.getElementById('selDish').value = name;
-            showToast(`Target Locked: ${name}`);
-            document.getElementById('dispatch').scrollIntoView({behavior: 'smooth'});
-        }
-        function toggleModPanel() {
-            const p = document.getElementById('modPanel');
-            p.style.display = p.style.display === 'block' ? 'none' : 'block';
-            if(p.style.display === 'block') p.scrollIntoView({behavior: 'smooth'});
+        function saveName(val) {
+            localStorage.setItem('marse_user_alias', val);
         }
 
-        function showToast(msg, isError = false) {
+        // --- NAVIGATION TOGGLE ---
+        function setView(view) {
+            const btnOrder = document.getElementById('nav-order');
+            const btnFeedback = document.getElementById('nav-feedback');
+            const menuView = document.getElementById('menu-view');
+            const orderForm = document.getElementById('order-form-container');
+            const evalPanel = document.getElementById('eval-panel');
+
+            if (view === 'order') {
+                btnOrder.classList.add('active');
+                btnFeedback.classList.remove('active');
+                menuView.style.display = 'block';
+                orderForm.style.display = 'block';
+                evalPanel.style.display = 'none';
+            } else {
+                btnOrder.classList.remove('active');
+                btnFeedback.classList.add('active');
+                menuView.style.display = 'none';
+                orderForm.style.display = 'none';
+                evalPanel.style.display = 'block';
+            }
+        }
+
+        // --- TOAST SYSTEMS ---
+        function triggerToast(msg) {
             const t = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').className = isError ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-check-circle";
-            t.className = isError ? "toast show error" : "toast show";
-            setTimeout(() => t.classList.remove('show'), 4000);
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // --- DATABASE PIPELINE ---
-        async function order() {
+        // --- DATABASE INTERACTIONS ---
+        async function submitOrder() {
             const n = document.getElementById('name').value;
             const nt = document.getElementById('note').value;
-            
-            if(!currentDish) return showToast("ERROR: No weaponry selected.", true);
-            if(!n) return showToast("ERROR: Operative alias required.", true);
-            
+
+            if (!n) return triggerToast("Name is required");
+
             const btn = document.getElementById('sendBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> UPLINKING...`; btn.disabled = true;
+            btn.innerText = "Dispatching...";
+            btn.disabled = true;
 
             try {
-                // 1. Discord Tactical Ping
+                // Discord Logging
                 const res = await fetch(`${W_URL}?wait=true`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ embeds: [{ title: "🔥 MARSE INC. DISPATCH", color: 0xff1e4d, fields: [{name: "Alias", value: n, inline: true}, {name: "Target", value: currentDish, inline: true}, {name: "Mods", value: nt || "Standard Issue"}] }] })
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "🚨 NEW ORDER DISPATCH",
+                            color: 0x000000,
+                            fields: [
+                                { name: "Alias", value: n, inline: true },
+                                { name: "Dish", value: dishName, inline: true },
+                                { name: "Notes", value: nt || "None Specified" }
+                            ]
+                        }]
+                    })
                 });
                 const d = await res.json();
-                
-                // 2. Supabase Storage
-                const { error } = await _s.from('orders').insert([{ name: n, item: currentDish, note: nt, discord_id: d.id, status: 'pending' }]);
+
+                // Supabase DB Store
+                const { error } = await _s.from('orders').insert([{
+                    name: n,
+                    item: dishName,
+                    note: nt,
+                    discord_id: d.id,
+                    status: 'pending'
+                }]);
+
                 if (error) throw new Error(error.message);
 
-                showToast("TRANSMISSION SUCCESSFUL. HQ is preparing your order.");
+                triggerToast("Order Received Successfully");
                 document.getElementById('note').value = '';
-                currentDish = ''; document.getElementById('selDish').value = '';
             } catch (e) {
                 console.error(e);
-                showToast("NETWORK FAILURE. Attempt again.", true);
+                triggerToast("Submission Error. Try again.");
             }
-            btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-satellite-dish"></i> TRANSMIT ORDER TO HQ`;
+            btn.innerText = "Dispatch Order";
+            btn.disabled = false;
         }
 
         async function submitFeedback() {
-            const staff = document.getElementById('rStaff').value, cust = document.getElementById('rCust').value || 'Anonymous';
-            if(!staff) return showToast("Target staff required.", true);
-            const btn = document.getElementById('rateBtn'); btn.innerHTML = '...'; btn.disabled = true;
+            const staff = document.getElementById('rStaff').value;
+            const cust = document.getElementById('rCust').value || 'Anonymous';
+            if (!staff) return triggerToast("Specify a staff member");
+
+            const btn = document.getElementById('rateBtn');
+            btn.innerText = "Logging...";
+            btn.disabled = true;
+
             try {
-                await _s.from('employee_feedback').insert([{ 
-                    customer_name: cust, staff_name: staff,
-                    food_score: document.getElementById('fFood').value, service_score: document.getElementById('fServ').value, usefulness_score: 5, health_safety_score: 5
+                const { error } = await _s.from('employee_feedback').insert([{
+                    customer_name: cust,
+                    staff_name: staff,
+                    food_score: parseInt(document.getElementById('fFood').value),
+                    service_score: parseInt(document.getElementById('fServ').value),
+                    usefulness_score: 5,
+                    health_safety_score: 5
                 }]);
-                showToast("Intel logged in core database.");
-            } catch(e) { showToast("DB Error", true); }
-            btn.innerHTML = 'Log Intel'; btn.disabled = false;
+
+                if (error) throw new Error(error.message);
+                triggerToast("Evaluation Logged");
+                document.getElementById('rStaff').value = "";
+            } catch (e) {
+                triggerToast("Network Error");
+            }
+            btn.innerText = "Log Intel";
+            btn.disabled = false;
         }
 
         async function submitRec() {
-            const name = document.getElementById('recName').value, type = document.getElementById('recType').value, txt = document.getElementById('recText').value;
-            if(!name || !txt) return showToast("Complete all fields.", true);
-            const btn = document.getElementById('recBtn'); btn.innerHTML = '...'; btn.disabled = true;
+            const name = document.getElementById('recName').value;
+            const type = document.getElementById('recType').value;
+            const txt = document.getElementById('recText').value;
+
+            if (!name || !txt) return triggerToast("Complete all fields");
+
+            const btn = document.getElementById('recBtn');
+            btn.innerText = "Submitting...";
+            btn.disabled = true;
+
             try {
-                await _s.from('recommendations').insert([{ author_name: name, rec_type: type, suggestion_text: txt }]);
-                showToast("Strategy recorded. R&D notified."); document.getElementById('recText').value = "";
-            } catch(e) { showToast("DB Error", true); }
-            btn.innerHTML = 'Submit Proposal'; btn.disabled = false;
+                const { error } = await _s.from('recommendations').insert([{
+                    author_name: name,
+                    rec_type: type,
+                    suggestion_text: txt
+                }]);
+
+                if (error) throw new Error(error.message);
+                triggerToast("Concept Registered");
+                document.getElementById('recText').value = "";
+            } catch (e) {
+                triggerToast("Database Error");
+            }
+            btn.innerText = "Submit Concept";
+            btn.disabled = false;
         }
     </script>
 </body>
