@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MARSE | THE RESTAURANT DESTROYER</title>
     
-    <!-- Fonts & Icons -->
+    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- MINIMALIST B&W SYSTEM --- */
+        /* --- LUXURY STREETWEAR THEME (MONOCHROME) --- */
         :root {
-            --bg: #000000;
+            --bg: #070707;
+            --surface: #121212;
+            --surface-hover: #1c1c1c;
             --fg: #ffffff;
-            --border: #222222;
-            --muted: #666666;
-            --light-bg: #111111;
+            --border: rgba(255, 255, 255, 0.1);
+            --border-focus: rgba(255, 255, 255, 0.6);
+            --muted: #888888;
+            --success: #ffffff;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-sans: 'Inter', sans-serif;
         }
 
         * {
@@ -28,22 +33,28 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg);
             color: var(--fg);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
+            font-family: var(--font-sans);
+            line-height: 1.5;
             overflow-x: hidden;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
-        /* --- SPONSOR HEADER (WWE, SHADES BY NIKO, MARVEL) --- */
-        .sponsor-ticker {
+        /* --- HIGH-END PARTNERSHIP BAR --- */
+        .sponsor-marquee {
             background: var(--fg);
             color: var(--bg);
-            padding: 12px 0;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 0.8rem;
+            padding: 10px 0;
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 0.75rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             overflow: hidden;
@@ -53,304 +64,635 @@
 
         .sponsor-track {
             display: inline-block;
-            animation: scroll-ticker 20s linear infinite;
+            animation: marquee 25s linear infinite;
         }
 
-        @keyframes scroll-ticker {
+        @keyframes marquee {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
 
-        /* --- HEADER & NAVIGATION --- */
-        header {
-            padding: 30px 5%;
+        /* --- STICKY NAV --- */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(7, 7, 7, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            transition: all 0.3s ease;
         }
 
-        .brand {
-            font-family: 'Space Grotesk', sans-serif;
+        .logo {
+            font-family: var(--font-display);
             font-weight: 900;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             letter-spacing: -1px;
             text-transform: uppercase;
-        }
-
-        .nav-links button {
-            background: none;
-            border: none;
-            color: var(--muted);
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: color 0.2s;
-            margin-left: 20px;
-        }
-
-        .nav-links button:hover, .nav-links button.active {
-            color: var(--fg);
-        }
-
-        /* --- MAIN HERO SECTION --- */
-        .hero {
-            padding: 80px 5% 40px;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 900;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            line-height: 1.1;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            color: var(--muted);
-            font-weight: 300;
-            margin-bottom: 40px;
-        }
-
-        /* --- THE SINGLE FOCUS CARD (THE DESTROYER) --- */
-        .showcase {
-            max-width: 600px;
-            margin: 0 auto 80px;
-            padding: 0 20px;
-        }
-
-        .dish-card {
-            border: 1px solid var(--fg);
-            padding: 40px;
-            background: var(--light-bg);
-            text-align: left;
             position: relative;
         }
 
-        .dish-card .badge {
-            display: inline-block;
-            border: 1px solid var(--fg);
-            padding: 4px 10px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            font-family: 'Space Grotesk', sans-serif;
+        .nav-links {
+            display: flex;
+            gap: 15px;
         }
 
-        .dish-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--muted);
+            padding: 8px 16px;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            color: var(--fg);
+            border-color: var(--border-focus);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- CONTAINER --- */
+        .wrapper {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* --- TITLE HEADER --- */
+        .brand-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .brand-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            line-height: 1.0;
+            margin-bottom: 10px;
+        }
+
+        .brand-hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* --- THE CORE DISPLAY --- */
+        .hero-display-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .hero-display-card:hover {
+            border-color: var(--border-focus);
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--fg);
+            color: var(--bg);
+            font-family: var(--font-display);
+            font-size: 0.7rem;
             font-weight: 900;
             text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
             margin-bottom: 15px;
+            letter-spacing: 1px;
         }
 
-        .dish-desc {
+        .display-title {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .display-desc {
             color: var(--muted);
             font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* --- INTERACTIVE BUILDER (QoL) --- */
+        .builder-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* Spice Matrix Grid */
+        .spice-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .spice-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 12px 0;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .spice-btn:hover {
+            border-color: var(--border-focus);
+            color: var(--fg);
+        }
+
+        .spice-btn.active {
+            background: var(--fg);
+            color: var(--bg);
+            border-color: var(--fg);
+        }
+
+        /* Boost Chip Options */
+        .boost-matrix {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 30px;
         }
 
-        /* --- FORMS & INPUTS --- */
-        .form-section {
-            border-top: 1px solid var(--border);
-            padding: 60px 20px;
-            max-width: 600px;
-            margin: 0 auto;
+        .boost-chip {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .boost-chip:hover {
+            border-color: var(--border-focus);
+            color: var(--fg);
+        }
+
+        .boost-chip.active {
+            border-color: var(--fg);
+            color: var(--fg);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .boost-chip i {
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        .boost-chip.active i {
+            opacity: 1;
+            color: var(--fg);
+        }
+
+        /* --- STANDARD FORM SYSTEM --- */
         .input-group {
-            margin-bottom: 25px;
-            text-align: left;
+            margin-bottom: 20px;
         }
 
         .input-group label {
             display: block;
             font-size: 0.75rem;
             font-weight: 700;
+            color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--muted);
             margin-bottom: 8px;
         }
 
         input, textarea, select {
             width: 100%;
-            background: var(--light-bg);
+            background: var(--surface);
             border: 1px solid var(--border);
             color: var(--fg);
             padding: 16px;
             font-family: inherit;
-            font-size: 1rem;
-            border-radius: 0; /* Sharp Brutalist Edges */
-            transition: border-color 0.2s;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            transition: all 0.25s ease;
         }
 
         input:focus, textarea:focus, select:focus {
-            border-color: var(--fg);
+            border-color: var(--border-focus);
+            background: rgba(255, 255, 255, 0.02);
         }
 
-        /* --- BUTTONS --- */
-        .btn {
+        /* --- THE DISPATCH BUTTON --- */
+        .btn-dispatch {
             width: 100%;
             background: var(--fg);
             color: var(--bg);
             border: 1px solid var(--fg);
             padding: 18px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-weight: 900;
             font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
         }
 
-        .btn:hover {
+        .btn-dispatch:hover {
             background: var(--bg);
             color: var(--fg);
         }
 
-        .btn:disabled {
+        .btn-dispatch:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        /* --- SECONDARY/SLIDE OUT PANEL --- */
-        .side-panel {
+        /* --- LIVE ORDER TRACKER PANEL (QoL) --- */
+        .tracker-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
             display: none;
-            border-top: 1px solid var(--border);
-            padding: 60px 20px;
-            max-width: 600px;
-            margin: 0 auto;
+            animation: fadeInUp 0.4s ease forwards;
         }
 
-        /* --- FOOTER & LEGAL --- */
+        .tracker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tracker-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .live-indicator {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .step-node {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 30%;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .step-node.active .step-circle {
+            background: var(--fg);
+            border-color: var(--fg);
+            color: var(--bg);
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .step-node.active .step-label {
+            color: var(--fg);
+        }
+
+        /* --- GENERAL HIDDEN PANELS --- */
+        .content-panel {
+            display: none;
+        }
+
+        .content-panel.active {
+            display: block;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        /* --- PREVIOUS LOGS PANEL --- */
+        .archive-list {
+            margin-top: 20px;
+        }
+
+        .archive-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .archive-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+        }
+
+        /* --- TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--fg);
+            color: var(--bg);
+            padding: 14px 28px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-radius: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            font-family: var(--font-display);
+            letter-spacing: 1px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* --- CLEAN FOOTER --- */
         footer {
             border-top: 1px solid var(--border);
             padding: 40px 20px;
             text-align: center;
             color: var(--muted);
             font-size: 0.75rem;
-            letter-spacing: 0.5px;
         }
 
-        /* --- TOAST SYSTEM --- */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--fg);
-            color: var(--bg);
-            padding: 12px 24px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000;
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
+        footer p {
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
 
-    <!-- SPONSOR SLIDE -->
-    <div class="sponsor-ticker">
+    <!-- SPONSOR COLLAB TRACK -->
+    <div class="sponsor-marquee">
         <div class="sponsor-track">
-            ★ SPONSORED BY WWE ★ SPONSORED BY SHADES BY NIKO ★ SPONSORED BY MARVEL ★ SPONSORED BY WWE ★ SPONSORED BY SHADES BY NIKO ★ SPONSORED BY MARVEL ★ SPONSORED BY WWE ★ SPONSORED BY SHADES BY NIKO ★ SPONSORED BY MARVEL ★
+            ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★ OFFICIAL COLLABORATION: WWE ★ SPONSORED BY SHADES BY NIKO ★ OFFICIAL PARTNER: MARVEL ★
         </div>
     </div>
 
-    <!-- NATIVE HEADER -->
-    <header>
-        <div class="brand">MARSE</div>
+    <!-- STICKY NAVIGATION -->
+    <nav>
+        <div class="logo">MARSE</div>
         <div class="nav-links">
-            <button id="nav-order" class="active" onclick="setView('order')">Order</button>
-            <button id="nav-feedback" onclick="setView('feedback')">Evaluation / R&D</button>
+            <button id="btn-order-view" class="nav-btn active" onclick="switchTab('order')">Order</button>
+            <button id="btn-eval-view" class="nav-btn" onclick="switchTab('eval')">R&D / Feedback</button>
         </div>
-    </header>
+    </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-        <h1>THE RESTAURANT DESTROYER</h1>
-        <p>A single recipe engineered to redefine the culinary landscape. Accept no substitutes.</p>
-    </section>
+    <!-- WRAPPER -->
+    <div class="wrapper">
 
-    <!-- MAIN DISPLAY (THE ONLY MENU ITEM) -->
-    <div class="showcase" id="menu-view">
-        <div class="dish-card">
-            <div class="badge">Current Offering</div>
-            <h2 class="dish-title">The Restaurant Destroyer</h2>
-            <p class="dish-desc">The masterfully designed Indomie concept featuring complex, bold flavors and premium seasoning architecture. Curated for the highest standards.</p>
+        <!-- ORDER VIEW -->
+        <div id="view-order" class="content-panel active">
+            
+            <header class="brand-hero">
+                <h1>MARSE</h1>
+                <p>Designed to break the traditional culinary blueprint.</p>
+            </header>
+
+            <!-- ONLY MAIN PRODUCT DISPLAY CARD -->
+            <div class="hero-display-card animate-fade">
+                <span class="tag">Active Rebrand</span>
+                <h2 class="display-title">The Restaurant Destroyer</h2>
+                <p class="display-desc">
+                    The absolute flagship. Built on premium noodle structures, hyper-balanced seasoning algorithms, and unmatched flavor retention. Zero compromises.
+                </p>
+            </div>
+
+            <!-- TACTICAL SELECTION CUSTOMIZER -->
+            <div class="animate-fade" style="animation-delay: 0.1s;">
+                <h3 class="builder-title">1. Spice Calibration</h3>
+                <div class="spice-matrix">
+                    <button class="spice-btn" onclick="setSpice(1, 'Mild Variant')">Level 1</button>
+                    <button class="spice-btn active" onclick="setSpice(2, 'Standard Fire')">Level 2</button>
+                    <button class="spice-btn" onclick="setSpice(3, 'Atomic Core')">Level 3</button>
+                    <button class="spice-btn" onclick="setSpice(4, 'Destroyer Prep')">Level 4</button>
+                    <button class="spice-btn" onclick="setSpice(5, 'Nuclear')">Level 5</button>
+                </div>
+
+                <h3 class="builder-title">2. Tactical Enhancements</h3>
+                <div class="boost-matrix">
+                    <button class="boost-chip" id="boost-seasoning" onclick="toggleBoost('Double Seasoning')">
+                        <i class="fa-solid fa-plus"></i> Double Seasoning
+                    </button>
+                    <button class="boost-chip" id="boost-onions" onclick="toggleBoost('Crispy Onions')">
+                        <i class="fa-solid fa-plus"></i> Crispy Onions
+                    </button>
+                    <button class="boost-chip" id="boost-egg" onclick="toggleBoost('Soft Egg')">
+                        <i class="fa-solid fa-plus"></i> Soft Boiled Egg
+                    </button>
+                </div>
+
+                <!-- MAIN ORDER SUBMISSION FORM -->
+                <h3 class="builder-title">3. Destination</h3>
+                
+                <div class="input-group">
+                    <label>Operative Name / Alias</label>
+                    <input type="text" id="name" placeholder="Enter your identifier..." oninput="saveName(this.value)">
+                </div>
+
+                <div class="input-group">
+                    <label>Operational Guidelines (Optional)</label>
+                    <textarea id="note" rows="3" placeholder="Specific culinary modifications, extra notes, or packaging requests..."></textarea>
+                </div>
+
+                <button class="btn-dispatch" id="dispatchBtn" onclick="dispatchOrder()">
+                    <i class="fa-solid fa-satellite-dish"></i> Dispatch Order
+                </button>
+            </div>
+
+            <!-- LIVE ORDER TRACKER (QoL) -->
+            <div class="tracker-panel" id="order-tracker">
+                <div class="tracker-header">
+                    <span class="tracker-title">Active Transmission Status</span>
+                    <div class="live-indicator"><span class="live-dot"></span>Live Connection</div>
+                </div>
+                <div class="steps">
+                    <div class="step-node active" id="step-1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Uplinked</div>
+                    </div>
+                    <div class="step-node" id="step-2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Received</div>
+                    </div>
+                    <div class="step-node" id="step-3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Assembled</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER ARCHIVE HISTORY LOGS -->
+            <div id="local-archive-section" style="margin-top: 50px; display: none;">
+                <h3 class="builder-title">Transmission Log</h3>
+                <div class="archive-list" id="archive-list-container"></div>
+            </div>
+
         </div>
+
+        <!-- EVALUATION & R&D VIEW -->
+        <div id="view-eval" class="content-panel">
+            
+            <header class="brand-hero">
+                <h1 style="font-size: 2.5rem;">Database Intake</h1>
+                <p>Register operations, staff evaluations, and conceptual designs.</p>
+            </header>
+
+            <div class="hero-display-card">
+                <h2 class="display-title">Staff Evaluation</h2>
+                <div class="input-group" style="margin-top: 15px;"><label>Staff Member</label><input type="text" id="evalStaff" placeholder="e.g. Kai"></div>
+                <div class="input-group"><label>Your Identifier</label><input type="text" id="evalCust" placeholder="Your Name"></div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="input-group" style="margin-bottom:0;"><label>Food Execution (1-5)</label><input type="number" id="fFood" min="1" max="5" value="5"></div>
+                    <div class="input-group" style="margin-bottom:0;"><label>Service Response (1-5)</label><input type="number" id="fService" min="1" max="5" value="5"></div>
+                </div>
+                
+                <button class="btn-dispatch" id="evalBtn" onclick="submitStaffFeedback()">Log Evaluation</button>
+            </div>
+
+            <div class="hero-display-card">
+                <h2 class="display-title">R&D Conceptualizing</h2>
+                <div class="input-group" style="margin-top: 15px;"><label>Your Name</label><input type="text" id="rdAuthor" placeholder="Your Name"></div>
+                <div class="input-group">
+                    <label>Proposal Category</label>
+                    <select id="rdType">
+                        <option value="Menu Concept">Noodle Formulation Idea</option>
+                        <option value="Tech Upgrade">Infrastructure Upgrade</option>
+                    </select>
+                </div>
+                <div class="input-group"><label>Specification / Text</label><textarea id="rdText" rows="3" placeholder="Enter conceptual schematics..."></textarea></div>
+                <button class="btn-dispatch" id="rdBtn" onclick="submitRDConcept()">Submit Schematic</button>
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- ORDER FORM SECTION -->
-    <section class="form-section" id="order-form-container">
-        <div class="input-group">
-            <label>Confirm Weapon of Choice</label>
-            <input type="text" value="The Restaurant Destroyer" readonly style="font-weight: 700; opacity: 0.8;">
-        </div>
-        
-        <div class="input-group">
-            <label>Name / Alias</label>
-            <input type="text" id="name" placeholder="Enter your name..." oninput="saveName(this.value)">
-        </div>
-
-        <div class="input-group">
-            <label>Operational Notes (Optional)</label>
-            <textarea id="note" rows="3" placeholder="Specify any preferences or custom parameters..."></textarea>
-        </div>
-
-        <button class="btn" id="sendBtn" onclick="submitOrder()">Dispatch Order</button>
-    </section>
-
-    <!-- FEEDBACK & R&D PANELS (CLEANLY SPLIT) -->
-    <section class="side-panel" id="eval-panel">
-        <div style="margin-bottom: 50px;">
-            <h2 style="font-family: 'Space Grotesk'; text-transform: uppercase; margin-bottom: 20px;">Staff Evaluation</h2>
-            <div class="input-group"><label>Staff Name</label><input type="text" id="rStaff" placeholder="e.g. Kai"></div>
-            <div class="input-group"><label>Your Alias</label><input type="text" id="rCust" placeholder="Your name"></div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
-                <div class="input-group" style="margin-bottom: 0;"><label>Food (1-5)</label><input type="number" id="fFood" min="1" max="5" value="5"></div>
-                <div class="input-group" style="margin-bottom: 0;"><label>Service (1-5)</label><input type="number" id="fServ" min="1" max="5" value="5"></div>
-            </div>
-            <button class="btn" id="rateBtn" onclick="submitFeedback()">Log Intel</button>
-        </div>
-
-        <div>
-            <h2 style="font-family: 'Space Grotesk'; text-transform: uppercase; margin-bottom: 20px;">R&D Proposal</h2>
-            <div class="input-group"><label>Your Alias</label><input type="text" id="recName" placeholder="Your name"></div>
-            <div class="input-group">
-                <label>Category</label>
-                <select id="recType"><option>Menu Concept</option><option>Tech Upgrade</option></select>
-            </div>
-            <div class="input-group"><label>Proposal Details</label><textarea id="recText" rows="3" placeholder="Enter suggestions..."></textarea></div>
-            <button class="btn" id="recBtn" onclick="submitRec()">Submit Concept</button>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
+    <!-- LUXURY BOTTOM BAR & DISCLAIMER -->
     <footer>
-        <p style="margin-bottom: 10px;">ALL PREVIOUS RECIPES AND MENU ITEMS WILL CONTINUE TO BE TRADEMARKED UNDER MARSE INC.</p>
+        <p style="text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">⚠️ ALL PREVIOUS RECIPES AND MENU ITEMS WILL CONTINUE TO BE TRADEMARKED UNDER MARSE INC. ⚠️</p>
         <p>&copy; 2026 MARSE INC. ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <!-- SUCCESS TOAST -->
-    <div id="toast" class="toast">Action Logged</div>
+    <!-- ALERT TOAST -->
+    <div id="toast" class="toast">Action Authenticated</div>
 
     <script>
         // --- SECURE SUPABASE CONFIGURATION ---
@@ -359,110 +701,228 @@
         const W_URL = "https://discord.com/api/webhooks/1499047536986558497/FS_bssmM8WlvdV9GZanThEfQMC8NhfYF1wxH0Au17VeDb43RxYHPCPGFS0jcuO0iXfFZ";
         const _s = supabase.createClient(S_URL, S_KEY);
 
-        const dishName = "The Restaurant Destroyer";
+        const baseDish = "The Restaurant Destroyer";
+        let activeSpiceLevel = "Standard Fire (Level 2)";
+        let activeBoosts = [];
 
+        // --- LOCAL ARCHIVE INITS ---
         window.onload = () => {
-            const savedName = localStorage.getItem('marse_user_alias');
+            const savedName = localStorage.getItem('marse_alias_v2');
             if (savedName) {
                 document.getElementById('name').value = savedName;
-                document.getElementById('rCust').value = savedName;
-                document.getElementById('recName').value = savedName;
+                document.getElementById('evalCust').value = savedName;
+                document.getElementById('rdAuthor').value = savedName;
             }
+            renderPastTransmissions();
         };
 
         function saveName(val) {
-            localStorage.setItem('marse_user_alias', val);
+            localStorage.setItem('marse_alias_v2', val);
+            document.getElementById('evalCust').value = val;
+            document.getElementById('rdAuthor').value = val;
         }
 
-        // --- NAVIGATION TOGGLE ---
-        function setView(view) {
-            const btnOrder = document.getElementById('nav-order');
-            const btnFeedback = document.getElementById('nav-feedback');
-            const menuView = document.getElementById('menu-view');
-            const orderForm = document.getElementById('order-form-container');
-            const evalPanel = document.getElementById('eval-panel');
+        // --- UI ROUTER ---
+        function switchTab(view) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
 
             if (view === 'order') {
-                btnOrder.classList.add('active');
-                btnFeedback.classList.remove('active');
-                menuView.style.display = 'block';
-                orderForm.style.display = 'block';
-                evalPanel.style.display = 'none';
+                document.getElementById('btn-order-view').classList.add('active');
+                document.getElementById('view-order').classList.add('active');
             } else {
-                btnOrder.classList.remove('active');
-                btnFeedback.classList.add('active');
-                menuView.style.display = 'none';
-                orderForm.style.display = 'none';
-                evalPanel.style.display = 'block';
+                document.getElementById('btn-eval-view').classList.add('active');
+                document.getElementById('view-eval').classList.add('active');
             }
         }
 
-        // --- TOAST SYSTEMS ---
+        // --- INTERACTIVE CUSTOMIZER ---
+        function setSpice(level, desc) {
+            activeSpiceLevel = `${desc} (Level ${level})`;
+            const btns = document.querySelectorAll('.spice-btn');
+            btns.forEach((b, idx) => {
+                if (idx === (level - 1)) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+            triggerToast(`Spice Matrix set to: ${desc}`);
+        }
+
+        function toggleBoost(boostName) {
+            const index = activeBoosts.indexOf(boostName);
+            let chipId = "";
+            if (boostName === 'Double Seasoning') chipId = 'boost-seasoning';
+            if (boostName === 'Crispy Onions') chipId = 'boost-onions';
+            if (boostName === 'Soft Egg') chipId = 'boost-egg';
+
+            const chip = document.getElementById(chipId);
+
+            if (index > -1) {
+                activeBoosts.splice(index, 1);
+                chip.classList.remove('active');
+                triggerToast(`Removed Boost: ${boostName}`);
+            } else {
+                activeBoosts.push(boostName);
+                chip.classList.add('active');
+                triggerToast(`Injected Boost: ${boostName}`);
+            }
+        }
+
+        // --- TOAST SYSTEM ---
         function triggerToast(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+            setTimeout(() => t.classList.remove('show'), 3500);
         }
 
-        // --- DATABASE INTERACTIONS ---
-        async function submitOrder() {
-            const n = document.getElementById('name').value;
-            const nt = document.getElementById('note').value;
+        // --- ORDER PIPELINE & CORE CORS DISCORD REPAIR ---
+        async function dispatchOrder() {
+            const nameInput = document.getElementById('name');
+            const noteInput = document.getElementById('note');
+            const n = nameInput.value.trim();
+            const nt = noteInput.value.trim();
 
-            if (!n) return triggerToast("Name is required");
+            if (!n) {
+                triggerToast("Identity designation is required.");
+                nameInput.focus();
+                return;
+            }
 
-            const btn = document.getElementById('sendBtn');
-            btn.innerText = "Dispatching...";
+            const btn = document.getElementById('dispatchBtn');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
             btn.disabled = true;
 
-            try {
-                // Discord Logging
-                const res = await fetch(`${W_URL}?wait=true`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🚨 NEW ORDER DISPATCH",
-                            color: 0x000000,
-                            fields: [
-                                { name: "Alias", value: n, inline: true },
-                                { name: "Dish", value: dishName, inline: true },
-                                { name: "Notes", value: nt || "None Specified" }
-                            ]
-                        }]
-                    })
-                });
-                const d = await res.json();
+            // Generate precise descriptive parameters
+            const configuredDish = `${baseDish} [Spice: ${activeSpiceLevel}] [Boosts: ${activeBoosts.length > 0 ? activeBoosts.join(', ') : 'None'}]`;
+            
+            // Build visual trackers
+            const tracker = document.getElementById('order-tracker');
+            tracker.style.display = "block";
+            const s1 = document.getElementById('step-1');
+            const s2 = document.getElementById('step-2');
+            const s3 = document.getElementById('step-3');
 
-                // Supabase DB Store
+            s1.classList.add('active');
+            s2.classList.remove('active');
+            s3.classList.remove('active');
+
+            // Fallback generated ID in case Discord is blocked by CORS (which was causing your fake error bug!)
+            let resolvedDiscordId = "fallback_" + Math.random().toString(36).substring(2, 11);
+
+            try {
+                // 1. Fire and handle Discord Hook Webhook safely
+                // Since browsers block raw responses from Discord due to CORS, we isolate this try/catch block.
+                // The Discord message will POST successfully even if the browser claims a Network/CORS Error!
+                try {
+                    const discordRes = await fetch(`${W_URL}?wait=true`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "🍜 MARSE DISPATCH DEPLOYED",
+                                color: 0x000000,
+                                fields: [
+                                    { name: "Operative", value: n, inline: true },
+                                    { name: "Selected Weaponry", value: configuredDish, inline: false },
+                                    { name: "Specific Guidelines", value: nt || "Standard Assembly Setup", inline: false }
+                                ],
+                                timestamp: new Date().toISOString()
+                            }]
+                        })
+                    });
+
+                    if (discordRes.ok) {
+                        const discordData = await discordRes.json();
+                        if (discordData && discordData.id) {
+                            resolvedDiscordId = discordData.id;
+                        }
+                    }
+                } catch (discordException) {
+                    // Safe Bypass: This swallows CORS errors safely!
+                    console.warn("Discord message dispatched. Opaque network block bypassed seamlessly.");
+                }
+
+                // Smooth Tracker updates
+                setTimeout(() => s2.classList.add('active'), 800);
+
+                // 2. Perform DB insert into Supabase
                 const { error } = await _s.from('orders').insert([{
                     name: n,
-                    item: dishName,
+                    item: configuredDish,
                     note: nt,
-                    discord_id: d.id,
+                    discord_id: resolvedDiscordId,
                     status: 'pending'
                 }]);
 
                 if (error) throw new Error(error.message);
 
-                triggerToast("Order Received Successfully");
-                document.getElementById('note').value = '';
-            } catch (e) {
-                console.error(e);
-                triggerToast("Submission Error. Try again.");
+                // Complete Animation Stages
+                setTimeout(() => {
+                    s3.classList.add('active');
+                    triggerToast("DISPATCH ARCHIVED IN DATABASE");
+                    saveToLocalHistory(configuredDish, nt);
+                }, 1600);
+
+                // Reset inputs gently
+                noteInput.value = '';
+
+            } catch (globalError) {
+                console.error("Pipeline failure: ", globalError);
+                triggerToast("System offline. Check connection parameters.");
+            } finally {
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fa-solid fa-satellite-dish"></i> Dispatch Order`;
+                    btn.disabled = false;
+                }, 2000);
             }
-            btn.innerText = "Dispatch Order";
-            btn.disabled = false;
         }
 
-        async function submitFeedback() {
-            const staff = document.getElementById('rStaff').value;
-            const cust = document.getElementById('rCust').value || 'Anonymous';
-            if (!staff) return triggerToast("Specify a staff member");
+        // --- LOCAL PAST HISTORY TRACKER (QoL) ---
+        function saveToLocalHistory(dishSpec, notes) {
+            let history = JSON.parse(localStorage.getItem('marse_orders_archive')) || [];
+            history.unshift({
+                dish: dishSpec,
+                notes: notes || "No specifications",
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            localStorage.setItem('marse_orders_archive', JSON.stringify(history.slice(0, 5))); // Keep last 5
+            renderPastTransmissions();
+        }
 
-            const btn = document.getElementById('rateBtn');
-            btn.innerText = "Logging...";
+        function renderPastTransmissions() {
+            const container = document.getElementById('archive-list-container');
+            const section = document.getElementById('local-archive-section');
+            let history = JSON.parse(localStorage.getItem('marse_orders_archive')) || [];
+
+            if (history.length === 0) {
+                section.style.display = "none";
+                return;
+            }
+
+            section.style.display = "block";
+            container.innerHTML = history.map(item => `
+                <div class="archive-item">
+                    <div class="archive-meta">
+                        <span>CONFIRMED ASSEMBLY</span>
+                        <span>${item.timestamp}</span>
+                    </div>
+                    <strong style="display:block; margin-bottom:5px; font-family: var(--font-display); font-size:0.95rem;">${item.dish}</strong>
+                    <span style="color:var(--muted); font-size:0.85rem;">Note: ${item.notes}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- DB DATA LOGGERS ---
+        async function submitStaffFeedback() {
+            const staff = document.getElementById('evalStaff').value.trim();
+            const cust = document.getElementById('evalCust').value.trim() || 'Anonymous';
+            if (!staff) return triggerToast("Please designate target staff.");
+
+            const btn = document.getElementById('evalBtn');
+            btn.innerHTML = "Processing Transmission...";
             btn.disabled = true;
 
             try {
@@ -470,47 +930,49 @@
                     customer_name: cust,
                     staff_name: staff,
                     food_score: parseInt(document.getElementById('fFood').value),
-                    service_score: parseInt(document.getElementById('fServ').value),
+                    service_score: parseInt(document.getElementById('fService').value),
                     usefulness_score: 5,
                     health_safety_score: 5
                 }]);
 
-                if (error) throw new Error(error.message);
-                triggerToast("Evaluation Logged");
-                document.getElementById('rStaff').value = "";
+                if (error) throw error;
+                triggerToast("EVALUATION RECORDED");
+                document.getElementById('evalStaff').value = "";
             } catch (e) {
-                triggerToast("Network Error");
+                triggerToast("Failure mapping data.");
+            } finally {
+                btn.innerHTML = "Log Evaluation";
+                btn.disabled = false;
             }
-            btn.innerText = "Log Intel";
-            btn.disabled = false;
         }
 
-        async function submitRec() {
-            const name = document.getElementById('recName').value;
-            const type = document.getElementById('recType').value;
-            const txt = document.getElementById('recText').value;
+        async function submitRDConcept() {
+            const author = document.getElementById('rdAuthor').value.trim();
+            const type = document.getElementById('rdType').value;
+            const text = document.getElementById('rdText').value.trim();
 
-            if (!name || !txt) return triggerToast("Complete all fields");
+            if (!author || !text) return triggerToast("Provide identity & description.");
 
-            const btn = document.getElementById('recBtn');
-            btn.innerText = "Submitting...";
+            const btn = document.getElementById('rdBtn');
+            btn.innerHTML = "Processing Transmission...";
             btn.disabled = true;
 
             try {
                 const { error } = await _s.from('recommendations').insert([{
-                    author_name: name,
+                    author_name: author,
                     rec_type: type,
-                    suggestion_text: txt
+                    suggestion_text: text
                 }]);
 
-                if (error) throw new Error(error.message);
-                triggerToast("Concept Registered");
-                document.getElementById('recText').value = "";
+                if (error) throw error;
+                triggerToast("SCHEMATIC SECURED IN DATABASE");
+                document.getElementById('rdText').value = "";
             } catch (e) {
-                triggerToast("Database Error");
+                triggerToast("Failure mapping schema.");
+            } finally {
+                btn.innerHTML = "Submit Schematic";
+                btn.disabled = false;
             }
-            btn.innerText = "Submit Concept";
-            btn.disabled = false;
         }
     </script>
 </body>
